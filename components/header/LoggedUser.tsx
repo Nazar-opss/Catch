@@ -1,7 +1,7 @@
 import { signOut, useSession } from "@/lib/auth-clients"
 import { Button } from "../ui/button"
 import { BookmarkIcon, ChevronDown, LogOutIcon, Plus, UserIcon } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useState } from "react"
 import AddDeal from "./AddDeal"
 

@@ -1,163 +1,93 @@
 "use client"
 import { Button } from "../ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../ui/field";
-import { Input } from "../ui/input";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-
-const formSchema = z.object({
-    link: z
-        .url("Введіть коректне посилання"),
-    itemName: z
-        .string()
-        .min(1, "Введіть назву"),
-    oldPrice: z
-        .number(),
-    newPrice: z
-        .number(),
-    image: z
-        .any()
-        .refine((file) => file?.size <= MAX_FILE_SIZE, "Максимальний розмір файлу 5МБ")
-        .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), "Підтримуються лише формати .jpeg, .jpg, .png, .webp"),
-    description: z
-        .string()
-        .min(1, "Додайте опис або промокод для знижки...")
-        .max(100, "Опис повинен бути не більше 100 символів"),
-})
-
+import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "../ui/drawer";
+import DealFormContent from "./DealFormContent";
+import useMediaQuery from "@/hooks/useMediaQuery";
+import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
+import { X } from "lucide-react";
+import z from "zod";
+import { toast } from "sonner";
 
 export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             link: "",
             itemName: "",
-            oldPrice: 0,
-            newPrice: 0,
-            image: null,
+            oldPrice: "",
+            newPrice: "",
+            images: [],
             description: "",
         }
     })
 
-    return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="font-geist">
-                <DialogHeader>
-                    <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DialogTitle>
-                </DialogHeader>
-                <div className="no-scrollbar max-h-[50vh] overflow-y-auto p-6">
-                    <FieldGroup>
-                        <Controller
-                            name="link"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Посилання на товар</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id={field.name}
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="https://rozetka.com.ua/product/123456789/"
-                                        autoComplete="off"
-                                        required={true}
-                                        value={field.value}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="itemName"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Назва товару</FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id={field.name}
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="Наприклад: iPhone 15 Pro Max 256GB"
-                                        autoComplete="off"
-                                        value={field.value}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
-                        <FieldGroup className="flex flex-row">
-                            <Controller
-                                name="newPrice"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor={field.name}>Нова ціна</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id={field.name}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Наприклад: 12999"
-                                            autoComplete="off"
-                                            value={field.value}
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="oldPrice"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor={field.name}>Стара ціна</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id={field.name}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="Наприклад: 15999"
-                                            autoComplete="off"
-                                            value={field.value}
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-                        <Controller
-                            name="image"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor={field.name}>Зображення</FieldLabel>
-                                    <Input
-                                        id={field.name}
-                                        type="file"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="Перетягніть сюди або натисніть для завантаження"
-                                        accept="image/*"
-                                        value={field.value}
-                                        multiple={false}
-                                    />
-                                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-                <DialogFooter >
-                    <DialogClose asChild>
-                        <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer">Скасувати</Button>
-                    </DialogClose>
-                    <DialogClose type="submit" asChild>
-                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">Додати</Button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
+    const isDesktop = useMediaQuery("(min-width: 640px)")
 
+    function onSubmit(data: z.infer<typeof formSchema>) {
+        toast("You submitted the following values:", {
+            description: (
+                <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+                    <code>{JSON.stringify(data, null, 2)}</code>
+                </pre>
+            ),
+            position: "bottom-right",
+            classNames: {
+                content: "flex flex-col gap-2",
+            },
+            style: {
+                "--border-radius": "calc(var(--radius)  + 4px)",
+            } as React.CSSProperties,
+        })
+    }
+
+
+    if (isDesktop) {
+        return (
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogContent showCloseButton={false} className="font-geist mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
+                    <DialogHeader className="flex justify-between">
+                        <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DialogTitle>
+                        <DialogClose asChild className="">
+                            <X className="w-5 h-5 p-2 text-slate-400 bg-transparent rounded-full hover:bg-slate-100" />
+                        </DialogClose>
+
+                    </DialogHeader>
+                    <div className="p-6 sm:p-8">
+                        <DealFormContent form={form} />
+                    </div>
+                    <DialogFooter >
+                        <DialogClose asChild onClick={() => form.reset()}>
+                            <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer border border-slate-300">Скасувати</Button>
+                        </DialogClose>
+                        <DialogClose type="submit" onClick={form.handleSubmit(onSubmit)} asChild>
+                            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">Опублікувати</Button>
+                        </DialogClose>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        )
+    }
+    return (
+        <Drawer open={open} onOpenChange={onOpenChange}>
+            <DrawerContent className="font-geist">
+                <DrawerHeader>
+                    <DrawerTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DrawerTitle>
+                </DrawerHeader>
+                <div className="no-scrollbar max-h-[calc(100vh-2rem)] overflow-y-auto p-6 sm:p-8">
+                    <DealFormContent form={form} />
+                </div>
+                <DrawerFooter >
+                    <DrawerClose asChild>
+                        <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer">Скасувати</Button>
+                    </DrawerClose>
+                    <DrawerClose type="submit" asChild>
+                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">Додати</Button>
+                    </DrawerClose>
+                </DrawerFooter>
+            </DrawerContent>
+        </Drawer>
+    )
 }
