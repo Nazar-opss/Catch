@@ -34,7 +34,7 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                     )}
                 />
                 <Controller
-                    name="itemName"
+                    name="title"
                     control={form.control}
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
@@ -69,6 +69,7 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                                             autoComplete="off"
                                             value={field.value}
                                             className={`${inputStyle} pr-9 font-medium`}
+                                            onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))}
                                             min="0"
                                             step="0.01"
                                             type="number"
@@ -95,6 +96,7 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                                             placeholder="Наприклад: 16999"
                                             autoComplete="off"
                                             value={field.value}
+                                            onChange={(e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value))}
                                             className={`${inputStyle} pr-9 font-medium`}
                                             min="0"
                                             step="0.01"
@@ -156,6 +158,7 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                         </Field>
                     )}
+                //fix error display for images
                 />
                 <Controller
                     name="description"

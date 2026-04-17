@@ -3,11 +3,10 @@ import z from "zod";
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-
 export const formSchema = z.object({
     link: z
         .url("Введіть коректне посилання"),
-    itemName: z
+    title: z
         .string()
         .min(1, "Введіть назву"),
     oldPrice: z
@@ -17,7 +16,6 @@ export const formSchema = z.object({
         .number()
         .or(z.literal(""))
         .refine((value) => value !== "" && value > 0, "Введіть нову ціну"),
-    // fix Invalid input: expected number, received string
     images: z
         .array(
             z.custom<File>((file) => file instanceof File, "Оберіть файл")
@@ -27,8 +25,17 @@ export const formSchema = z.object({
         .max(5, "Додайте не більше 5 зображень"),
     description: z
         .string()
-        // if description is empty, ...
+        // if description is empty, use Ai to write smth
         .max(100, "Опис повинен бути не більше 100 символів"),
 })
+
+export const dealActionSchema = z.object({
+    images: z
+        .array(
+            z
+                .string()
+                .url("Введіть коректне посилання")
+        ),
+});
 
 export type DealFormValues = z.infer<typeof formSchema>

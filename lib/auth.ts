@@ -1,8 +1,6 @@
 import { dash } from "@better-auth/infra";
 import { betterAuth } from "better-auth";
 import { db } from "@/server/db";
-import { kyselyAdapter } from "@better-auth/kysely-adapter";
-import { types } from "util";
 
 const secret = process.env.BETTER_AUTH_SECRET
 if (!secret) throw new Error("BETTER_AUTH_SECRET is not defined")

@@ -79,10 +79,10 @@ model Deal {
     id          String   @id @default(uuid())
     title       String
     link        String
-    price       Float
+    newPrice    Float
     oldPrice    Float?
     description String?
-    imageUrl    String?
+    imageUrls   String[]
     temperature Int      @default(0)
     createdAt   DateTime @default(now())
 

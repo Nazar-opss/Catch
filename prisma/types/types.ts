@@ -30,10 +30,10 @@ export type Deal = {
     id: string;
     title: string;
     link: string;
-    price: number;
+    newPrice: number;
     oldPrice: number | null;
     description: string | null;
-    imageUrl: string | null;
+    imageUrls: string[];
     temperature: Generated<number>;
     createdAt: Generated<Timestamp>;
     authorId: string;

@@ -10,13 +10,17 @@ import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
 import { X } from "lucide-react";
 import z from "zod";
 import { toast } from "sonner";
+import { useActionState } from "react";
+import { createDealAction } from "@/lib/actions/deal";
 
 export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
+    // const [state, action, isPending] = useActionState(createDealAction, null)
+
     const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             link: "",
-            itemName: "",
+            title: "",
             oldPrice: "",
             newPrice: "",
             images: [],
@@ -26,21 +30,30 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
 
     const isDesktop = useMediaQuery("(min-width: 640px)")
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        toast("You submitted the following values:", {
-            description: (
-                <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-                    <code>{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-            position: "bottom-right",
-            classNames: {
-                content: "flex flex-col gap-2",
-            },
-            style: {
-                "--border-radius": "calc(var(--radius)  + 4px)",
-            } as React.CSSProperties,
-        })
+    async function onSubmit(values: DealFormValues) {
+        const formData = new FormData();
+        values.images.forEach((image) => {
+            formData.append("files", image);
+        });
+
+        const uploadResult = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+        });
+        // fix error with images
+        const data = await uploadResult.json();
+
+        values.images = data.urls.map((image: any) => image.secure_url);
+        console.log(values)
+        const result = await createDealAction(values)
+        console.log(result)
+        if (result?.success) {
+            toast.success(result.success)
+            form.reset()
+            onOpenChange(false)
+        } else {
+            toast.error(result?.error)
+        }
     }
 
 
@@ -50,8 +63,8 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
                 <DialogContent showCloseButton={false} className="font-geist mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
                     <DialogHeader className="flex justify-between">
                         <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DialogTitle>
-                        <DialogClose asChild className="">
-                            <X className="w-5 h-5 p-2 text-slate-400 bg-transparent rounded-full hover:bg-slate-100" />
+                        <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
+                            <X height={20} width={20} className="" aria-hidden={false} />
                         </DialogClose>
 
                     </DialogHeader>
