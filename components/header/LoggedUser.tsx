@@ -18,7 +18,7 @@ export default function LoggedUser() {
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer">
                 <img className="w-8 h-8 rounded-full" src={session?.user?.image ?? undefined} alt={session?.user?.name ?? undefined} />
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         {/* <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer"> */}
                         <ChevronDown className="w-6 h-6 text-slate-400" />

@@ -8,7 +8,6 @@ import DealFormContent from "./DealFormContent";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
 import { X } from "lucide-react";
-import z from "zod";
 import { toast } from "sonner";
 import { useActionState } from "react";
 import { createDealAction } from "@/lib/actions/deal";
@@ -40,7 +39,7 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
             method: "POST",
             body: formData,
         });
-        // fix error with images
+        // fix showing error with images
         const data = await uploadResult.json();
 
         values.images = data.urls.map((image: any) => image.secure_url);

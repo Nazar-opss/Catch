@@ -7,7 +7,7 @@ import { Textarea } from "../ui/textarea";
 import { DealFormValues } from "@/lib/schemas/dealSchema";
 import { Button } from "../ui/button";
 
-const inputStyle = "flex h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-[15px] text-slate-900 shadow-sm placeholder:text-slate-400 hover:border-slate-400 focus-visible:outline-none focus-visible:border-orange-600 focus-visible:ring-orange-600/10 transition-all duration-200"
+export const inputStyle = "flex h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-[15px] text-slate-900 shadow-sm placeholder:text-slate-400 hover:border-slate-400 focus-visible:outline-none focus-visible:border-orange-600 focus-visible:ring-orange-600/10 transition-all duration-200"
 
 export default function DealFormContent({ form }: { form: UseFormReturn<DealFormValues> }) {
     return (
