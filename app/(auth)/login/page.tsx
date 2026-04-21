@@ -2,28 +2,27 @@
 import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
 import { signIn } from "@/lib/auth-clients"
-import AuthWrapper from "@/components/auth/authWrapper";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { inputStyle } from "@/components/header/DealFormContent";
+import { FieldGroup } from "@/components/ui/field";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/lib/schemas/loginSchema";
+import AuthPasswordInput from "@/components/auth/AuthPasswordInput";
+import AuthEmailInput from "@/components/auth/AuthEmailInput";
+import { AuthFormValues, authSchema } from "@/lib/schemas/authSchema";
+import AuthTypeDivider from "@/components/auth/AuthTypeDivider";
 
-const buttonStyle = "font-geist flex items-center justify-center gap-3 px-4 py-2.5 text-slate-700 rounded-xl border border-slate-200 text-[15px] font-medium cursor-pointer transition-all hover:bg-slate-50 hover:border-slate-300 focus:ring-2 focus:ring-slate-200 focus:outline-none shadow-sm"
+const buttonStyle = "font-geist flex items-center justify-center gap-3 px-4 py-2.5 text-slate-700 rounded-xl border border-slate-200 text-[15px] font-medium cursor-pointer transition-all hover:bg-slate-50 hover:border-slate-300 focus:ring-2 focus:ring-slate-200 focus:outline-none shadow-sm active:scale-95"
 
 export default function LoginPage() {
-    const form = useForm<z.infer<typeof loginSchema>>({
-        resolver: zodResolver(loginSchema),
+    const [pending, startTransition] = useTransition()
+    const [error, setError] = useState<string | undefined>(undefined)
+
+    const form = useForm<AuthFormValues>({
+        resolver: zodResolver(authSchema),
         defaultValues: {
             email: "",
             password: "",
         },
     })
-    const [pending, startTransition] = useTransition()
-    const [error, setError] = useState<string | undefined>(undefined)
 
     const handleGoogleSignUp = (provider: 'google') => {
         startTransition(async () => {
@@ -36,7 +35,8 @@ export default function LoginPage() {
         })
     }
     return (
-        <AuthWrapper authType="login" >
+        <>
+
             <div className="flex flex-col w-full mb-8 gap-3.5 z-10">
                 <Button variant="outline" disabled={pending} onClick={() => handleGoogleSignUp('google')} className={buttonStyle}>
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -55,57 +55,16 @@ export default function LoginPage() {
                     Продовжити з Telegram
                 </Button>
             </div>
-            <div className="flex items-center w-full gap-4 z-10">
-                <div className="w-full h-px bg-slate-200"></div>
-                <span className="text-slate-400 font-medium tracking-wide text-[13px] font-geist">або</span>
-                <div className="w-full h-px bg-slate-200"></div>
-            </div>
+
+            <AuthTypeDivider />
 
             <FieldGroup className="gap-5">
-                <Controller
-                    name="email"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                            <Input
-                                {...field}
-                                id={field.name}
-                                aria-invalid={fieldState.invalid}
-                                placeholder="example@gmail.com"
-                                autoComplete="off"
-                                required={true}
-                                value={field.value}
-                                className={inputStyle}
-                            />
-                            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-                <Controller
-                    name="password"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                        <Field data-invalid={fieldState.invalid}>
-                            <FieldLabel htmlFor={field.name}>Пароль</FieldLabel>
-                            <Input
-                                {...field}
-                                id={field.name}
-                                aria-invalid={fieldState.invalid}
-                                placeholder="Пароль"
-                                autoComplete="off"
-                                value={field.value}
-                                className={inputStyle}
-                            />
-                            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                        </Field>
-                    )}
-                />
-                <Button variant="outline" className="items-center justify-center px-5 py-2.5 mt-3 w-full text-[14px] bg-[#ea580c] text-white font-medium rounded-xl cursor-pointer transition-all hover:bg-orange-700" type="submit">
+                <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" />
+                <AuthPasswordInput forgotPassword={true} form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" />
+                <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
                     Увійти
                 </Button>
             </FieldGroup>
-
-        </AuthWrapper>
+        </>
     )
 }
