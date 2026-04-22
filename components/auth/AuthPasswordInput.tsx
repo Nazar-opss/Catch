@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { inputStyle } from "../header/DealFormContent";
+import { inputStyle } from "../deals/DealFormContent";
 import { Button } from "../ui/button";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -14,9 +14,10 @@ type InputProps = {
     placeholder: string;
     inputName: string;
     forgotPassword?: boolean;
+    autoComplete?: string;
 }
 
-export default function AuthPasswordInput({ form, inputLabel, placeholder, inputName, forgotPassword }: InputProps) {
+export default function AuthPasswordInput({ form, inputLabel, placeholder, inputName, forgotPassword, autoComplete }: InputProps) {
     const [showPassword, setShowPassword] = useState<"password" | "text">("password")
 
     return (
@@ -36,7 +37,7 @@ export default function AuthPasswordInput({ form, inputLabel, placeholder, input
                         id={field.name}
                         aria-invalid={fieldState.invalid}
                         placeholder={placeholder}
-                        autoComplete="off"
+                        autoComplete={autoComplete || "off"}
                         type={showPassword}
                         value={field.value}
                         className={`${inputStyle} px-4`}

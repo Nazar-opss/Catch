@@ -1,5 +1,5 @@
 'use client'
-import { inputStyle } from "@/components/header/DealFormContent"
+import { inputStyle } from "@/components/deals/DealFormContent"
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -7,6 +7,8 @@ import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { forgetPasswordSchema, ForgetPasswordSchemaValues } from "@/lib/schemas/resetSchema"
 import Link from "next/link"
+import { authClient } from "@/lib/auth-clients"
+import { toast } from "sonner"
 
 export default function ForgetPasswordPage() {
     const form = useForm<ForgetPasswordSchemaValues>({
@@ -15,6 +17,18 @@ export default function ForgetPasswordPage() {
             email: "",
         },
     })
+
+    const onSubmit = async (data: ForgetPasswordSchemaValues) => {
+        try {
+            await authClient.requestPasswordReset({
+                email: data.email,
+                redirectTo: "/reset-password",
+            })
+            toast.success("Посилання для скидання пароля відправлено")
+        } catch (error) {
+            toast.error("Не вдалося скинути пароль")
+        }
+    }
     return (
         <div className="flex flex-col w-full mb-8 gap-3.5 z-10">
             <FieldGroup className="gap-5">
@@ -40,10 +54,8 @@ export default function ForgetPasswordPage() {
                     )}
                 />
 
-                <Button variant="outline" asChild className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95">
-                    <Link href="/reset-password">
-                        Скинути пароль
-                    </Link>
+                <Button variant="outline" onClick={form.handleSubmit(onSubmit)} className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95">
+                    Скинути пароль
                 </Button>
 
             </FieldGroup>

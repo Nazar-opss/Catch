@@ -14,7 +14,7 @@ const buttonStyle = "font-geist flex items-center justify-center gap-3 px-4 py-2
 
 export default function LoginPage() {
     const [pending, startTransition] = useTransition()
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<string | undefined>()
 
     const form = useForm<AuthFormValues>({
         resolver: zodResolver(authSchema),
@@ -24,7 +24,7 @@ export default function LoginPage() {
         },
     })
 
-    const handleGoogleSignUp = (provider: 'google') => {
+    const handleGoogleLogin = (provider: 'google') => {
         startTransition(async () => {
             const { error } = await signIn.social({
                 provider,
@@ -34,11 +34,23 @@ export default function LoginPage() {
             if (error) setError(error.message)
         })
     }
+
+    const handleEmailAndPasswordLogin = () => {
+        startTransition(async () => {
+            const { error } = await signIn.email({
+                email: form.getValues("email"),
+                password: form.getValues("password"),
+                rememberMe: true,
+                callbackURL: "/",
+            })
+
+            if (error) setError(error.message)
+        })
+    }
     return (
         <>
-
             <div className="flex flex-col w-full mb-8 gap-3.5 z-10">
-                <Button variant="outline" disabled={pending} onClick={() => handleGoogleSignUp('google')} className={buttonStyle}>
+                <Button variant="outline" disabled={pending} onClick={() => handleGoogleLogin('google')} className={buttonStyle}>
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.58c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
@@ -59,10 +71,10 @@ export default function LoginPage() {
             <AuthTypeDivider />
 
             <FieldGroup className="gap-5">
-                <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" />
+                <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" type="email" />
                 <AuthPasswordInput forgotPassword={true} form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" />
-                <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
-                    Увійти
+                <Button variant="outline" onClick={() => handleEmailAndPasswordLogin()} disabled={pending} className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
+                    {pending ? "Вхід..." : "Увійти"}
                 </Button>
             </FieldGroup>
         </>

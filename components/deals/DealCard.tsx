@@ -50,7 +50,7 @@ const SHOP_ICONS: Record<string, string> = {
     "epicentr": "/icons/epicentr.png",
     "brain": "/icons/brain.jpg",
     "elmir": "/icons/elmir.jpg",
-    "stylus": "/icons/stylus.jpg",
+    "stls": "/icons/stylus.jpg",
     "ktc": "/icons/ktc.jpg",
     "kvshop": "/icons/kvshop.jpg",
     "pxphone": "/icons/pxphone.jpg",

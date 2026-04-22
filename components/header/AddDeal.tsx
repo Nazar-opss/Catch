@@ -4,7 +4,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from "../ui/drawer";
-import DealFormContent from "./DealFormContent";
+import DealFormContent from "../deals/DealFormContent";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
 import { X } from "lucide-react";

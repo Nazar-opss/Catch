@@ -21,6 +21,7 @@ export default function RegisterPage() {
         defaultValues: {
             email: "",
             password: "",
+            name: "",
         },
     })
 
@@ -59,8 +60,9 @@ export default function RegisterPage() {
             <AuthTypeDivider />
 
             <FieldGroup className="gap-5">
-                <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" />
-                <AuthPasswordInput form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" />
+                <AuthEmailInput form={form} inputLabel="Ім'я користувача (Нікнейм)" placeholder="Введіть ваше ім'я користувача" inputName="name" type="text" />
+                <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" type="email" />
+                <AuthPasswordInput form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" autoComplete="new-password" />
                 <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
                     Зареєструватися
                 </Button>
