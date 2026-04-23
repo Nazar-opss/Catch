@@ -27,7 +27,7 @@ export default function AuthFooter() {
     return (
         pathname === "/reset-password" ? (
             null
-        ) : <div className="font-geist mt-8 pt-6 border-t border-slate-100 text-center text-[14px] w-full text-slate-500 flex items-center justify-center">
+        ) : <div className="mt-8 pt-6 border-t border-slate-100 text-center text-[14px] w-full text-slate-500 flex items-center justify-center">
             <>
                 {current.title}
                 <Link href={current.redirect} className="flex items-center text-orange-600 font-semibold gap-1 ml-1 hover:text-orange-700 ">

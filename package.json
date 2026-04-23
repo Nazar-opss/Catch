@@ -22,6 +22,7 @@
     "cloudinary": "^2.9.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.20",
+    "embla-carousel-react": "^8.6.0",
     "kysely": "^0.28.15",
     "kysely-neon": "^2.0.2",
     "lucide-react": "^1.7.0",

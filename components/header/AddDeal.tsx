@@ -59,7 +59,7 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
     if (isDesktop) {
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent showCloseButton={false} className="font-geist mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
+                <DialogContent showCloseButton={false} className="mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
                     <DialogHeader className="flex justify-between">
                         <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DialogTitle>
                         <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
@@ -84,7 +84,7 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
     }
     return (
         <Drawer open={open} onOpenChange={onOpenChange}>
-            <DrawerContent className="font-geist">
+            <DrawerContent>
                 <DrawerHeader>
                     <DrawerTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DrawerTitle>
                 </DrawerHeader>

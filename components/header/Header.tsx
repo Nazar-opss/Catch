@@ -7,7 +7,7 @@ import { useSession } from "@/lib/auth-clients";
 import LoggedUser from "./LoggedUser";
 
 export function Header() {
-    const { data: session } = useSession()
+    const { data: session, isPending } = useSession()
 
 
     return (
@@ -17,8 +17,17 @@ export function Header() {
                     <Logo />
                 </Link>
                 <SearchBar />
-                {session ? <LoggedUser /> : <AuthButtons />}
-
+                {isPending ? (
+                    <div className="flex items-center gap-4 md:gap-6">
+                        <div className="h-11 w-44 rounded-full bg-orange-200 animate-pulse" />
+                        <div className="h-11 w-19 rounded-full bg-gray-200 animate-pulse" />
+                    </div>
+                ) : session ? (
+                    <LoggedUser session={session} />
+                ) : (
+                    <AuthButtons />
+                )
+                }
             </div>
         </header>
     )

@@ -94,10 +94,6 @@ export default function DealCard({ deal }: DealCardProps) {
                                 width={320}
                                 height={230}
                                 loading="eager"
-                                crop={{
-                                    type: 'fit',
-                                    source: true,
-                                }}
                                 src={deal.imageUrls[0]}
                                 alt={deal.title}
                                 className="object-contain w-full h-full"
@@ -134,7 +130,7 @@ export default function DealCard({ deal }: DealCardProps) {
                         <span className="text-[14px] text-slate-500 line-through font-medium">{deal.oldPrice ? `${deal.oldPrice} грн` : ""}</span>
                         {dealPercent ? <span className="text-[12px] bg-red-50 text-red-600 px-2.5 py-0.5 rounded font-bold tracking-wide border border-red-200">{dealPercent > 0 ? `-${dealPercent}%` : `+${dealPercent.toString().split('-')[1]}%`}</span> : null}
                     </div>
-                    <Link href={''} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
+                    <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
                     <div className="flex flex-col gap-2.5 mt-auto pt-3">
                         <div className="text-xs flex items-center gap-2 text-slate-500 font-medium">
                             <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={20} height={20} />
