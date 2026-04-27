@@ -2,7 +2,7 @@ import DealCard from "./DealCard";
 import { db } from "@/server/db";
 
 export default async function DealsList() {
-    const deals = await db.selectFrom('deal').innerJoin('user', 'user.id', 'deal.authorId').selectAll("deal").select((eb) => [
+    const deals = await db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").select((eb) => [
         "user.name as authorName",
         "user.image as authorImage",
         eb.selectFrom("comment")
