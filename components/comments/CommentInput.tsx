@@ -8,13 +8,51 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import EmojiPicker from 'emoji-picker-react';
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { commentFormSchema, CommentFormValues } from "@/lib/schemas/dealSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import z from "zod";
+import { createCommentAction } from "@/lib/actions/comment";
 
-export default function CommentInput() {
+export default function CommentInput({ dealId }: { dealId: string }) {
     const { data: session, isPending } = useSession()
 
     const [input, setInput] = useState("");
-    const [files, setFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+
+    const form = useForm<CommentFormValues>({
+        resolver: zodResolver(commentFormSchema),
+        defaultValues: {
+            content: "",
+            images: [],
+        }
+    })
+
+    async function onSubmit(values: CommentFormValues) {
+        const formData = new FormData();
+        values.images.forEach((image) => {
+            formData.append("files", image);
+        });
+
+        const uploadResult = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await uploadResult.json();
+
+        const imageUrls: string[] = data.urls.map((image: any) => image.secure_url);
+        const payload = { ...values, images: imageUrls, dealId: dealId };
+        console.log(payload)
+        const result = await createCommentAction(payload)
+        console.log(result)
+        if (result?.success) {
+            toast.success(result.success)
+            form.reset()
+        } else {
+            toast.error(result?.error)
+        }
+    }
 
     const onInputChange = useCallback(
         (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -78,14 +116,15 @@ export default function CommentInput() {
         });
     }, []);
 
-    const onSubmit = useCallback(
-        (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            setInput("");
-            setFiles([]);
-        },
-        [],
-    );
+    // const onSubmit = useCallback(
+    //     (event: React.FormEvent<HTMLFormElement>) => {
+    //         event.preventDefault();
+    //         setInput("");
+    //         setFiles([]);
+    //     },
+    //     [],
+    // );
+
 
     return (
         <div className="flex gap-4 sm:gap-5 mb-10">
@@ -101,115 +140,137 @@ export default function CommentInput() {
                 </div>
             ) : null}
             <div className="w-full">
-                <FileUpload
-                    value={files}
-                    onValueChange={setFiles}
-                    onUpload={onUpload}
-                    onFileReject={onFileReject}
-                    maxFiles={5}
-                    className="relative w-full items-center"
-                    multiple
-                    disabled={isUploading}
-                >
-                    <FileUploadDropzone
-                        tabIndex={-1}
-                        // Prevents the dropzone from triggering on click
-                        onClick={(event) => event.preventDefault()}
-                        className="absolute top-0 left-0 z-0 flex size-full items-center justify-center rounded-xl border-none bg-background/50 p-0 opacity-0 backdrop-blur transition-opacity duration-200 ease-out data-dragging:z-10 data-dragging:opacity-100"
-                    >
-                        <div className="flex flex-col items-center gap-1 text-center">
-                            <div className="flex items-center justify-center rounded-full border p-2.5">
-                                <Upload className="size-6 text-muted-foreground" />
-                            </div>
-                            <p className="font-medium text-sm">Drag & drop files here</p>
-                            <p className="text-muted-foreground text-xs">
-                                Upload max 5 files each up to 5MB
-                            </p>
-                        </div>
-                    </FileUploadDropzone>
-                    <form
-                        onSubmit={onSubmit}
-                        className="relative flex w-full flex-col rounded-xl border border-slate-200 bg-white outline-none focus-within:ring-2 focus-within:ring-orange-600/20 focus-within:border-orange-500 transition-all overflow-hidden shadow-sm"
-                    >
-                        <FileUploadList
-                            orientation="horizontal"
-                            className="overflow-x-auto px-0 py-1"
-                        >
-                            {files.map((file, index) => (
-                                <FileUploadItem key={index} value={file} className="max-w-52 p-1.5">
-                                    <FileUploadItemPreview className="size-8 [&>svg]:size-5">
-                                        <FileUploadItemProgress variant="fill" />
-                                    </FileUploadItemPreview>
-                                    <FileUploadItemMetadata size="sm" />
-                                    <FileUploadItemDelete asChild>
-                                        <Button
-                                            variant="secondary"
-                                            size="icon"
-                                            className="absolute -top-1 -right-1 size-4 shrink-0 cursor-pointer rounded-full"
-                                        >
-                                            <X className="size-2.5" />
-                                        </Button>
-                                    </FileUploadItemDelete>
-                                </FileUploadItem>
-                            ))}
-                        </FileUploadList>
-                        <Textarea
-                            value={input}
-                            onChange={onInputChange}
-                            placeholder="Написати коментар..."
-                            className="rounded-none text-slate-900 placeholder:text-slate-400 px-4! py-3.5! sm:text-[15px] sm:leading-6 min-h-[90px] resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent "
+                <Controller
+                    name="images"
+                    control={form.control}
+                    render={({ field }) => (
+                        <FileUpload
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            onUpload={onUpload}
+                            onFileReject={onFileReject}
+                            maxFiles={5}
+                            className="relative w-full items-center"
+                            multiple
                             disabled={isUploading}
-                        />
-                        <div className="flex items-center justify-between bg-slate-50 border-t border-slate-100 px-3 py-2.5">
-                            <div className="flex items-center">
-                                <FileUploadTrigger asChild>
-                                    <Button
-                                        type="button"
-                                        size="icon"
-                                        variant="ghost"
-                                        className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
-                                    >
-                                        <Image className="size-5 " />
-                                        <span className="sr-only">Додати зображення</span>
-                                    </Button>
-                                </FileUploadTrigger>
-                                <Popover open={emojiOpen} onOpenChange={setEmojiOpen} >
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            type="button"
-                                            size="icon"
-                                            variant="ghost"
-                                            className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
-                                        >
-                                            <Smile className="size-5 " />
-                                            <span className="sr-only">Додати емодзі</span>
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0 border-0 shadow-sm" align="start" side='bottom'>
-                                        <EmojiPicker
-                                            open={emojiOpen}
-                                            skinTonesDisabled={true}
-                                            searchPlaceHolder="Пошук"
-                                            previewConfig={{
-                                                showPreview: false,
-                                            }}
-                                            autoFocusSearch={false}
-                                            onEmojiClick={(emojiObject) => { console.log(emojiObject) }} />
-                                    </PopoverContent>
-                                </Popover>
-
-                                <span className="sr-only">Додати зображення</span>
-                            </div>
-                            <Button
-                                className="rounded-lg font-medium px-5 py-1.5 bg-orange-600 text-white cursor-pointer hover:bg-orange-700 transition-all text-sm shadow-sm h-8"
-                                disabled={!input.trim() || isUploading}
+                        >
+                            <FileUploadDropzone
+                                tabIndex={-1}
+                                // Prevents the dropzone from triggering on click
+                                onClick={(event) => event.preventDefault()}
+                                className="absolute top-0 left-0 z-0 flex size-full items-center justify-center rounded-xl border-none bg-background/50 p-0 opacity-0 backdrop-blur transition-opacity duration-200 ease-out data-dragging:z-10 data-dragging:opacity-100"
                             >
-                                Відправити
-                                <span className="sr-only">Відправити</span>
-                            </Button>
-                        </div>
-                    </form>
-                </FileUpload>
+                                <div className="flex flex-col items-center gap-1 text-center">
+                                    <div className="flex items-center justify-center rounded-full border p-2.5">
+                                        <Upload className="size-6 text-muted-foreground" />
+                                    </div>
+                                    <p className="font-medium text-sm">Drag & drop files here</p>
+                                    <p className="text-muted-foreground text-xs">
+                                        Upload max 5 files each up to 5MB
+                                    </p>
+                                </div>
+                            </FileUploadDropzone>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="relative flex w-full flex-col rounded-xl border border-slate-200 bg-white outline-none focus-within:ring-2 focus-within:ring-orange-600/20 focus-within:border-orange-500 transition-all overflow-hidden shadow-sm"
+                            >
+                                <FileUploadList
+                                    orientation="horizontal"
+                                    className="overflow-x-auto px-0 py-1 pl-1"
+                                >
+                                    {field.value.map((file, index) => (
+                                        <FileUploadItem key={index} value={file} className="max-w-52 p-1.5">
+                                            <FileUploadItemPreview className="size-8 [&>svg]:size-5">
+                                                <FileUploadItemProgress variant="fill" />
+                                            </FileUploadItemPreview>
+                                            <FileUploadItemMetadata size="sm" />
+                                            <FileUploadItemDelete asChild>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="icon"
+                                                    className="absolute -top-1 -right-1 size-4 shrink-0 cursor-pointer rounded-full"
+                                                >
+                                                    <X className="size-2.5" />
+                                                </Button>
+                                            </FileUploadItemDelete>
+                                        </FileUploadItem>
+                                    ))}
+                                </FileUploadList>
+                                <Controller
+                                    name="content"
+                                    control={form.control}
+                                    render={({ field }) => (
+                                        <Textarea
+                                            {...field}
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                onInputChange(e);
+                                            }}
+                                            placeholder="Написати коментар..."
+                                            className="rounded-none text-slate-900 placeholder:text-slate-400 px-4! py-3.5! sm:text-[15px] sm:leading-6 min-h-[90px] resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent "
+                                            disabled={isUploading}
+                                        />
+                                    )}
+                                />
+                                <div className="flex items-center justify-between bg-slate-50 border-t border-slate-100 px-3 py-2.5">
+                                    <div className="flex items-center">
+                                        <FileUploadTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                size="icon"
+                                                variant="ghost"
+                                                // TODO: add upload images feature, update bd, add images to comment
+                                                disabled
+                                                className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
+                                            >
+                                                <Image className="size-5 " />
+                                                <span className="sr-only">Додати зображення</span>
+                                            </Button>
+                                        </FileUploadTrigger>
+                                        <Popover open={emojiOpen} onOpenChange={setEmojiOpen} >
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
+                                                >
+                                                    <Smile className="size-5 " />
+                                                    <span className="sr-only">Додати емодзі</span>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0 border-0 shadow-sm" align="start" side='bottom'>
+                                                <EmojiPicker
+                                                    open={emojiOpen}
+                                                    skinTonesDisabled={true}
+                                                    searchPlaceHolder="Пошук"
+                                                    previewConfig={{
+                                                        showPreview: false,
+                                                    }}
+                                                    autoFocusSearch={false}
+                                                    onEmojiClick={(emojiObject) => {
+                                                        form.setValue('content', `${form.getValues().content}${emojiObject.emoji}`)
+                                                        console.log(emojiObject)
+                                                    }} />
+                                            </PopoverContent>
+                                        </Popover>
+
+                                        <span className="sr-only">Додати зображення</span>
+                                    </div>
+                                    <Button
+                                        className="rounded-lg font-medium px-5 py-1.5 bg-orange-600 text-white cursor-pointer hover:bg-orange-700 transition-all text-sm shadow-sm h-8"
+                                        disabled={!form.getValues().content.trim() || isUploading}
+                                        onClick={() => onSubmit(form.getValues())}
+                                    >
+                                        Відправити
+                                        <span className="sr-only">Відправити</span>
+                                    </Button>
+                                </div>
+                            </form>
+                        </FileUpload>
+                    )}
+                />
             </div>
         </div>
     )

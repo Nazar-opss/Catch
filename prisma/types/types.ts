@@ -21,10 +21,17 @@ export type Account = {
 };
 export type Comment = {
     id: string;
-    text: string;
+    content: string;
     createdAt: Generated<Timestamp>;
-    userId: string;
+    authorId: string;
     dealId: string;
+    parentId: string | null;
+};
+export type CommentVote = {
+    id: string;
+    value: number;
+    commentId: string;
+    userId: string;
 };
 export type Deal = {
     id: string;
@@ -76,6 +83,7 @@ export type Vote = {
 export type DB = {
     account: Account;
     comment: Comment;
+    comment_vote: CommentVote;
     deal: Deal;
     session: Session;
     user: User;

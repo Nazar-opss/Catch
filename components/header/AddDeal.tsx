@@ -9,7 +9,6 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import { useActionState } from "react";
 import { createDealAction } from "@/lib/actions/deal";
 
 export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {

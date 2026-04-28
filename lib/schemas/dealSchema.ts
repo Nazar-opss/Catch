@@ -26,7 +26,22 @@ export const formSchema = z.object({
     description: z
         .string()
         // if description is empty, use Ai to write smth
-        .max(100, "Опис повинен бути не більше 100 символів"),
+        .max(500, "Опис повинен бути не більше 500 символів"),
+})
+
+export const commentFormSchema = z.object({
+    content: z
+        .string()
+        .min(1, "Введіть коментар"),
+    images: z
+        .array(
+            z.custom<File>((file) => file instanceof File, "Оберіть файл")
+                .refine((file) => file?.size <= MAX_FILE_SIZE, "Максимальний розмір файлу 5МБ")
+                .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file?.type), "Підтримуються лише формати .jpeg, .jpg, .png, .webp")
+        )
+        .max(5, "Додайте не більше 5 зображень"),
+    dealId: z.string(),
+    parentId: z.string().optional().nullable(),
 })
 
 export const dealActionSchema = z.object({
@@ -38,4 +53,5 @@ export const dealActionSchema = z.object({
         ),
 });
 
+export type CommentFormValues = z.infer<typeof commentFormSchema>
 export type DealFormValues = z.infer<typeof formSchema>

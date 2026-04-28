@@ -34,11 +34,16 @@ export default async function DealPage({ params }: DealPageProps) {
 
     const comments = await db
         .selectFrom("comment")
-        .innerJoin("user", "user.id", "comment.userId")
+        .innerJoin("user", "user.id", "comment.authorId")
         .selectAll("comment")
-        .select([
+        .select((eb) => [
             "user.name as authorName",
-            "user.image as authorImage"
+            "user.image as authorImage",
+
+            eb.selectFrom("comment_vote")
+                .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
+                .whereRef("comment_vote.commentId", "=", "comment.id")
+                .as("rating")
         ])
         .where("comment.dealId", "=", deal.id)
         .orderBy("comment.createdAt", "desc")
@@ -89,7 +94,7 @@ export default async function DealPage({ params }: DealPageProps) {
                                 ({deal.commentCount})
                             </span>
                         </h2>
-                        <CommentInput />
+                        <CommentInput dealId={deal.id} />
                         <div className="space-y-8">
                             {comments.map((comment) => {
                                 return (

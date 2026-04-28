@@ -11,6 +11,7 @@ import { ChevronDown, ChevronUp, Clock, ExternalLink, MessageCircleMore, MinusIc
 import { Button } from "../ui/button"
 import { ButtonGroup } from "../ui/button-group"
 import NoImage from "../ui/noImage"
+import RatingButton from "../ui/rating-button"
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
 
@@ -64,7 +65,7 @@ function getShopName(url: string) {
     const hostname = new URL(url).hostname;
     const parts = hostname.split('.');
 
-    const subdomains = ['www', 'bt', 'shop', 'm', 'store'];
+    const subdomains = ['www', 'bt', 'shop', 'm', 'store', 'hard'];
     const filtered = parts.filter(p => !subdomains.includes(p));
 
     const name = filtered[0];
@@ -104,7 +105,7 @@ export default function DealCard({ deal }: DealCardProps) {
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-[36px]">
                         <div className="items-center bg-slate-200 px-1.5 py-1 border border-slate-100 rounded-full">
-                            <ButtonGroup
+                            {/* <ButtonGroup
                                 orientation="horizontal"
                                 // TODO: Redesign this buttons
 
@@ -119,7 +120,8 @@ export default function DealCard({ deal }: DealCardProps) {
                                 <Button variant="ghost" className="p-1.5 cursor-pointer hover:bg-slate-200/50">
                                     <ChevronDown width={14} height={14} strokeWidth={3} className=" text-slate-400" />
                                 </Button>
-                            </ButtonGroup>
+                            </ButtonGroup> */}
+                            <RatingButton rating={Number(deal.temperature)} comment={false} />
                         </div>
                     </div>
                 </div>

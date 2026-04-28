@@ -23,10 +23,11 @@ model User {
     sessions Session[]
     accounts Account[]
 
-    deals    Deal[]
-    votes    Vote[]
-    comments Comment[]
-    karma    Int       @default(0)
+    deals        Deal[]
+    votes        Vote[]
+    comments     Comment[]
+    karma        Int           @default(0)
+    commentVotes CommentVote[]
 
     @@map("user")
 }
@@ -111,14 +112,33 @@ model Vote {
 
 model Comment {
     id        String   @id @default(uuid())
-    text      String
+    content   String
     createdAt DateTime @default(now())
 
-    userId String
-    dealId String
+    authorId String
+    author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    dealId   String
+    deal     Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    deal Deal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+    parentId String?
+    parent   Comment?  @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+    replies  Comment[] @relation("CommentToComment")
+
+    votes CommentVote[]
 
     @@map("comment")
+}
+
+model CommentVote {
+    id    String @id @default(uuid())
+    value Int
+
+    commentId String
+    comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([commentId, userId])
+    @@map("comment_vote")
 }

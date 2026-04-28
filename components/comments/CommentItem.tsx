@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Comment } from "@/prisma/types/types";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import RatingButton from "../ui/rating-button";
 
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
@@ -29,6 +30,7 @@ dayjs.updateLocale('en', {
 type CommentWithAuthor = Selectable<Comment> & {
     authorName: string;
     authorImage: string | null;
+    rating: number | null;
 };
 
 interface CommentItemProps {
@@ -51,7 +53,11 @@ export default function CommentItem({ comment }: CommentItemProps) {
                     <span className="text-slate-300 text-[13px]">•</span>
                     <span className="text-slate-500 text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
                 </div>
-                <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.text}</p>
+                <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
+                <div className="flex items-center gap-2">
+                    <RatingButton rating={Number(comment.rating)} comment={false} />
+                    <button className="text-slate-400 hover:text-slate-900 transition-colors font-medium text-[13px] cursor-pointer">Відповісти</button>
+                </div>
             </div>
         </div>
     )
