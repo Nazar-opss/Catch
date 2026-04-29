@@ -3,22 +3,25 @@ import { ButtonGroup } from "./button-group";
 import { Button } from "./button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-export default function RatingButton({ rating, comment }: { rating: number, comment: boolean }) {
+export default function RatingButton({ rating, reply, fontSize, iconSize, deal }: { rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean }) {
+
+    const buttonSize = reply ? "p-1" : "p-1.5";
+    const buttonStyle = `cursor-pointer hover:bg-slate-200/50 text-slate-400 hover:text-slate-700 transition-colors bg-transparent  rounded-full! ${deal ? "w-10 h-10" : "w-6 h-6"}`
     return (
         <ButtonGroup
             orientation="horizontal"
             // TODO: Redesign this buttons
 
-            className="justify-center items-center "
+            className={` flex justify-center items-center bg-slate-50 gap-1 border border-slate-200 rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
         >
-            <Button variant="ghost" className="p-1.5 cursor-pointer hover:bg-slate-200/50">
-                <ChevronUp width={14} height={14} strokeWidth={3} className="text-slate-400 " />
+            <Button className={`${buttonSize} ${buttonStyle}`}>
+                <ChevronUp width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
-            <span className="text-[14px] font-bold text-slate-900 px-1">
-                {rating}{comment ? "°" : ""}
+            <span className={`${fontSize ? fontSize : "text-sm"} font-bold text-slate-900 ${deal ? "px-3" : "px-1"}`}>
+                {rating}{reply ? "" : "°"}
             </span>
-            <Button variant="ghost" className="p-1.5 cursor-pointer hover:bg-slate-200/50">
-                <ChevronDown width={14} height={14} strokeWidth={3} className=" text-slate-400" />
+            <Button className={`${buttonSize} ${buttonStyle}`}>
+                <ChevronDown width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
         </ButtonGroup>
     )

@@ -12,6 +12,7 @@ import { Button } from "../ui/button"
 import { ButtonGroup } from "../ui/button-group"
 import NoImage from "../ui/noImage"
 import RatingButton from "../ui/rating-button"
+import { dealPercentCalculate } from "@/lib/utils"
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
 
@@ -48,7 +49,7 @@ const SHOP_ICONS: Record<string, string> = {
     "allo": "/icons/allo.svg",
     "comfy": "/icons/comfy.png",
     "foxtrot": "/icons/foxtrot.jpg",
-    "epicentr": "/icons/epicentr.png",
+    "epicentrk": "/icons/epicentr.png",
     "brain": "/icons/brain.jpg",
     "elmir": "/icons/elmir.jpg",
     "stls": "/icons/stylus.jpg",
@@ -76,14 +77,13 @@ function getShopIcon(url: string) {
     const name = getShopName(url).toLowerCase();
     const fileName = SHOP_ICONS[name] || `${name}.svg`
     return fileName
-
 }
 
 export default function DealCard({ deal }: DealCardProps) {
     const authorImage = deal.authorImage || "/placeholder.jpg";
     // TODO: Add placeholder for image of avatar
 
-    const dealPercent = deal.oldPrice ? Math.round(((deal.oldPrice - deal.newPrice) / deal.oldPrice) * 100) : 0
+    const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
 
     return (
         <div>
@@ -105,23 +105,7 @@ export default function DealCard({ deal }: DealCardProps) {
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-[36px]">
                         <div className="items-center bg-slate-200 px-1.5 py-1 border border-slate-100 rounded-full">
-                            {/* <ButtonGroup
-                                orientation="horizontal"
-                                // TODO: Redesign this buttons
-
-                                className="justify-center items-center "
-                            >
-                                <Button variant="ghost" className="p-1.5 cursor-pointer hover:bg-slate-200/50">
-                                    <ChevronUp width={14} height={14} strokeWidth={3} className="text-slate-400 " />
-                                </Button>
-                                <span className="text-[14px] font-bold text-slate-900 px-1">
-                                    {deal.temperature}°
-                                </span>
-                                <Button variant="ghost" className="p-1.5 cursor-pointer hover:bg-slate-200/50">
-                                    <ChevronDown width={14} height={14} strokeWidth={3} className=" text-slate-400" />
-                                </Button>
-                            </ButtonGroup> */}
-                            <RatingButton rating={Number(deal.temperature)} comment={false} />
+                            <RatingButton rating={Number(deal.temperature)} reply={false} />
                         </div>
                     </div>
                 </div>

@@ -41,10 +41,10 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
                     <CarouselNext className="w-10 h-10 z-10 right-0" />
                 </Carousel>
             </div>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center flex-wrap gap-2">
                 {
                     images.map((image, index) => (
-                        <Button className={`rounded-xl overflow-hidden bg-white p-0 hover:bg-white aspect-square w-20 h-20 border-2 transition-all shadow-sm duration-200 hover:scale-105 cursor-pointer ${current === index ? "border-orange-600" : "border-transparent hover:border-orange-600"}`}
+                        <Button className={`rounded-xl overflow-hidden bg-white p-0  hover:bg-white aspect-square w-20 h-20 border-2 transition-all shadow-sm duration-200 hover:scale-105 cursor-pointer ${current === index ? "border-orange-600" : "border-transparent hover:border-orange-600"}`}
                             key={index} variant="secondary"
                             onClick={() => api?.scrollTo(index)}>
                             <Image

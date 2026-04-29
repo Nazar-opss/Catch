@@ -11,12 +11,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { commentFormSchema, CommentFormValues } from "@/lib/schemas/dealSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import z from "zod";
 import { createCommentAction } from "@/lib/actions/comment";
 
-export default function CommentInput({ dealId }: { dealId: string }) {
+export default function CommentInput({ dealId, reply, parentName, parentId }: { dealId: string, reply?: boolean, parentName?: string, parentId?: string }) {
     const { data: session, isPending } = useSession()
-
+    console.log(dealId)
     const [input, setInput] = useState("");
     const [isUploading, setIsUploading] = useState(false);
 
@@ -42,7 +41,7 @@ export default function CommentInput({ dealId }: { dealId: string }) {
         const data = await uploadResult.json();
 
         const imageUrls: string[] = data.urls.map((image: any) => image.secure_url);
-        const payload = { ...values, images: imageUrls, dealId: dealId };
+        const payload = { ...values, images: imageUrls, dealId: dealId, parentId: parentId };
         console.log(payload)
         const result = await createCommentAction(payload)
         console.log(result)
@@ -127,15 +126,15 @@ export default function CommentInput({ dealId }: { dealId: string }) {
 
 
     return (
-        <div className="flex gap-4 sm:gap-5 mb-10">
+        <div className={`flex gap-4 ${reply ? "sm:gap-3" : "sm:gap-5 mb-10"}`}>
             {isPending ? (
                 <div className="flex gap-4 md:gap-6">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 animate-pulse" />
+                    <div className={`${reply ? "w-8 h-8" : "w-12 h-12"} rounded-full bg-gray-200 animate-pulse`} />
                 </div>
             ) : session?.user?.image ? (
-                <img className="w-12 h-12 rounded-full shrink-0" src={session.user.image} alt={session.user.name ?? ""} />
+                <img className={`${reply ? "w-8 h-8" : "w-12 h-12"} rounded-full shrink-0`} src={session.user.image} alt={session.user.name ?? ""} />
             ) : session?.user ? (
-                <div className="shrink-0 rounded-full w-12 h-12 bg-orange-600 text-white flex items-center justify-center text-lg font-semibold">
+                <div className={`shrink-0 rounded-full ${reply ? "w-8 h-8" : "w-12 h-12"} bg-orange-600 text-white flex items-center justify-center text-lg font-semibold`}>
                     {session.user.name?.charAt(0).toUpperCase() ?? "?"}
                 </div>
             ) : null}
@@ -203,12 +202,13 @@ export default function CommentInput({ dealId }: { dealId: string }) {
                                         <Textarea
                                             {...field}
                                             value={field.value}
+                                            // value={reply ? `@${parentName} ` + field.value : field.value} - TODO: add mentions feature
                                             onChange={(e) => {
                                                 field.onChange(e);
                                                 onInputChange(e);
                                             }}
-                                            placeholder="Написати коментар..."
-                                            className="rounded-none text-slate-900 placeholder:text-slate-400 px-4! py-3.5! sm:text-[15px] sm:leading-6 min-h-[90px] resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent "
+                                            placeholder={reply ? `Відповісти @${parentName}` : "Написати коментар..."}
+                                            className={`rounded-none text-slate-900 placeholder:text-slate-400 ${reply ? "px-3! py-2.5!" : "px-4! py-3.5!"}  sm:text-[15px] sm:leading-6 ${reply ? "min-h-[70px]" : "min-h-[90px]"} resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent `}
                                             disabled={isUploading}
                                         />
                                     )}
@@ -259,6 +259,7 @@ export default function CommentInput({ dealId }: { dealId: string }) {
                                         <span className="sr-only">Додати зображення</span>
                                     </div>
                                     <Button
+                                        type="submit"
                                         className="rounded-lg font-medium px-5 py-1.5 bg-orange-600 text-white cursor-pointer hover:bg-orange-700 transition-all text-sm shadow-sm h-8"
                                         disabled={!form.getValues().content.trim() || isUploading}
                                         onClick={() => onSubmit(form.getValues())}

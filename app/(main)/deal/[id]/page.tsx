@@ -7,6 +7,9 @@ import { db } from "@/server/db";
 import { Info } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { buildCommentTree } from "@/lib/buildCommentTree";
+import RatingButton from "@/components/ui/rating-button";
+import { dealPercentCalculate } from "@/lib/utils";
 
 interface DealPageProps {
     params: Promise<{ id: string }>;
@@ -50,6 +53,7 @@ export default async function DealPage({ params }: DealPageProps) {
         .execute();
 
 
+    const threadComments = buildCommentTree(comments)
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -96,18 +100,40 @@ export default async function DealPage({ params }: DealPageProps) {
                         </h2>
                         <CommentInput dealId={deal.id} />
                         <div className="space-y-8">
-                            {comments.map((comment) => {
+                            {threadComments.map((comment) => {
                                 return (
                                     <CommentItem key={comment.id} comment={comment} />
                                 )
                             })}
+                            {threadComments.length === 0 && (
+                                <p className="text-slate-500 text-sm">Коментарів поки що немає.</p>
+                            )}
                         </div>
                     </div>
                 </div>
 
 
                 <div className="lg:col-span-4 sticky top-24">
-
+                    <div className="sticky top-[92px] flex flex-col gap-4">
+                        <div className="bg-white rounded-[24px] border border-slate-200 p-6 sm:p-7 shadow-sm">
+                            <div className="flex items-center justify-between mb-6">
+                                <span className="uppercase text-sm font-bold text-slate-400">
+                                    рейтинг знижки
+                                </span>
+                                <RatingButton rating={Number(deal.temperature)} fontSize="text-2xl" iconSize="20" deal />
+                            </div>
+                            <div className="w-full h-px bg-slate-100 mb-6"></div>
+                            <div className="mb-6 flex flex-col gap-2">
+                                <span className="font-extrabold text-[40px] leading-none text-slate-900 tracking-tight">{deal.newPrice} <span className="font-bold text-3xl">грн</span></span>
+                                {deal.oldPrice && (
+                                    <div className="flex items-center gap-3 mt-2">
+                                        <span className="text-lg text-slate-400 line-through font-medium decoration-slate-300">{deal.oldPrice} грн</span>
+                                        <span className="text-[14px] bg-red-50 text-red-600 px-2.5 py-0.5 rounded font-extrabold tracking-wide border border-red-200">-{dealPercentCalculate(deal.oldPrice, deal.newPrice)}%</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
