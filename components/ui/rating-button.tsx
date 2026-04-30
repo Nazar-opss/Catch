@@ -6,7 +6,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 export default function RatingButton({ rating, reply, fontSize, iconSize, deal }: { rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean }) {
 
     const buttonSize = reply ? "p-1" : "p-1.5";
-    const buttonStyle = `cursor-pointer hover:bg-slate-200/50 text-slate-400 hover:text-slate-700 transition-colors bg-transparent  rounded-full! ${deal ? "w-10 h-10" : "w-6 h-6"}`
+    const buttonStyle = `cursor-pointer hover:bg-slate-200/50 text-slate-400 transition-colors bg-transparent  rounded-full! ${deal ? "w-10 h-10" : "w-6 h-6"}`
     return (
         <ButtonGroup
             orientation="horizontal"
@@ -14,13 +14,13 @@ export default function RatingButton({ rating, reply, fontSize, iconSize, deal }
 
             className={` flex justify-center items-center bg-slate-50 gap-1 border border-slate-200 rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
         >
-            <Button className={`${buttonSize} ${buttonStyle}`}>
+            <Button className={`${buttonSize} ${buttonStyle} hover:text-green-600 `}>
                 <ChevronUp width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
             <span className={`${fontSize ? fontSize : "text-sm"} font-bold text-slate-900 ${deal ? "px-3" : "px-1"}`}>
                 {rating}{reply ? "" : "°"}
             </span>
-            <Button className={`${buttonSize} ${buttonStyle}`}>
+            <Button className={`${buttonSize} ${buttonStyle} hover:text-red-600 `}>
                 <ChevronDown width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
         </ButtonGroup>

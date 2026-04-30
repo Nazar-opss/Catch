@@ -4,13 +4,37 @@ import { DealsCarousel } from "@/components/deals/DealsCarousel";
 import NoImage from "@/components/ui/noImage";
 import { db } from "@/server/db";
 
-import { Info } from "lucide-react";
+import { Clock, ExternalLink, Info } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildCommentTree } from "@/lib/buildCommentTree";
 import RatingButton from "@/components/ui/rating-button";
-import { dealPercentCalculate } from "@/lib/utils";
+import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
+dayjs.extend(relativeTime)
+dayjs.extend(updateLocale)
 
+dayjs.updateLocale('en', {
+    relativeTime: {
+        future: "за %s",
+        past: "%s",
+        s: 'декілька сек тому',
+        m: "1 хв тому",
+        mm: "%d хв тому",
+        h: "1 год тому",
+        hh: "%d год тому",
+        d: "1 дн тому",
+        dd: "%d дн тому",
+        M: "1 міс тому",
+        MM: "%d міс тому",
+        y: "1 р тому",
+        yy: "%d р тому"
+    }
+})
 interface DealPageProps {
     params: Promise<{ id: string }>;
 }
@@ -22,13 +46,16 @@ export default async function DealPage({ params }: DealPageProps) {
 
     const deal = await db
         .selectFrom("deal")
-        .selectAll().select((eb) => [
+        .innerJoin("user", "user.id", "deal.authorId")
+        .selectAll("deal").select((eb) => [
+            "user.name as authorName",
+            "user.image as authorImage",
             eb.selectFrom("comment")
                 .whereRef("comment.dealId", "=", "deal.id")
                 .select(eb.fn.count<number>("id").as("count"))
                 .as("commentCount")
         ])
-        .where("id", "=", id)
+        .where("deal.id", "=", id)
         .executeTakeFirst();
 
     if (!deal) {
@@ -131,6 +158,43 @@ export default async function DealPage({ params }: DealPageProps) {
                                         <span className="text-[14px] bg-red-50 text-red-600 px-2.5 py-0.5 rounded font-extrabold tracking-wide border border-red-200">-{dealPercentCalculate(deal.oldPrice, deal.newPrice)}%</span>
                                     </div>
                                 )}
+                            </div>
+                            <Link href={deal.link} target="_blank" rel="noopener noreferrer">
+                                <Button className="relative w-full h-full group overflow-hidden bg-[#ea580c] text-white font-bold text-[17px] py-4 rounded-xl! shadow-[0_4px_14px_0_rgba(234,88,12,0.39)] hover:shadow-[0_6px_20px_rgba(234,88,12,0.23)] cursor-pointer group hover:-translate-y-0.5 transition-all  items-center justify-center gap-2 mb-4">
+                                    <div className="absolute inset-0 bg-linear-to-t from-orange-700/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                                    </div>
+                                    <span className="flex items-center z-10 gap-2 relative">
+
+                                        Перейти до магазину
+                                        <ExternalLink strokeWidth={3} className="w-5 h-5 transition-colors" />
+                                    </span>
+                                </Button>
+                            </Link>
+                            <div className="flex items-center justify-center gap-2 text-slate-500 text-[14px] font-medium">
+                                Продавець:
+                                <span className="text-slate-900 font-semibold gap-1.5 flex  ">
+                                    <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={20} height={20} />
+                                    {getShopName(deal.link)}
+                                </span>
+                            </div>
+                            <div className="w-full h-px bg-slate-100 my-6"></div>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <Link href={`/${deal.authorName}`} className="relative">
+                                        <Image src={deal.authorImage ?? "/logo.png"} alt={deal.authorName} className="rounded-full w-10 h-10" width={20} height={20} />
+                                    </Link>
+                                    <div className="flex flex-col ">
+                                        <span className="text-xs text-slate-500 mb-0.5 leading-tight">Опублікував</span>
+                                        <Link href={`/${deal.authorName}`}>
+                                            <span className="text-[14px] font-bold text-slate-900 hover:text-orange-600 transition-colors leading-tight">{deal.authorName}</span>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1 px-2.5 py-1 rounded-md border text-slate-400 border-slate-200 bg-slate-50 text-xs font-medium">
+                                    <Clock className="w-3.5 h-3.5" />
+                                    <span>{dayjs(deal.createdAt).fromNow()}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
