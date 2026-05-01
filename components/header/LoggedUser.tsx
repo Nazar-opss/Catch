@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState } from "react"
 import AddDeal from "./AddDeal"
 import { Session } from "@/lib/auth";
+import Link from "next/link"
 
 export default function LoggedUser({ session }: { session: Session }) {
     const [modal, setModal] = useState(false)
@@ -23,10 +24,12 @@ export default function LoggedUser({ session }: { session: Session }) {
                         <ChevronDown className="w-6 h-6 text-slate-400" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center" className="bg-white/50 backdrop-blur-md text-slate-900 mt-2.5 border-slate-200 ">
-                        <DropdownMenuItem className="cursor-pointer">
-                            <UserIcon />
-                            Профіль
-                        </DropdownMenuItem>
+                        <Link href={`/user/${session?.user?.name}`}>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <UserIcon />
+                                Профіль
+                            </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem className="cursor-pointer">
                             <BookmarkIcon />
                             Збережене

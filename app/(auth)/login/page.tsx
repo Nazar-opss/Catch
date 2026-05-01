@@ -57,7 +57,6 @@ export default function LoginPage() {
                     <Google width={20} height={20} />
                     Продовжити з Google
                 </Button>
-                {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button variant="outline" disabled className={buttonStyle}>
                     <Telegram width={20} height={20} />
                     Продовжити з Telegram
@@ -68,6 +67,7 @@ export default function LoginPage() {
             <FieldGroup className="gap-5">
                 <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" type="email" />
                 <AuthPasswordInput forgotPassword={true} form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" />
+                {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button variant="outline" onClick={() => handleEmailAndPasswordLogin()} disabled={pending} className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
                     {pending ? <span className="flex items-center gap-2">Вхід<Loader /></span> : "Увійти"}
                 </Button>

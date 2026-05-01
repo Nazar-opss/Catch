@@ -105,7 +105,7 @@ export default function DealCard({ deal }: DealCardProps) {
                             </div>
                         </div>
                     </div>
-                    <Link href={deal.link} className=" ">
+                    <Link href={deal.link} target="_blank" rel="noopener noreferrer" >
                         <Button variant="outline" className="rounded-lg mt-3 shadow-sm bg-white px-4 py-2.5 cursor-pointer border border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-[13px] h-[41.5px] w-full text-slate-800 gap-2 font-semibold transition-colors flex justify-center items-center">
                             До знижки
                             <ExternalLink className="w-3 h-3 text-slate-400" />

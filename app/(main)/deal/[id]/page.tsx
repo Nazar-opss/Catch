@@ -3,7 +3,6 @@ import CommentInput from "@/components/comments/CommentInput";
 import { DealsCarousel } from "@/components/deals/DealsCarousel";
 import NoImage from "@/components/ui/noImage";
 import { db } from "@/server/db";
-
 import { Clock, ExternalLink, Info } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
