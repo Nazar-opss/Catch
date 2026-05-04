@@ -146,7 +146,7 @@ export default async function DealPage({ params }: DealPageProps) {
                                 <span className="uppercase text-sm font-bold text-slate-400">
                                     рейтинг знижки
                                 </span>
-                                <RatingButton rating={Number(deal.temperature)} fontSize="text-2xl" iconSize="20" deal />
+                                <RatingButton dealId={deal.id} authorId={deal.authorId} rating={Number(deal.temperature)} fontSize="text-2xl" iconSize="20" deal />
                             </div>
                             <div className="w-full h-px bg-slate-100 mb-6"></div>
                             <div className="mb-6 flex flex-col gap-2">

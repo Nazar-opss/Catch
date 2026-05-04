@@ -71,7 +71,7 @@ export default function DealCard({ deal }: DealCardProps) {
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-[36px]">
                         <div className="items-center bg-slate-200 px-1.5 py-1 border border-slate-100 rounded-full">
-                            <RatingButton rating={Number(deal.temperature)} reply={false} />
+                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} authorId={deal.authorId} reply={false} />
                         </div>
                     </div>
                 </div>
