@@ -4,9 +4,7 @@ import Settings from "./settings";
 import { Selectable } from "kysely";
 import { User } from "@/prisma/types/types";
 
-export default function ProfileCard({ user }: { user: Selectable<User> }) {
-
-
+export default function ProfileCard({ user, isOwnProfile }: { user: Selectable<User>, isOwnProfile: boolean }) {
     return (
         <div className=" bg-white rounded-[24px] border border-slate-200 shadow-sm p-8 flex flex-col items-center gap-8">
             <div className="flex flex-col items-center text-center">
@@ -14,9 +12,12 @@ export default function ProfileCard({ user }: { user: Selectable<User> }) {
                     <div className="w-28 h-28 rounded-full p-1 bg-white border border-slate-200 group-hover:border-orange-200 transition-colors shadow-sm">
                         <img className="rounded-full w-full h-full object-cover" src={user.image ?? undefined} alt={user.name ?? undefined} />
                     </div>
-                    <Button className="absolute cursor-pointer bottom-0 right-0 p-2 bg-white border border-slate-200 shadow-sm hover:text-orange-600 hover:border-orange-200 transition-colors opacity-0 group-hover:opacity-100 rounded-full" variant={"outline"} size={"icon"}>
-                        <Camera />
-                    </Button>
+                    {isOwnProfile && (
+                        <Button className="absolute cursor-pointer bottom-0 right-0 p-2 bg-white border border-slate-200 shadow-sm hover:text-orange-600 hover:border-orange-200 transition-colors opacity-0 group-hover:opacity-100 rounded-full" variant={"outline"} size={"icon"}>
+                            <Camera />
+                        </Button>
+                    )}
+
                 </div>
                 <span className="text-lg font-bold">{user.name}</span>
                 <span className="text-sm text-slate-500 font-medium mt-1.5">Зареєстрований з: {new Date(user.createdAt).toLocaleDateString()}</span>
@@ -31,15 +32,21 @@ export default function ProfileCard({ user }: { user: Selectable<User> }) {
                     Карма спільноти
                 </div>
                 <span className="text-[42px] leading-none font-bold text-orange-600 mt-3 tracking-tighter">{user.karma > 0 ? `+${user.karma}` : user.karma}</span>
-                <p className="text-[13px] text-slate-500 leading-snug font-medium mt-2.5">Це загальний рейтинг усіх ваших знахідок</p>
+                <p className="text-[13px] text-slate-500 leading-snug font-medium mt-2.5">{isOwnProfile
+                    ? "Це загальний рейтинг усіх ваших знахідок."
+                    : "Це загальний рейтинг усіх знахідок користувача."}</p>
             </div>
-            <div className="w-full h-px bg-slate-100 "></div>
-            <div className="w-full">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1.5">
-                    Керування:
-                </h4>
-                <Settings />
-            </div>
+            {isOwnProfile && <div className="w-full h-px bg-slate-100 " />}
+            {isOwnProfile && (
+                <div className="w-full">
+                    <>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1.5">
+                            Керування:
+                        </h4>
+                        <Settings />
+                    </>
+                </div>
+            )}
         </div>
     )
 }

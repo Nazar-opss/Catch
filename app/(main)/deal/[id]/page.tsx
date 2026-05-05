@@ -46,9 +46,11 @@ export default async function DealPage({ params }: DealPageProps) {
     const deal = await db
         .selectFrom("deal")
         .innerJoin("user", "user.id", "deal.authorId")
+        .leftJoin("vote", (jb) => jb.onRef("vote.dealId", "=", "deal.id").onRef("vote.userId", "=", "user.id"))
         .selectAll("deal").select((eb) => [
             "user.name as authorName",
             "user.image as authorImage",
+            "vote.value as userVote",
             eb.selectFrom("comment")
                 .whereRef("comment.dealId", "=", "deal.id")
                 .select(eb.fn.count<number>("id").as("count"))
@@ -61,6 +63,7 @@ export default async function DealPage({ params }: DealPageProps) {
         notFound();
     }
 
+    console.log(deal)
     const comments = await db
         .selectFrom("comment")
         .innerJoin("user", "user.id", "comment.authorId")
@@ -138,7 +141,6 @@ export default async function DealPage({ params }: DealPageProps) {
                     </div>
                 </div>
 
-
                 <div className="lg:col-span-4 sticky top-24">
                     <div className="sticky top-[92px] flex flex-col gap-4">
                         <div className="bg-white rounded-[24px] border border-slate-200 p-6 sm:p-7 shadow-sm">
@@ -146,7 +148,7 @@ export default async function DealPage({ params }: DealPageProps) {
                                 <span className="uppercase text-sm font-bold text-slate-400">
                                     рейтинг знижки
                                 </span>
-                                <RatingButton dealId={deal.id} authorId={deal.authorId} rating={Number(deal.temperature)} fontSize="text-2xl" iconSize="20" deal />
+                                <RatingButton dealId={deal.id} authorId={deal.authorId} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
                             </div>
                             <div className="w-full h-px bg-slate-100 mb-6"></div>
                             <div className="mb-6 flex flex-col gap-2">
@@ -180,12 +182,12 @@ export default async function DealPage({ params }: DealPageProps) {
                             <div className="w-full h-px bg-slate-100 my-6"></div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <Link href={`/${deal.authorName}`} className="relative">
+                                    <Link href={`/user/${deal.authorName}`} className="relative">
                                         <Image src={deal.authorImage ?? "/logo.png"} alt={deal.authorName} className="rounded-full w-10 h-10" width={20} height={20} />
                                     </Link>
                                     <div className="flex flex-col ">
                                         <span className="text-xs text-slate-500 mb-0.5 leading-tight">Опублікував</span>
-                                        <Link href={`/${deal.authorName}`}>
+                                        <Link href={`/user/${deal.authorName}`}>
                                             <span className="text-[14px] font-bold text-slate-900 hover:text-orange-600 transition-colors leading-tight">{deal.authorName}</span>
                                         </Link>
                                     </div>

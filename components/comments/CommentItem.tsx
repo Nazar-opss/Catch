@@ -66,7 +66,7 @@ export default function CommentItem({ comment }: CommentItemProps) {
                     <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
-                            <RatingButton dealId={comment.dealId} authorId={comment.authorId} rating={Number(comment.rating)} reply />
+                            <RatingButton commentId={comment.id} dealId={comment.dealId} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />
                             <CollapsibleTrigger className="text-slate-400 hover:text-slate-900 transition-colors font-medium text-[13px] cursor-pointer">
                                 Відповісти
                             </CollapsibleTrigger>
