@@ -1,19 +1,17 @@
+"use client"
 import DealCard from "./DealCard";
-import { db } from "@/server/db";
+import { DealWithAuthor } from "@/app/(main)/page";
 
-export default async function DealsList() {
-    const deals = await db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").select((eb) => [
-        "user.name as authorName",
-        "user.image as authorImage",
-        eb.selectFrom("comment")
-            .select(eb.fn.count<number>("id").as("count"))
-            .whereRef("comment.dealId", "=", ("deal.id"))
-            .as("commentCount")
-    ]).execute()
+interface DealsListProps {
+    deals: DealWithAuthor[]
+    layout: "grid" | "list"
+}
+
+export default function DealsList({ deals, layout }: DealsListProps) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className={`${layout === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" : "flex flex-col gap-6"} `}>
             {deals.map((deal) => (
-                <DealCard key={deal.id} deal={deal} />
+                <DealCard key={deal.id} deal={deal} layout={layout} />
             ))}
         </div>
     )

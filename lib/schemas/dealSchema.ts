@@ -26,7 +26,7 @@ export const formSchema = z.object({
     description: z
         .string()
         // if description is empty, use Ai to write smth
-        .max(500, "Опис повинен бути не більше 500 символів"),
+        .max(2000, "Опис повинен бути не більше 2000 символів"),
 })
 
 export const commentFormSchema = z.object({

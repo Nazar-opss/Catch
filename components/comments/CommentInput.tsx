@@ -15,7 +15,7 @@ import { createCommentAction } from "@/lib/actions/comment";
 
 export default function CommentInput({ dealId, reply, parentName, parentId }: { dealId: string, reply?: boolean, parentName?: string, parentId?: string }) {
     const { data: session, isPending } = useSession()
-    console.log(dealId)
+
     const [input, setInput] = useState("");
     const [isUploading, setIsUploading] = useState(false);
 

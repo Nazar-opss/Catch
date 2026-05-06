@@ -31,12 +31,15 @@ export async function voteDealAction(dealId: string, authorId: string, voteValue
                     .execute()
 
                 karmaDiff = voteValue
+                // console.log(voteValue, "Не було голосу")
+
             } else if (existingVote.value === voteValue) {
                 await trx.deleteFrom("vote")
                     .where("id", "=", existingVote.id)
                     .execute()
 
                 karmaDiff = -voteValue
+                // console.log(voteValue, "Був голос")
             } else {
                 await trx.updateTable("vote")
                     .set({ value: voteValue })
@@ -44,6 +47,7 @@ export async function voteDealAction(dealId: string, authorId: string, voteValue
                     .execute()
 
                 karmaDiff = voteValue - existingVote.value
+                // console.log(voteValue, "Поміняв голос")
             }
 
             if (karmaDiff !== 0) {

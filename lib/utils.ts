@@ -32,11 +32,13 @@ const SHOP_ICONS: Record<string, string> = {
   "stls": "/icons/stylus.jpg",
   "ktc": "/icons/ktc.jpg",
   "kvshop": "/icons/kvshop.jpg",
-  "pxphone": "/icons/pxphone.jpg",
+  "pixophone": "/icons/pxphone.png",
   "sota": "/icons/sota.jpg",
   "touch": "/icons/touch.jpg",
   "yabko": "/icons/yabko.jpg",
   "zhuk": "/icons/zhuk.jpg",
+  "olx": "/icons/olx.png",
+  "prm": "/icons/prm.svg"
 }
 
 export function getShopIcon(url: string) {

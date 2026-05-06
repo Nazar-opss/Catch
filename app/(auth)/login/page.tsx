@@ -12,6 +12,7 @@ import AuthTypeDivider from "@/components/auth/AuthTypeDivider";
 import Google from "@/components/ui/google";
 import Telegram from "@/components/ui/telegram";
 import Loader from "@/components/ui/loader";
+import PageLoader from "@/components/ui/PageLoader";
 
 const buttonStyle = "flex items-center justify-center gap-3 px-4 py-2.5 text-slate-700 rounded-xl border border-slate-200 text-[15px] font-medium cursor-pointer transition-all hover:bg-slate-50 hover:border-slate-300 focus:ring-2 focus:ring-slate-200 focus:outline-none shadow-sm active:scale-95"
 
@@ -70,6 +71,7 @@ export default function LoginPage() {
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button variant="outline" onClick={() => handleEmailAndPasswordLogin()} disabled={pending} className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
                     {pending ? <span className="flex items-center gap-2">Вхід<Loader /></span> : "Увійти"}
+                    {/* {pending ? <PageLoader /> : "Увійти"} */}
                 </Button>
             </FieldGroup>
         </>

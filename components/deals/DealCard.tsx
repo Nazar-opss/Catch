@@ -1,18 +1,17 @@
 "use client"
 import { CldImage } from "next-cloudinary"
-import { Selectable } from "kysely"
-import { Deal } from "@/prisma/types/types"
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import dayjs from "dayjs"
-import Image from "next/image"
 import Link from "next/link"
-import { ChevronDown, ChevronUp, Clock, ExternalLink, MessageCircleMore, MinusIcon, PlusIcon } from "lucide-react"
-import { Button } from "../ui/button"
-import { ButtonGroup } from "../ui/button-group"
 import NoImage from "../ui/noImage"
 import RatingButton from "../ui/rating-button"
-import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils"
+import { dealPercentCalculate } from "@/lib/utils"
+import { DealWithAuthor } from "@/app/(main)/page"
+import DealPrice from "./parts/DealPrice"
+import DealCTA from "./parts/DealCTA"
+import DealMeta from "./parts/DealMeta"
+
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
 
@@ -33,86 +32,62 @@ dayjs.updateLocale('en', {
         yy: "%d р"
     }
 })
-type DealWithAuthor = Selectable<Deal> & {
-    authorName: string
-    authorImage: string | null
-    commentCount: number | string | null
-}
-
 interface DealCardProps {
     deal: DealWithAuthor;
+    layout: "grid" | "list"
 }
 
+export default function DealCard({ deal, layout }: DealCardProps) {
 
-
-export default function DealCard({ deal }: DealCardProps) {
-    const authorImage = deal.authorImage || "/placeholder.jpg";
-    // TODO: Add placeholder for image of avatar
 
     const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
 
     return (
         <div>
-            <article key={deal.id} className="flex flex-col h-full bg-white p-5 border border-slate-200 rounded-[16px] ">
-                <div key={deal.imageUrls[0]} className=" relative w-full aspect-4/3 overflow-hidden p-4 justify-center flex items-center rounded-lg border border-slate-200 bg-slate-50">
+            <article data-layout={layout} key={deal.id} className="flex items-center bg-white p-5 border border-slate-200 rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
+                <div key={deal.imageUrls[0]} className="relative aspect-4/3 overflow-hidden p-4 justify-center flex items-center rounded-lg h-full border border-slate-200 bg-slate-50 data-[layout=list]:h-full data-[layout=list]:max-w-[240px]  data-[layout=list]:max-h-[276px] data-[layout=grid]:h-full">
                     {
                         deal.imageUrls[0] ? (
                             <CldImage
-                                width={320}
+                                width={230}
                                 height={230}
                                 loading="eager"
                                 src={deal.imageUrls[0]}
                                 alt={deal.title}
-                                className="object-contain w-full h-full"
+                                className="object-contain h-full"
                             />
                         ) : (
                             <NoImage />
                         )
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-[36px]">
-                        <div className="items-center bg-slate-200 px-1.5 py-1 border border-slate-100 rounded-full">
-                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} authorId={deal.authorId} reply={false} />
+                        <div className="items-center bg-slate-200 px-0.5 py-0.5 border border-slate-100 rounded-full">
+                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} authorId={deal.authorId} reply={false} userVote={deal.userVote} />
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col flex-1 mt-4 gap-3">
+                <div className={`flex flex-col flex-1 ${layout === "list" ? "mt-0 gap-5" : "mt-4 gap-3"} `}>
+                    {
+                        layout === "list" ? (
+                            <>
+                                <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
+                                <DealPrice oldPrice={deal.oldPrice} newPrice={deal.newPrice} dealPercent={dealPercent} textSize={["text-[26px]", "text-[16px]", "text-[13px]"]} />
+                            </>
+                        ) : (
+                            <>
+                                <DealPrice oldPrice={deal.oldPrice} newPrice={deal.newPrice} dealPercent={dealPercent} />
+                                <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
+                            </>
+                        )
+                    }
 
-                    <div className="flex items-center gap-2">
-                        <span className="text-[22px] text-slate-900 font-bold tracking-tight leading-none">{deal.newPrice} грн</span>
-                        <span className="text-[14px] text-slate-500 line-through font-medium">{deal.oldPrice ? `${deal.oldPrice} грн` : ""}</span>
-                        {dealPercent ? <span className="text-[12px] bg-red-50 text-red-600 px-2.5 py-0.5 rounded font-bold tracking-wide border border-red-200">{dealPercent > 0 ? `-${dealPercent}%` : `+${dealPercent.toString().split('-')[1]}%`}</span> : null}
-                    </div>
-                    <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
-                    <div className="flex flex-col gap-2.5 mt-auto pt-3">
-                        <div className="text-xs flex items-center gap-2 text-slate-500 font-medium">
-                            <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={20} height={20} />
-                            {getShopName(deal.link)}
-                        </div>
-                        <div className="flex items-center text-xs text-slate-500 justify-between font-medium">
-                            <div className="flex items-center gap-2">
-                                <Image src={authorImage} alt={deal.authorName} className="rounded-full" width={20} height={20} />
-                                <span>{deal.authorName}</span>
-                                <span className="text-slate-300">•</span>
-                                <div className="flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />
-                                    <span>{dayjs(deal.createdAt).fromNow()}</span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-1">
-                                <MessageCircleMore className="w-3 h-3" />
-                                {deal.commentCount}
-                            </div>
-                        </div>
-                    </div>
-                    <Link href={deal.link} target="_blank" rel="noopener noreferrer" >
-                        <Button variant="outline" className="rounded-lg mt-3 shadow-sm bg-white px-4 py-2.5 cursor-pointer border border-slate-200 hover:border-slate-300 hover:bg-slate-100 text-[13px] h-[41.5px] w-full text-slate-800 gap-2 font-semibold transition-colors flex justify-center items-center">
-                            До знижки
-                            <ExternalLink className="w-3 h-3 text-slate-400" />
-                        </Button>
-                    </Link>
-                </div>
-            </article>
-        </div>
+                    <DealMeta deal={deal} layout={layout} />
+                    {
+                        layout === "grid" &&
+                        <DealCTA link={deal.link} layout={layout} />
+                    }
+                </div >
+            </article >
+        </div >
     )
 }

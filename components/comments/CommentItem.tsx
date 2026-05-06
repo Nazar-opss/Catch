@@ -36,14 +36,16 @@ type CommentWithAuthor = Selectable<Comment> & {
     authorName: string;
     authorImage: string | null;
     rating: number | null;
+    userVote?: number | null;
     replies?: CommentWithAuthor[];
 };
 
 interface CommentItemProps {
     comment: CommentWithAuthor;
+    userVote?: number | null;
 }
 
-export default function CommentItem({ comment }: CommentItemProps) {
+export default function CommentItem({ comment, userVote }: CommentItemProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
@@ -66,7 +68,7 @@ export default function CommentItem({ comment }: CommentItemProps) {
                     <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
-                            <RatingButton commentId={comment.id} dealId={comment.dealId} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />
+                            <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />
                             <CollapsibleTrigger className="text-slate-400 hover:text-slate-900 transition-colors font-medium text-[13px] cursor-pointer">
                                 Відповісти
                             </CollapsibleTrigger>
@@ -94,7 +96,7 @@ export default function CommentItem({ comment }: CommentItemProps) {
                 <>
                     <div className="ml-5 pl-6 mt-4 border-l-2 border-slate-200">
                         {comment.replies.slice(0, 1).map((reply) => (
-                            <CommentItem key={reply.id} comment={reply} />
+                            <CommentItem key={reply.id} comment={reply} userVote={comment.userVote} />
                         ))}
 
                         {comment.replies.length > 1 && (

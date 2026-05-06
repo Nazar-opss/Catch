@@ -14,6 +14,8 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
 
@@ -41,20 +43,25 @@ interface DealPageProps {
 const imageStyle = "rounded-lg object-contain w-full h-full"
 
 export default async function DealPage({ params }: DealPageProps) {
+    const session = await auth.api.getSession({ headers: await headers() });
+    const currentUserId = session?.user.id;
     const { id } = await params;
 
     const deal = await db
         .selectFrom("deal")
         .innerJoin("user", "user.id", "deal.authorId")
-        .leftJoin("vote", (jb) => jb.onRef("vote.dealId", "=", "deal.id").onRef("vote.userId", "=", "user.id"))
         .selectAll("deal").select((eb) => [
             "user.name as authorName",
             "user.image as authorImage",
-            "vote.value as userVote",
             eb.selectFrom("comment")
                 .whereRef("comment.dealId", "=", "deal.id")
                 .select(eb.fn.count<number>("id").as("count"))
-                .as("commentCount")
+                .as("commentCount"),
+            eb.selectFrom("vote")
+                .select("value")
+                .whereRef("vote.dealId", "=", "deal.id")
+                .where("vote.userId", "=", currentUserId ?? "")
+                .as("userVote")
         ])
         .where("deal.id", "=", id)
         .executeTakeFirst();
@@ -63,7 +70,6 @@ export default async function DealPage({ params }: DealPageProps) {
         notFound();
     }
 
-    console.log(deal)
     const comments = await db
         .selectFrom("comment")
         .innerJoin("user", "user.id", "comment.authorId")
@@ -75,7 +81,12 @@ export default async function DealPage({ params }: DealPageProps) {
             eb.selectFrom("comment_vote")
                 .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
                 .whereRef("comment_vote.commentId", "=", "comment.id")
-                .as("rating")
+                .as("rating"),
+            eb.selectFrom("comment_vote")
+                .select("value")
+                .whereRef("comment_vote.commentId", "=", "comment.id")
+                .where("comment_vote.userId", "=", currentUserId ?? "")
+                .as("userVote")
         ])
         .where("comment.dealId", "=", deal.id)
         .orderBy("comment.createdAt", "desc")
@@ -131,7 +142,7 @@ export default async function DealPage({ params }: DealPageProps) {
                         <div className="space-y-8">
                             {threadComments.map((comment) => {
                                 return (
-                                    <CommentItem key={comment.id} comment={comment} />
+                                    <CommentItem key={comment.id} userVote={comment.userVote} comment={comment} />
                                 )
                             })}
                             {threadComments.length === 0 && (

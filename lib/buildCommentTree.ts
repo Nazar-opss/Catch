@@ -5,6 +5,7 @@ type CommentWithAuthor = Selectable<Comment> & {
     authorName: string;
     authorImage: string | null;
     rating: number | null;
+    userVote?: number | null;
     replies?: CommentWithAuthor[];
 };
 
