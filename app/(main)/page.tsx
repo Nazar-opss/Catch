@@ -13,15 +13,15 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null
 }
 
-export default async function Home({ searchParams }: { searchParams: { view?: string } }) {
+export default async function Home({ searchParams }: { searchParams: { view?: string, sort?: string | "hot" } }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const currentUserId = session?.user.id;
 
-  const { view } = await searchParams
+  const { view, sort } = await searchParams
 
   const layout = view === "list" ? "list" : "grid"
 
-  const deals = await db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").select((eb) => [
+  let deals = db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").select((eb) => [
     "user.name as authorName",
     "user.image as authorImage",
     eb.selectFrom("comment")
@@ -33,12 +33,30 @@ export default async function Home({ searchParams }: { searchParams: { view?: st
       .whereRef("vote.dealId", "=", "deal.id")
       .where("vote.userId", "=", currentUserId ?? "")
       .as("userVote")
-  ]).execute()
+  ])
+
+  switch (sort) {
+    case "new":
+      deals = deals.orderBy("deal.createdAt", "desc")
+      break;
+    case "discussed":
+      deals = deals.orderBy((eb) =>
+        eb.selectFrom("comment")
+          .select(eb.fn.count<number>("id").as("count"))
+          .whereRef("comment.dealId", "=", "deal.id"),
+        "desc")
+      break;
+    case "hot":
+    default:
+      deals = deals.orderBy("temperature", "desc")
+      break
+  }
+  const dealsArray = await deals.limit(20).execute();
 
   return (
     <main className="flex flex-1 w-full max-w-7xl flex-col mx-auto py-8 sm:px-6 px-4">
       <FilterBar />
-      <DealsList deals={deals} layout={layout} />
+      <DealsList deals={dealsArray} layout={layout} />
     </main>
   );
 }

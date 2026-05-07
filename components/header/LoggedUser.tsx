@@ -24,7 +24,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                         <ChevronDown className="w-6 h-6 text-slate-400" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="center" className="bg-white/50 backdrop-blur-md text-slate-900 mt-2.5 border-slate-200 ">
-                        <Link href={`/user/${session?.user?.name}`}>
+                        <Link href={`/user/${session?.user?.username}`}>
                             <DropdownMenuItem className="cursor-pointer">
                                 <UserIcon />
                                 Профіль

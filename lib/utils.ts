@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import slugify from 'slugify';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -45,4 +46,17 @@ export function getShopIcon(url: string) {
   const name = getShopName(url).toLowerCase();
   const fileName = SHOP_ICONS[name] || `${name}.svg`
   return fileName
+}
+
+export function generateSlugUsername(name: string): string {
+  const baseSlug = slugify(name, {
+    replacement: '-',
+    lower: true,
+    trim: true,
+    strict: true,
+    locale: 'uk'
+
+  })
+  const random = Math.floor(1000 + Math.random() * 9000)
+  return `${baseSlug}-${random}`
 }

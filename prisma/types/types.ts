@@ -45,6 +45,12 @@ export type Deal = {
     createdAt: Generated<Timestamp>;
     authorId: string;
 };
+export type SavedDeal = {
+    id: string;
+    createdAt: Generated<Timestamp>;
+    userId: string;
+    dealId: string;
+};
 export type Session = {
     id: string;
     expiresAt: Timestamp;
@@ -58,6 +64,7 @@ export type Session = {
 export type User = {
     id: string;
     name: string;
+    username: string;
     email: string;
     emailVerified: boolean;
     image: string | null;
@@ -85,6 +92,7 @@ export type DB = {
     comment: Comment;
     comment_vote: CommentVote;
     deal: Deal;
+    saved_deal: SavedDeal;
     session: Session;
     user: User;
     verification: Verification;

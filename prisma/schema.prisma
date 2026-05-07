@@ -14,6 +14,7 @@ generator kysely {
 model User {
     id            String   @id
     name          String
+    username      String   @unique
     email         String
     emailVerified Boolean
     image         String?
@@ -28,6 +29,7 @@ model User {
     comments     Comment[]
     karma        Int           @default(0)
     commentVotes CommentVote[]
+    savedDeals   SavedDeal[]
 
     @@map("user")
 }
@@ -90,8 +92,9 @@ model Deal {
     authorId String
     author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-    votes    Vote[]
-    comments Comment[]
+    votes      Vote[]
+    comments   Comment[]
+    savedDeals SavedDeal[]
 
     @@map("deal")
 }
@@ -141,4 +144,18 @@ model CommentVote {
 
     @@unique([commentId, userId])
     @@map("comment_vote")
+}
+
+model SavedDeal {
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    dealId String
+    deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, dealId])
+    @@map("saved_deal")
 }

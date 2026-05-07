@@ -1,5 +1,5 @@
 import { Controller, UseFormReturn } from "react-hook-form";
-import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { inputStyle } from "./DealFormContent";
 import { DealFormValues } from "@/lib/schemas/dealSchema";

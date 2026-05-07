@@ -7,19 +7,17 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
 interface UserPageProps {
-    params: Promise<{ userName: string }>;
+    params: Promise<{ username: string }>;
 }
-
-
 
 export default async function UserPage({ params }: UserPageProps) {
     // const [activeTab, setActiveTab] = useState<ActiveTab>("deals");
     const session = await auth.api.getSession({ headers: await headers() });
-    const { userName } = await params;
+    const { username } = await params;
     const user = await db
         .selectFrom("user")
         .selectAll("user")
-        .where("user.name", "=", userName)
+        .where("user.username", "=", username)
         .executeTakeFirst();
     if (!user) {
         notFound();

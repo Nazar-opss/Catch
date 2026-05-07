@@ -51,6 +51,7 @@ export default async function DealPage({ params }: DealPageProps) {
         .selectFrom("deal")
         .innerJoin("user", "user.id", "deal.authorId")
         .selectAll("deal").select((eb) => [
+            "user.username as authorUsername",
             "user.name as authorName",
             "user.image as authorImage",
             eb.selectFrom("comment")
@@ -193,12 +194,12 @@ export default async function DealPage({ params }: DealPageProps) {
                             <div className="w-full h-px bg-slate-100 my-6"></div>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <Link href={`/user/${deal.authorName}`} className="relative">
+                                    <Link href={`/user/${deal.authorUsername}`} className="relative">
                                         <Image src={deal.authorImage ?? "/logo.png"} alt={deal.authorName} className="rounded-full w-10 h-10" width={20} height={20} />
                                     </Link>
                                     <div className="flex flex-col ">
                                         <span className="text-xs text-slate-500 mb-0.5 leading-tight">Опублікував</span>
-                                        <Link href={`/user/${deal.authorName}`}>
+                                        <Link href={`/user/${deal.authorUsername}`}>
                                             <span className="text-[14px] font-bold text-slate-900 hover:text-orange-600 transition-colors leading-tight">{deal.authorName}</span>
                                         </Link>
                                     </div>
