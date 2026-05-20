@@ -154,7 +154,7 @@ export default async function DealPage({ params }: DealPageProps) {
                 </div>
 
                 <div className="lg:col-span-4 sticky top-24">
-                    <div className="sticky top-[92px] flex flex-col gap-4">
+                    <div className="sticky top-23 flex flex-col gap-4">
                         <div className="bg-white rounded-[24px] border border-slate-200 p-6 sm:p-7 shadow-sm">
                             <div className="flex items-center justify-between mb-6">
                                 <span className="uppercase text-sm font-bold text-slate-400">
@@ -186,8 +186,8 @@ export default async function DealPage({ params }: DealPageProps) {
                             </Link>
                             <div className="flex items-center justify-center gap-2 text-slate-500 text-[14px] font-medium">
                                 Продавець:
-                                <span className="text-slate-900 font-semibold gap-1.5 flex  ">
-                                    <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={20} height={20} />
+                                <span className="text-slate-900 items-center font-semibold gap-1.5 flex  ">
+                                    <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={32} height={32} />
                                     {getShopName(deal.link)}
                                 </span>
                             </div>

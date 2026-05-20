@@ -11,7 +11,7 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import { createDealAction } from "@/lib/actions/deal";
 
-export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
+export default function AddDealForm({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
     // const [state, action, isPending] = useActionState(createDealAction, null)
 
     const form = useForm<DealFormValues>({
@@ -41,7 +41,7 @@ export default function AddDeal({ open, onOpenChange }: { open: boolean, onOpenC
         // fix showing error with images
         const data = await uploadResult.json();
 
-        values.images = data.urls.map((image: any) => image.secure_url);
+        values.images = data.urls.map((image: { secure_url: string }) => image.secure_url);
         console.log(values)
         const result = await createDealAction(values)
         console.log(result)

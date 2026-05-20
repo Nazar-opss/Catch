@@ -14,7 +14,7 @@ if (!secret) throw new Error("BETTER_AUTH_SECRET is not defined")
 
 export const auth = betterAuth({
     secret,
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3000/api/auth",
     database: {
         db,
         type: "postgres"
@@ -43,8 +43,8 @@ export const auth = betterAuth({
     },
     socialProviders: {
         google: {
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }
     },
     databaseHooks: {

@@ -1,24 +1,27 @@
-import { signOut, useSession } from "@/lib/auth-clients"
+import { signOut } from "@/lib/auth-clients"
 import { Button } from "../ui/button"
 import { BookmarkIcon, ChevronDown, LogOutIcon, Plus, UserIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useState } from "react"
-import AddDeal from "./AddDeal"
+import AddDealForm from "./AddDealForm"
 import { Session } from "@/lib/auth";
 import Link from "next/link"
+import Image from "next/image"
 
 export default function LoggedUser({ session }: { session: Session }) {
     const [modal, setModal] = useState(false)
 
+    // TODO: add notifications, and avatar default image
+
     return (
         <div className="flex items-center gap-4 sm:gap-6">
-            <AddDeal open={modal} onOpenChange={setModal} />
+            <AddDealForm open={modal} onOpenChange={setModal} />
             <Button onClick={() => setModal(true)} className="items-center justify-center px-5 py-2.5 h-full text-[14px] bg-[#ea580c] text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700">
                 <Plus />
                 Додати знижку
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer">
-                <img className="w-8 h-8 rounded-full" src={session?.user?.image ?? undefined} alt={session?.user?.name ?? undefined} />
+                <Image className="rounded-full" width={32} height={32} src={session?.user?.image || "/default-avatar.png"} alt={session?.user?.name ?? undefined} />
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <ChevronDown className="w-6 h-6 text-slate-400" />

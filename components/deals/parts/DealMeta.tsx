@@ -14,11 +14,12 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
     const metaSize = layout === "list" ? "text-sm" : "text-xs";
 
     return (
-        <div className="flex flex-col gap-2.5 mt-auto pt-3">
+        <div className="flex flex-col gap-2.5 mt-auto">
             <div className={`flex items-center gap-2 text-slate-500 ${metaSize} font-medium`}>
                 <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={imageSize} height={imageSize} />
                 {getShopName(deal.link)}
             </div>
+            <div className="w-full h-px bg-slate-100 my-2"></div>
             <div className={`flex relative items-center text-slate-500 ${metaSize} ${layout === "list" ? "gap-2" : "justify-between"} font-medium`}>
                 <div className="flex items-center gap-2">
                     <Image src={authorImage} alt={deal.authorName} className="rounded-full" width={imageSize} height={imageSize} />
