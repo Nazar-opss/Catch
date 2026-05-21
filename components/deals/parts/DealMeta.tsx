@@ -6,8 +6,7 @@ import DealCTA from "./DealCTA"
 import { DealWithAuthor } from "@/app/(main)/page"
 
 export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layout: "grid" | "list" }) {
-    const authorImage = deal.authorImage || "/placeholder.jpg";
-    // TODO: Add placeholder for image of avatar
+    const authorImage = deal.authorImage || "/icons/avatar-default.svg";
 
     const iconSize = layout === "list" ? "w-4.5 h-4.5" : "w-3 h-3";
     const imageSize = layout === "list" ? 28 : 20;

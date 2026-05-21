@@ -1,14 +1,15 @@
-import { Controller } from "react-hook-form";
+import { Controller, Path } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { inputStyle } from "../deals/DealFormContent";
 import { UseFormReturn } from "react-hook-form";
+import { AuthFormValues } from "@/lib/schemas/authSchema";
 
 type InputProps = {
-    form: UseFormReturn<any>;
+    form: UseFormReturn<AuthFormValues>;
     inputLabel: string;
     placeholder: string;
-    inputName: string;
+    inputName: Path<AuthFormValues>;
     type: string;
     autoComplete?: string;
 }

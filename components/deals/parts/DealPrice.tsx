@@ -6,7 +6,7 @@ interface DealPriceProps {
 }
 
 export default function DealPrice({ oldPrice, newPrice, dealPercent, textSize }: DealPriceProps) {
-    console.log(textSize)
+    
     return (
         <div className="flex items-center gap-2">
             <span className={`text-slate-900 font-bold tracking-tight leading-none ${textSize ? textSize[0] : "text-[22px]"}`}>{newPrice} грн</span>

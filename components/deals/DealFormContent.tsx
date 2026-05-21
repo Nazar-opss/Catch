@@ -34,12 +34,12 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                             maxFiles={5}
                             className="w-full cursor-pointer"
                         >
-                            <FileUploadDropzone className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-slate-300">
+                            <FileUploadDropzone asChild aria-label="Dropzone for file upload" className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-slate-300">
                                 <div className="flex flex-col items-center transition-colors duration-200">
                                     <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-orange-200 group-hover:bg-orange-50 transition-colors">
                                         <Upload className="size-6 text-muted-foreground group-hover:text-orange-600 transition-colors" />
                                     </div>
-                                    <p className="text-slate-700 font-medium  text-sm mb-1 group-hover:text-slate-900">Перетягніть сюди або натисніть для завантаження</p>
+                                    <p className="text-slate-700 font-medium  text-sm mb-1 group-hover:text-slate-900">Перетягніть фото сюди або натисніть для завантаження</p>
                                     <p className="text-slate-500 text-xs ">
                                         JPG, PNG, WebP (макс. 5MB)
                                     </p>

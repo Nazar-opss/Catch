@@ -23,12 +23,6 @@ export default async function UserPage({ params }: UserPageProps) {
         notFound();
     }
 
-    // const deals = await db.selectFrom("deal")
-    //     .selectAll("deal")
-    //     .where("deal.authorId", "=", user.id)
-    //     .execute();
-
-
     const deals = await db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("deal.authorId", "=", user.id).select((eb) => [
         "user.name as authorName",
         "user.image as authorImage",
@@ -53,7 +47,7 @@ export default async function UserPage({ params }: UserPageProps) {
     return (
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
-                <aside className="w-full lg:w-[320px] shrink-0 lg:sticky lg:top-[112px]">
+                <aside className="w-full lg:w-[320px] shrink-0 lg:sticky lg:top-28">
                     <ProfileCard user={user} isOwnProfile={isOwnProfile} />
                 </aside>
                 <div className="flex-1 min-w-0 w-full">

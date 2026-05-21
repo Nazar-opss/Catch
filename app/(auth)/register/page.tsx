@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import Google from "@/components/ui/google"
 import Telegram from "@/components/ui/telegram"
-import { signIn } from "@/lib/auth-clients"
+import { signIn, signUp } from "@/lib/auth-clients"
 import { AuthFormValues, authSchema } from "@/lib/schemas/authSchema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState, useTransition } from "react"
@@ -38,6 +38,27 @@ export default function RegisterPage() {
         })
     }
 
+    const handleFormSignUp = (data: AuthFormValues) => {
+        startTransition(async () => {
+            const { error } = await signUp.email({
+                email: data.email,
+                password: data.password,
+                name: data.name,
+                callbackURL: "/"
+            })
+
+            const signInError = await signIn.email({
+                email: data.email,
+                password: data.password,
+                callbackURL: "/"
+            })
+            
+            if (signInError.error) setError(signInError.error.message)
+
+            if (error) setError(error.message)
+        })
+    }
+
     return (
         <>
             <div className="flex flex-col w-full mb-8 gap-3.5">
@@ -58,7 +79,7 @@ export default function RegisterPage() {
                 <AuthEmailInput form={form} inputLabel="Ім'я користувача (Нікнейм)" placeholder="Введіть ваше ім'я користувача" inputName="name" type="text" />
                 <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" type="email" />
                 <AuthPasswordInput form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" autoComplete="new-password" />
-                <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
+                <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit" onClick={form.handleSubmit(handleFormSignUp)} disabled={pending}>
                     Зареєструватися
                 </Button>
             </FieldGroup>

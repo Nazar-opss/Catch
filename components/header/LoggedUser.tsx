@@ -11,7 +11,7 @@ import Image from "next/image"
 export default function LoggedUser({ session }: { session: Session }) {
     const [modal, setModal] = useState(false)
 
-    // TODO: add notifications, and avatar default image
+    // TODO: add notifications
 
     return (
         <div className="flex items-center gap-4 sm:gap-6">
@@ -21,7 +21,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                 Додати знижку
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer">
-                <Image className="rounded-full" width={32} height={32} src={session?.user?.image || "/default-avatar.png"} alt={session?.user?.name ?? undefined} />
+                <Image className="rounded-full" width={32} height={32} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <ChevronDown className="w-6 h-6 text-slate-400" />
