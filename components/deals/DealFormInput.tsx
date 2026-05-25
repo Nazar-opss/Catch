@@ -48,7 +48,7 @@ export default function DealFormInput({ form, inputName, placeholder, inputLabel
                                 placeholder={placeholder}
                                 autoComplete="off"
                                 value={field.value}
-                                className='flex w-full rounded-lg border resize-none border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-900 shadow-sm transition-color placeholder:text-start min-h-[100px] focus-visible:outline-none focus-visible:border-orange-600 focus-visible:ring-orange-600/10'
+                                className='flex w-full rounded-lg border resize-none border-slate-300 bg-white px-3.5 py-3 text-[15px] text-slate-900 shadow-sm transition-color placeholder:text-start min-h-25 focus-visible:outline-none focus-visible:border-orange-600 focus-visible:ring-orange-600/10'
                             />
                         )
                     }
