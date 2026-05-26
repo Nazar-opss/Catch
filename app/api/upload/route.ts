@@ -15,10 +15,14 @@ export async function POST(req: Request) {
             cloudinary.uploader.upload_stream(
                 {
                     folder: 'uploads',
+                    format: 'avif',           
+                    transformation: [
+                        { width: 400, height: 400, crop: "fill", gravity: "face", quality: "auto:best", fetch_format: "auto" },
+                    ],
                 },
                 (error, result) => {
                     if (error) reject(error);
-                    else resolve(result);
+                     else resolve(result);
                 }
             ).end(buffer);
         }));

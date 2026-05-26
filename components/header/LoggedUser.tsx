@@ -10,7 +10,6 @@ import Image from "next/image"
 
 export default function LoggedUser({ session }: { session: Session }) {
     const [modal, setModal] = useState(false)
-
     // TODO: add notifications
 
     return (
@@ -21,7 +20,9 @@ export default function LoggedUser({ session }: { session: Session }) {
                 Додати знижку
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer">
-                <Image className="rounded-full" width={32} height={32} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
+                <div className="w-8 h-8 rounded-full overflow-hidden">
+                    <Image className="rounded-full object-cover h-full w-full" width={32} height={32} unoptimized quality={90} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
+                </div>
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <ChevronDown className="w-6 h-6 text-slate-400" />

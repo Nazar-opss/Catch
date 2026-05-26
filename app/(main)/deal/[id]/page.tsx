@@ -195,7 +195,7 @@ export default async function DealPage({ params }: DealPageProps) {
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
                                     <Link href={`/user/${deal.authorUsername}`} className="relative">
-                                        <Image src={deal.authorImage ?? "/logo.png"} alt={deal.authorName} className="rounded-full w-10 h-10" width={20} height={20} />
+                                        <Image src={deal.authorImage ?? "/logo.png"} alt={deal.authorName} className="rounded-full w-10 h-10" width={20} unoptimized quality={90} height={20} />
                                     </Link>
                                     <div className="flex flex-col ">
                                         <span className="text-xs text-slate-500 mb-0.5 leading-tight">Опублікував</span>

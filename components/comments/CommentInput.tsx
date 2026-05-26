@@ -2,7 +2,7 @@
 import { useSession } from "@/lib/auth-clients";
 import { Textarea } from "@/components/ui/textarea";
 import { FileUpload, FileUploadDropzone, FileUploadItem, FileUploadItemDelete, FileUploadItemMetadata, FileUploadItemPreview, FileUploadItemProgress, FileUploadList, FileUploadProps, FileUploadTrigger } from "../ui/file-upload";
-import { Image, Smile, Upload, X } from "lucide-react";
+import { Image as ImageIcon, Smile, Upload, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import { commentFormSchema, CommentFormValues } from "@/lib/schemas/dealSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { createCommentAction } from "@/lib/actions/comment";
+import Image from "next/image";
 
 export default function CommentInput({ dealId, reply, parentName, parentId }: { dealId: string, reply?: boolean, parentName?: string, parentId?: string }) {
     const { data: session, isPending } = useSession()
@@ -40,7 +41,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
 
         const data = await uploadResult.json();
 
-        const imageUrls: string[] = data.urls.map((image: any) => image.secure_url);
+        const imageUrls: string[] = data.urls.map((image: { secure_url: string }) => image.secure_url);
         const payload = { ...values, images: imageUrls, dealId: dealId, parentId: parentId };
         console.log(payload)
         const result = await createCommentAction(payload)
@@ -132,7 +133,15 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                     <div className={`${reply ? "w-8 h-8" : "w-12 h-12"} rounded-full bg-gray-200 animate-pulse`} />
                 </div>
             ) : session?.user?.image ? (
-                <img className={`${reply ? "w-8 h-8" : "w-12 h-12"} rounded-full shrink-0`} src={session.user.image} alt={session.user.name ?? ""} />
+                <Image
+                    src={session.user.image }
+                    className={`${reply ? "w-8 h-8" : "w-12 h-12"} rounded-full shrink-0`} 
+                    alt={session.user.name ?? ""} 
+                    width={reply ? 32 : 48} 
+                    height={reply ? 32 : 48}
+                    quality={90} 
+                    unoptimized 
+                />
             ) : session?.user ? (
                 <div className={`shrink-0 rounded-full ${reply ? "w-8 h-8" : "w-12 h-12"} bg-orange-600 text-white flex items-center justify-center text-lg font-semibold`}>
                     {session.user.name?.charAt(0).toUpperCase() ?? "?"}
@@ -208,7 +217,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                 onInputChange(e);
                                             }}
                                             placeholder={reply ? `Відповісти @${parentName}` : "Написати коментар..."}
-                                            className={`rounded-none text-slate-900 placeholder:text-slate-400 ${reply ? "px-3! py-2.5!" : "px-4! py-3.5!"}  sm:text-[15px] sm:leading-6 ${reply ? "min-h-[70px]" : "min-h-[90px]"} resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent `}
+                                            className={`rounded-none text-slate-900 placeholder:text-slate-400 ${reply ? "px-3! py-2.5!" : "px-4! py-3.5!"}  sm:text-[15px] sm:leading-6 ${reply ? "min-h-17.5" : "min-h-22.5"} resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent `}
                                             disabled={isUploading}
                                         />
                                     )}
@@ -224,7 +233,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                 disabled
                                                 className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
                                             >
-                                                <Image className="size-5 " />
+                                                <ImageIcon className="size-5" />
                                                 <span className="sr-only">Додати зображення</span>
                                             </Button>
                                         </FileUploadTrigger>

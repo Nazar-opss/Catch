@@ -53,7 +53,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
 
             <div className="flex gap-4" key={comment.id}>
                 {comment.authorImage ? (
-                    <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-slate-200" />
+                    <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-slate-200" />
                 ) : (
                     <div className="shrink-0 rounded-full w-10 h-10 bg-orange-600 text-white flex items-center justify-center">
                         {comment.authorName.charAt(0).toUpperCase()}

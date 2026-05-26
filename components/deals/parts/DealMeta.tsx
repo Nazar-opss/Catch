@@ -9,7 +9,7 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
     const authorImage = deal.authorImage || "/icons/avatar-default.svg";
 
     const iconSize = layout === "list" ? "w-4.5 h-4.5" : "w-3 h-3";
-    const imageSize = layout === "list" ? 28 : 20;
+    const imageSize = layout === "list" ? 56 : 32;
     const metaSize = layout === "list" ? "text-sm" : "text-xs";
 
     return (
@@ -21,7 +21,10 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
             <div className="w-full h-px bg-slate-100 my-2"></div>
             <div className={`flex relative items-center text-slate-500 ${metaSize} ${layout === "list" ? "gap-2" : "justify-between"} font-medium`}>
                 <div className="flex items-center gap-2">
-                    <Image src={authorImage} alt={deal.authorName} className="rounded-full" width={imageSize} height={imageSize} />
+                    <div className={`w-8 h-8 rounded-full overflow-hidden`}>
+                        <Image src={authorImage} alt={deal.authorName} className="rounded-full object-cover w-full h-full" width={imageSize} height={imageSize} unoptimized quality={90} />
+                    </div>
+
                     <span>{deal.authorName}</span>
                     <span className="text-slate-300">•</span>
                     <div className="flex items-center gap-1">

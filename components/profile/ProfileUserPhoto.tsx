@@ -15,8 +15,11 @@ import {
   FileUploadClear,
   FileUploadDropzone,
   FileUploadItem,
+  FileUploadItemDelete,
   FileUploadItemPreview,
 } from "../ui/file-upload";
+import { updateUserPhoto } from "@/lib/actions/user";
+import { useSession } from "@/lib/auth-clients";
 
 export default function ProfileUserPhoto({
   open,
@@ -26,9 +29,37 @@ export default function ProfileUserPhoto({
   onOpenChange: (open: boolean) => void;
 }) {
     const [files, setFiles] = React.useState<File[]>([]);
+    const { refetch } = useSession();
+
+    async function onSubmit(file: File[]) {
+            const formData = new FormData();
+                formData.append("files", file[0]);
+    
+            const uploadResult = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            // fix showing error with images
+            const data = await uploadResult.json();
+            console.log(data)
+            const uploadedUrl = data.urls[0].secure_url;
+            console.log(uploadedUrl)
+
+            const result = await updateUserPhoto(uploadedUrl)
+            refetch()
+            setFiles([])
+            console.log(result)
+            if (result?.success) {
+                onOpenChange(false)
+            } else {
+                console.error(result?.error)
+            }
+        }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} >
       <DialogContent
+        onInteractOutside={() => setFiles([])}
         showCloseButton={false}
         aria-describedby="Додати нову знижку"
         className="my-auto max-h-[calc(100vh-2rem)] max-w-md mx-4 overflow-y-auto no-scrollbar"
@@ -38,7 +69,7 @@ export default function ProfileUserPhoto({
             <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">
               Змінити фото профілю
             </DialogTitle>
-            <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <DialogClose onClick={() => setFiles([])} className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
               <X height={20} width={20} className="" aria-hidden={false} />
             </DialogClose>
           </div>
@@ -72,38 +103,47 @@ export default function ProfileUserPhoto({
               </div>
             </FileUploadDropzone>
             {files.map((file) => (
-              <FileUploadItem className="w-40 h-40 pl-0 p-1 rounded-full" value={file} key={file.name}>
-                <FileUploadItemPreview
-                className="rounded-full w-39 h-39 object-cover"
-                // render={(file, fallback) => {
-                //     // Custom preview for specific file types
-                //     if (file.type.startsWith("image/")) {
-                //     return (
-                //         <FileUploadItemPreview className="object-cover w-40 h-40" />
-                //     );
-                //     }
-                //     // Use default behavior for everything else
-                //     return fallback();
-                // }}
-                />
-               
+              <FileUploadItem className="mt-8 flex flex-col cursor-default" value={file} key={file.name}>
+                <div className="rounded-full border border-slate-300 w-40 h-40 items-center justify-center flex">
+                  <FileUploadItemPreview
+                  className="rounded-full w-38 h-38 object-cover m-1"
+                  // render={(file, fallback) => {
+                  //     // Custom preview for specific file types
+                  //     if (file.type.startsWith("image/")) {
+                  //     return (
+                  //         <FileUploadItemPreview className="object-cover w-40 h-40" />
+                  //     );
+                  //     }
+                  //     // Use default behavior for everything else
+                  //     return fallback();
+                  // }}
+                  />
+                </div>
+                <p className="text-slate-400 font-bold uppercase text-center text-sm">
+                  Попередній перегляд
+                </p>
+                <div className="flex justify-end absolute top-2 right-2">
+                  <FileUploadClear forceMount>
+                      <X height={20} width={20} className="cursor-pointer text-slate-400 hover:text-red-600" aria-hidden={false} />
+                  </FileUploadClear>
+                </div>
             </FileUploadItem>
             ))}
-             <FileUploadClear forceMount />
           </FileUpload>
         </div>
-        <DialogFooter>
+        <DialogFooter className='relative mt-6 border-t-0 bg-transparent'>
           <DialogClose asChild>
             <Button
               variant="outline"
+              onClick={() => setFiles([])}
               className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer border border-slate-300"
             >
               Скасувати
             </Button>
           </DialogClose>
-          <DialogClose type="submit" asChild>
-            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">
-              Опублікувати
+          <DialogClose type="submit" onClick={() => onSubmit(files)} asChild>
+            <Button  className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">
+              Зберегти зміни
             </Button>
           </DialogClose>
         </DialogFooter>
