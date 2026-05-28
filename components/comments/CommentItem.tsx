@@ -1,8 +1,6 @@
 "use client"
 import dayjs from "dayjs";
-import { Selectable } from "kysely";
 import Image from "next/image";
-import { Comment } from "@/prisma/types/types";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import RatingButton from "../ui/rating-button";
@@ -10,6 +8,8 @@ import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import CommentInput from "./CommentInput";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import type { CommentWithAuthor } from "@/lib/buildCommentTree";
 
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
@@ -32,14 +32,6 @@ dayjs.updateLocale('en', {
     }
 })
 
-type CommentWithAuthor = Selectable<Comment> & {
-    authorName: string;
-    authorImage: string | null;
-    rating: number | null;
-    userVote?: number | null;
-    replies?: CommentWithAuthor[];
-};
-
 interface CommentItemProps {
     comment: CommentWithAuthor;
     userVote?: number | null;
@@ -61,7 +53,9 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                 )}
                 <div className="flex-1 min-w-0">
                     <div className="flex gap-2 items-center mb-1">
-                        <p className="font-semibold text-slate-900 hover:text-orange-600 transition-colors text-[15px]">{comment.authorName}</p>
+                        <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-slate-900 hover:text-orange-600 transition-colors text-[15px]">
+                            {comment.authorName}
+                        </Link>
                         <span className="text-slate-300 text-[13px]">•</span>
                         <span className="text-slate-500 text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
                     </div>

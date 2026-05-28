@@ -13,7 +13,7 @@ function ProfileUserInfo({ user, isOwnProfile }: { user: Selectable<User>, isOwn
     <div className="flex flex-col items-center text-center">
                 <div className="relative mb-5 group">
                     <div className="w-28 h-28 rounded-full p-1 bg-white border border-slate-200 group-hover:border-orange-200 transition-colors shadow-sm items-center justify-center flex">
-                        <Image className="rounded-full object-cover h-full w-full" width={90} height={90} unoptimized quality={90} src={user.image || "/icons/avatar-default.svg"} alt={user.name ?? "Користувач"} />
+                        <Image loading='eager' className="rounded-full object-cover h-full w-full" width={90} height={90} unoptimized quality={90} src={user.image || "/icons/avatar-default.svg"} alt={user.name ?? "Користувач"} />
                     </div>
                     {isOwnProfile && (
                         <Button className="absolute cursor-pointer bottom-0 right-0 p-2 bg-white border border-slate-200 shadow-sm hover:text-orange-600 hover:border-orange-200 transition-colors opacity-0 group-hover:opacity-100 rounded-full" variant={"outline"} size={"icon"} onClick={() => setModal(true)}>

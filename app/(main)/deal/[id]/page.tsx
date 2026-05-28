@@ -3,20 +3,16 @@ import CommentInput from "@/components/comments/CommentInput";
 import { DealsCarousel } from "@/components/deals/DealsCarousel";
 import NoImage from "@/components/ui/noImage";
 import { db } from "@/server/db";
-import { Bookmark, Clock, ExternalLink, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildCommentTree } from "@/lib/buildCommentTree";
-import RatingButton from "@/components/ui/rating-button";
-import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { saveDealAction } from "@/lib/actions/saved";
+
 import DealAsideInfo from "@/components/deals/DealAsideInfo";
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
@@ -80,6 +76,7 @@ export default async function DealPage({ params }: DealPageProps) {
         .select((eb) => [
             "user.name as authorName",
             "user.image as authorImage",
+            "user.username as authorUsername",
 
             eb.selectFrom("comment_vote")
                 .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
@@ -156,9 +153,9 @@ export default async function DealPage({ params }: DealPageProps) {
                 </div>
 
                 <div className="lg:col-span-4 sticky top-24">
-                    <DealAsideInfo deal={deal} userId={currentUserId ?? ""} />
+                    <DealAsideInfo deal={deal} />
                 </div>
             </div>
         </main>
-    )
+    );
 }

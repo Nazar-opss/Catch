@@ -66,7 +66,7 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                         </div>
                     </div>
                 </div>
-                <div className={`flex flex-col flex-1 ${layout === "list" ? "mt-0 gap-5" : "mt-4 gap-3"} `}>
+                <div className={`flex flex-col flex-1 w-full ${layout === "list" ? "mt-0 gap-5" : "mt-4 gap-3"} `}>
                     {
                         layout === "list" ? (
                             <>
