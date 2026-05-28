@@ -1,7 +1,6 @@
 import DealEmpty from "@/components/deals/DealEmpty";
 import DealsList from "@/components/deals/DealsList";
 import { FilterBar } from "@/components/filters/FilterBar";
-import AddDealForm from "@/components/header/AddDealForm";
 import { auth } from "@/lib/auth";
 import { Deal } from "@/prisma/types/types";
 import { db } from "@/server/db";
