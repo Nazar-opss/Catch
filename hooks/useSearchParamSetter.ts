@@ -16,5 +16,5 @@ export default function useSearchParamSetter() {
         startTransition(() => {
             router.replace(`${pathname}?${params}`, { scroll: false })
         })
-    }, [startTransition, router, pathname, searchParams, pending])
+    }, [startTransition, router, pathname, searchParams])
 }

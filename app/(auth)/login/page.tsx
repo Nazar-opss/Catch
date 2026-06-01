@@ -12,7 +12,6 @@ import AuthTypeDivider from "@/components/auth/AuthTypeDivider";
 import Google from "@/components/ui/google";
 import Telegram from "@/components/ui/telegram";
 import Loader from "@/components/ui/loader";
-import PageLoader from "@/components/ui/PageLoader";
 
 const buttonStyle = "flex items-center justify-center gap-3 px-4 py-2.5 text-slate-700 rounded-xl border border-slate-200 text-[15px] font-medium cursor-pointer transition-all hover:bg-slate-50 hover:border-slate-300 focus:ring-2 focus:ring-slate-200 focus:outline-none shadow-sm active:scale-95"
 
@@ -51,6 +50,8 @@ export default function LoginPage() {
             if (error) setError(error.message)
         })
     }
+    // TODO: Add toast about account doesn't have password, use google login instead
+
     return (
         <>
             <div className="flex flex-col w-full mb-8 gap-3.5 z-10">

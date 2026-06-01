@@ -1,6 +1,7 @@
 import CommentCard from "@/components/comments/CommentCard";
 import DealCard from "@/components/deals/DealCard";
 import ProfileCard from "@/components/profile/ProfileCard";
+import ProfileSettings from "@/components/profile/ProfileSettings";
 import ProfileTabs from "@/components/profile/ProfileTabs";
 
 import { auth } from "@/lib/auth";
@@ -10,7 +11,7 @@ import { notFound } from "next/navigation";
 
 type Params = { username: string };
 
-export default async function UserPage({ params, searchParams }: { params: Promise<Params>; searchParams: { tab: string | "userDeals" } }) {
+export default async function UserPage({ params, searchParams }: { params: Promise<Params>; searchParams: { tab: string | "userDeals", settings: string | "true" } }) {
     const session = await auth.api.getSession({ headers: await headers() });
     const { username } = await params;
     const searchParam = await searchParams;
@@ -86,8 +87,6 @@ export default async function UserPage({ params, searchParams }: { params: Promi
 
     console.log(isOwnProfile)
 
-    // Make profile tabs content dynamic, by fetching, and use it in wrapper component
-
     return (
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -95,14 +94,19 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                     <ProfileCard user={user} isOwnProfile={isOwnProfile} />
                 </aside>
                 <div className="flex-1 min-w-0 w-full">
-                    <ProfileTabs isOwnProfile={isOwnProfile} />
-                    <div className={`${searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }`}>
-                        {content.map((item) => (
-                            "newPrice" in item 
-                            ? <DealCard key={item.id} deal={item} layout="grid" />
-                            : <CommentCard key={item.id} isOwnProfile={isOwnProfile} comment={{ ...item, rating: item.rating ?? 0 }} />
-                        ))}
-                    </div>
+                    {searchParam.settings === "true" 
+                    ? <ProfileSettings userName={user.name} email={user.email} /> 
+                    : <>
+                        <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
+                        <div className={`${searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }`}>
+                            {content.map((item) => (
+                                "newPrice" in item 
+                                ? <DealCard key={item.id} deal={item} layout="grid" />
+                                : <CommentCard key={item.id} isOwnProfile={isOwnProfile} comment={{ ...item, rating: item.rating ?? 0 }} />
+                            ))}
+                        </div>
+                     </>
+                    }
                 </div>
             </div>
         </div>

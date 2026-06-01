@@ -34,10 +34,12 @@ export default function LoggedUser({ session }: { session: Session }) {
                                 Профіль
                             </DropdownMenuItem>
                         </Link>
-                        <DropdownMenuItem className="cursor-pointer">
-                            <BookmarkIcon />
-                            Збережене
-                        </DropdownMenuItem>
+                        <Link href={`/user/${session?.user?.username}/?tab=userBookmarks`}>
+                            <DropdownMenuItem className="cursor-pointer">
+                                <BookmarkIcon />
+                                Збережене
+                            </DropdownMenuItem>
+                        </Link>
                         <DropdownMenuItem onClick={() => signOut()} className="text-red-600">
                             <LogOutIcon />
                             Вийти

@@ -3,12 +3,14 @@ import { LogOutIcon, SettingsIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { signOut } from "@/lib/auth-clients";
 import { useRouter } from "next/navigation";
+import useSearchParamSetter from "@/hooks/useSearchParamSetter";
 
 export default function Settings() {
     const router = useRouter();
+    const setParam = useSearchParamSetter()
     return (
         <div className="flex flex-col gap-2 ">
-            <Button variant={"ghost"} className="w-full flex items-center cursor-pointer h-full! text-sm px-4 py-2.5 rounded-xl gap-3 border border-slate-200 bg-white font-semibold justify-start hover:bg-slate-100 text-slate-700 hover:text-slate-900 transition-all">
+            <Button variant={"ghost"} onClick={() => setParam("settings", "true")} className="w-full flex items-center cursor-pointer h-full! text-sm px-4 py-2.5 rounded-xl gap-3 border border-slate-200 bg-white font-semibold justify-start hover:bg-slate-100 text-slate-700 hover:text-slate-900 transition-all">
                 <SettingsIcon className="w-4 h-4" />
                 <span className="text-sm ">Налаштування</span>
             </Button>

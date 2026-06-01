@@ -90,7 +90,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                 <>
                     <div className="ml-5 pl-6 mt-4 border-l-2 border-slate-200">
                         {comment.replies.slice(0, 1).map((reply) => (
-                            <CommentItem key={reply.id} comment={reply} userVote={comment.userVote} />
+                            <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} />
                         ))}
 
                         {comment.replies.length > 1 && (
@@ -101,7 +101,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                                 </CollapsibleTrigger>
                                 <CollapsibleContent className="flex flex-col">
                                     {comment.replies.slice(1).map((reply) => (
-                                        <CommentItem key={reply.id} comment={reply} />
+                                        <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} />
                                     ))}
                                 </CollapsibleContent>
                             </Collapsible>

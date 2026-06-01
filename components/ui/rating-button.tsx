@@ -21,7 +21,9 @@ export default function RatingButton({ userVote, commentId, dealId, authorId, ra
                 <ChevronUp width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
             <span className={`${fontSize ? fontSize : "text-sm"} font-bold text-slate-900 ${deal ? "px-3" : "px-1"}`}>
-                {rating}{reply ? "" : "°"}
+                {rating > 0 ? `+${rating}` : rating}
+                {/* {reply ? "" : "°"} -- return this if decide to keep temperature as concept */} 
+                {reply}
             </span>
             <Button onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, -1) } else { voteDealAction(dealId, authorId, -1) } }} className={`${buttonSize} ${buttonStyle} hover:text-red-600 ${userVote === -1 ? "text-red-600 bg-red-100" : "text-slate-400"}`}>
                 <ChevronDown width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
