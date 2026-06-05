@@ -66,7 +66,7 @@ export default function ProfileUserPhoto({
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">
           <div className="flex justify-between">
-            <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">
+            <DialogTitle className="text-xl font-bold text-card tracking-tight">
               Змінити фото профілю
             </DialogTitle>
             <DialogClose onClick={() => setFiles([])} className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">

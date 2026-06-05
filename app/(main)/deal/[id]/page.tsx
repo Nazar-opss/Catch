@@ -38,7 +38,7 @@ interface DealPageProps {
     params: Promise<{ id: string }>;
 }
 
-const imageStyle = "rounded-lg object-contain w-full h-full"
+const imageStyle = "rounded-lg object-contain w-full h-full bg-card"
 
 export default async function DealPage({ params }: DealPageProps) {
     const session = await auth.api.getSession({ headers: await headers() });
@@ -103,7 +103,7 @@ export default async function DealPage({ params }: DealPageProps) {
                         <DealsCarousel images={deal.imageUrls} imageStyle={imageStyle} />
                     ) :
                         deal.imageUrls[0] ? (
-                            <div className="w-full flex items-center justify-center p-8 relative bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm aspect-video sm:aspect-21/9 lg:aspect-16/10">
+                            <div className="w-full flex items-center justify-center p-8 relative border bg-card border-border rounded-2xl overflow-hidden shadow-sm aspect-video sm:aspect-21/9 lg:aspect-16/10">
                                 <Image
                                     loading="eager"
                                     src={deal.imageUrls[0]!}
@@ -122,8 +122,8 @@ export default async function DealPage({ params }: DealPageProps) {
                     <h1 className="text-3xl sm:text-[34px] font-extrabold tracking-tight leading-[1.2] text-balance ">
                         {deal.title}
                     </h1>
-                    <div className="bg-white rounded-[20px] border border-slate-200 p-6 sm:p-8 mt-2 shadow-sm">
-                        <h2 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2" >
+                    <div className="bg-card rounded-[20px] border border-border p-6 sm:p-8 mt-2 shadow-sm">
+                        <h2 className="font-bold text-lg text-foreground mb-4 flex items-center gap-2" >
                             <Info className="w-5 h-5 text-orange-600" />
                             Про знижку
                         </h2>
@@ -131,8 +131,8 @@ export default async function DealPage({ params }: DealPageProps) {
                             {deal.description}
                         </p>
                     </div>
-                    <div className="bg-white rounded-[20px] border border-slate-200 p-6 sm:p-8 mt-2 shadow-sm">
-                        <h2 className="font-bold text-lg text-slate-900 mb-4 flex items-center gap-2" >
+                    <div className="bg-card rounded-[20px] border border-border p-6 sm:p-8 mt-2 shadow-sm">
+                        <h2 className="font-bold text-lg text-foreground mb-4 flex items-center gap-2" >
                             Коментарі
                             <span className="text-slate-500 font-normal text-lg">
                                 ({deal.commentCount})

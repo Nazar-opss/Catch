@@ -18,7 +18,7 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
                 <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={imageSize} height={imageSize} />
                 {getShopName(deal.link)}
             </div>
-            <div className="w-full h-px bg-slate-100 my-2"></div>
+            <div className="w-full h-px bg-secondary my-2"></div>
             <div className={`flex relative items-center text-slate-500 ${metaSize} ${layout === "list" ? "gap-2" : "justify-between"} font-medium`}>
                 <div className="flex items-center gap-2">
                     <div className={`w-8 h-8 rounded-full overflow-hidden`}>

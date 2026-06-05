@@ -30,7 +30,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       
-      <body className="w-full min-h-full h-full flex flex-col bg-slate-50 antialiased font-geist">
+      <body className="w-full min-h-full h-full flex flex-col bg-background antialiased font-geist">
         <ThemeProvider
             attribute="class"
             defaultTheme="system"

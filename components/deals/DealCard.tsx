@@ -44,8 +44,8 @@ export default function DealCard({ deal, layout }: DealCardProps) {
 
     return (
         <div>
-            <article data-layout={layout} key={deal.id} className="flex items-center bg-white p-5 border border-slate-200 rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
-                <div key={deal.imageUrls[0]} className="relative aspect-4/3 overflow-hidden p-4 justify-center flex items-center rounded-lg border border-slate-200 bg-slate-50 data-[layout=list]:h-full data-[layout=list]:max-w-60 data-[layout=list]:max-h-69 data-[layout=grid]:h-full">
+            <article data-layout={layout} key={deal.id} className="flex items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
+                <div key={deal.imageUrls[0]} className="relative aspect-4/3 overflow-hidden p-4 justify-center flex items-center rounded-lg border border-border bg-background data-[layout=list]:h-full data-[layout=list]:max-w-60 data-[layout=list]:max-h-69 data-[layout=grid]:h-full">
                     {
                         deal.imageUrls[0] ? (
                             <CldImage
@@ -61,7 +61,7 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                         )
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-9">
-                        <div className="items-center bg-slate-200 px-0.5 py-0.5 border border-slate-100 rounded-full">
+                        <div className="items-center bg-slate-200 dark:bg-slate-800 px-0.5 py-0.5 border border-secondary rounded-full">
                             <RatingButton rating={Number(deal.temperature)} dealId={deal.id} authorId={deal.authorId} reply={false} userVote={deal.userVote} />
                         </div>
                     </div>
@@ -70,13 +70,13 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                     {
                         layout === "list" ? (
                             <>
-                                <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
+                                <Link href={`/deal/${deal.id}`} className="text-[16px] text-card-foreground font-semibold line-clamp-2 hover:text-primary transition-colors">{deal.title}</Link>
                                 <DealPrice oldPrice={deal.oldPrice} newPrice={deal.newPrice} dealPercent={dealPercent} textSize={["text-[26px]", "text-[16px]", "text-[13px]"]} />
                             </>
                         ) : (
                             <>
                                 <DealPrice oldPrice={deal.oldPrice} newPrice={deal.newPrice} dealPercent={dealPercent} />
-                                <Link href={`/deal/${deal.id}`} className="text-[16px]  text-slate-900 font-semibold line-clamp-2 hover:text-orange-600 transition-colors">{deal.title}</Link>
+                                <Link href={`/deal/${deal.id}`} className="text-[16px] text-card-foreground font-semibold line-clamp-2 hover:text-primary transition-colors">{deal.title}</Link>
                             </>
                         )
                     }

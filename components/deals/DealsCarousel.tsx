@@ -19,7 +19,7 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
     }
     return (
         <div className="flex flex-col gap-4">
-            <div className="w-full flex items-center justify-center p-8 relative bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm aspect-video sm:aspect-21/9 lg:aspect-16/10">
+            <div className="w-full flex items-center justify-center p-8 relative bg-card border border-border rounded-2xl overflow-hidden shadow-sm aspect-video sm:aspect-21/9 lg:aspect-16/10">
                 <Carousel setApi={handleApiChange} className="w-full">
                     <CarouselContent className="aspect-video sm:aspect-21/9 lg:aspect-16/10">
                         {
@@ -44,7 +44,7 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
             <div className="flex justify-center flex-wrap gap-2">
                 {
                     images.map((image, index) => (
-                        <Button className={`rounded-xl overflow-hidden bg-white p-0  hover:bg-white aspect-square w-20 h-20 border-2 transition-all shadow-sm duration-200 hover:scale-105 cursor-pointer ${current === index ? "border-orange-600" : "border-transparent hover:border-orange-600"}`}
+                        <Button className={`rounded-xl overflow-hidden bg-card p-0  hover:bg-card aspect-square w-20 h-20 border-2 transition-all shadow-sm duration-200 hover:scale-105 cursor-pointer ${current === index ? "border-primary" : "border-transparent hover:border-primary"}`}
                             key={index} variant="secondary"
                             onClick={() => api?.scrollTo(index)}>
                             <Image
