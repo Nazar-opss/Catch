@@ -52,10 +52,10 @@
 :root {
   /* Світла тема (Light Mode) */
   --background: hsl(210 40% 98%); /* slate-50 */
-  --foreground: hsl(222.2 47.4% 11.2%); /* slate-900 */
+  --foreground: hsl(222.2 84% 4.9%); /* slate-950 */
 
   --card: hsl(0 0% 100%); /* white */
-  --card-foreground: hsl(222.2 84% 4.9%);
+  --card-foreground: hsl(222.2 47.4% 11.2%);
 
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(222.2 84% 4.9%);
@@ -84,11 +84,11 @@
 }
 
 .dark {
-  --background: hsl(222.2 47.4% 11.2%); /* slate-900 (дуже темний фон сторінки) */
+  --background: hsl(222.2 84% 4.9%); /* slate-950 (дуже темний фон сторінки) */
   --foreground: hsl(210 40% 98%); /* білий текст */
 
   --card: hsl(222.2 47.4% 11.2%); /* slate-900 (фон карток, трохи світліший за background) */
-  --card-foreground: hsl(210 40% 98%);
+  --card-foreground: hsl(0 0% 100%);
 
   --popover: hsl(222.2 47.4% 11.2%);
   --popover-foreground: hsl(210 40% 98%);

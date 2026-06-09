@@ -37,8 +37,9 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
                             ))
                         }
                     </CarouselContent>
-                    <CarouselPrevious className="w-10 h-10 z-10 left-0" />
-                    <CarouselNext className="w-10 h-10 z-10 right-0" />
+                    <CarouselPrevious className="w-10 bg-background/70 backdrop-blur-sm border-border text-foreground shadow-sm
+                    hover:bg-background hover:scale-105 transition-all duration-200 h-10 z-10 left-3" variant={"default"} />
+                    <CarouselNext className="w-10 bg-background/70 backdrop-blur-sm border-border text-foreground shadow-sm hover:bg-background hover:scale-105 transition-all duration-200 h-10 z-10 right-3" variant={"default"}/>
                 </Carousel>
             </div>
             <div className="flex justify-center flex-wrap gap-2">

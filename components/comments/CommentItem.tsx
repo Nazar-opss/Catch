@@ -45,7 +45,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
 
             <div className="flex gap-4" key={comment.id}>
                 {comment.authorImage ? (
-                    <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-slate-200" />
+                    <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-border" />
                 ) : (
                     <div className="shrink-0 rounded-full w-10 h-10 bg-orange-600 text-white flex items-center justify-center">
                         {comment.authorName.charAt(0).toUpperCase()}
@@ -53,17 +53,17 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                 )}
                 <div className="flex-1 min-w-0">
                     <div className="flex gap-2 items-center mb-1">
-                        <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-slate-900 hover:text-orange-600 transition-colors text-[15px]">
+                        <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-card-foreground hover:text-orange-600 transition-colors text-[15px]">
                             {comment.authorName}
                         </Link>
-                        <span className="text-slate-300 text-[13px]">•</span>
-                        <span className="text-slate-500 text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
+                        <span className="text-slate-400 text-[13px]">•</span>
+                        <span className="text-muted-foreground text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
                     </div>
                     <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
                             <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />
-                            <CollapsibleTrigger className="text-slate-400 hover:text-slate-900 transition-colors font-medium text-[13px] cursor-pointer">
+                            <CollapsibleTrigger className="text-muted-foreground hover:text-card-foreground transition-colors font-medium text-[13px] cursor-pointer">
                                 Відповісти
                             </CollapsibleTrigger>
 
@@ -88,14 +88,14 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
             } */}
             {comment.replies && comment.replies.length > 0 && (
                 <>
-                    <div className="ml-5 pl-6 mt-4 border-l-2 border-slate-200">
+                    <div className="ml-5 pl-6 mt-4 border-l-2 border-border">
                         {comment.replies.slice(0, 1).map((reply) => (
                             <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} />
                         ))}
 
                         {comment.replies.length > 1 && (
                             <Collapsible>
-                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium cursor-pointer mb-4">
+                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-card-foreground transition-colors font-medium cursor-pointer mb-4">
                                     <ChevronDown className="w-4 h-4" />
                                     Показати ще {comment.replies.length - 1} відповідей
                                 </CollapsibleTrigger>
@@ -107,7 +107,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                             </Collapsible>
                         )}
                     </div>
-                    <div className="w-full h-px bg-slate-100 my-6" />
+                    <div className="w-full h-px bg-secondary my-6" />
                 </>
             )}
 
