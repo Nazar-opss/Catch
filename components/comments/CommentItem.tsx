@@ -42,24 +42,23 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
 
     return (
         <div>
-
             <div className="flex gap-4" key={comment.id}>
                 {comment.authorImage ? (
                     <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-border" />
                 ) : (
-                    <div className="shrink-0 rounded-full w-10 h-10 bg-orange-600 text-white flex items-center justify-center">
+                    <div className="shrink-0 rounded-full w-10 h-10 bg-primary text-primary-foreground  flex items-center justify-center">
                         {comment.authorName.charAt(0).toUpperCase()}
                     </div>
                 )}
                 <div className="flex-1 min-w-0">
                     <div className="flex gap-2 items-center mb-1">
-                        <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-card-foreground hover:text-orange-600 transition-colors text-[15px]">
+                        <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-card-foreground hover:text-primary transition-colors text-[15px]">
                             {comment.authorName}
                         </Link>
-                        <span className="text-slate-400 text-[13px]">•</span>
+                        <span className="text-muted-foreground text-[13px]">•</span>
                         <span className="text-muted-foreground text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
                     </div>
-                    <p className="text-slate-700 text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
+                    <p className="text-secondary-foreground text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
                             <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />

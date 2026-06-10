@@ -29,7 +29,7 @@ export default function AuthPasswordInput({ form, inputLabel, placeholder, input
                     <FieldGroup className="flex flex-row justify-between">
                         <FieldLabel htmlFor={field.name}>{inputLabel}</FieldLabel>
                         {forgotPassword && <Link href="/forgot-password">
-                            <FieldLabel htmlFor={field.name} className="text-orange-600 cursor-pointer">Забули пароль?</FieldLabel>
+                            <FieldLabel htmlFor={field.name} className="text-primary cursor-pointer">Забули пароль?</FieldLabel>
                         </Link>}
                     </FieldGroup>
                     <Input
@@ -47,7 +47,7 @@ export default function AuthPasswordInput({ form, inputLabel, placeholder, input
                         variant="ghost"
                         size="icon"
                         onClick={() => setShowPassword(showPassword === "password" ? "text" : "password")}
-                        className="absolute inline-flex items-center justify-center right-0 top-1/2 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
+                        className="absolute inline-flex rounded-full items-center justify-center right-0 top-1/2 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
                         aria-label={showPassword === "password" ? "Показати пароль" : "Приховати пароль"}
                     >
                         {showPassword === "password" ? (

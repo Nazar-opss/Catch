@@ -6,7 +6,7 @@ import { DealFormValues } from "@/lib/schemas/dealSchema";
 import { Button } from "../ui/button";
 import DealFormInput from "./DealFormInput";
 
-export const inputStyle = "flex h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-[15px] text-slate-900 shadow-sm placeholder:text-slate-400 hover:border-slate-400 focus-visible:outline-none focus-visible:border-orange-600 focus-visible:ring-orange-600/10 transition-all duration-200"
+export const inputStyle = "flex h-11 w-full rounded-lg border border-border bg-card px-3.5 py-2 text-[15px] text-card-foreground shadow-sm placeholder:text-muted-foreground hover:border-muted-foreground focus-visible:outline-none focus-visible:border-primary focus-visible:ring-ring/10 transition-all duration-200"
 
 export default function DealFormContent({ form }: { form: UseFormReturn<DealFormValues> }) {
     return (
@@ -34,12 +34,12 @@ export default function DealFormContent({ form }: { form: UseFormReturn<DealForm
                             maxFiles={5}
                             className="w-full cursor-pointer"
                         >
-                            <FileUploadDropzone asChild aria-label="Dropzone for file upload" className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-slate-300">
+                            <FileUploadDropzone asChild aria-label="Dropzone for file upload" className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-border">
                                 <div className="flex flex-col items-center transition-colors duration-200">
-                                    <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-orange-200 group-hover:bg-orange-50 transition-colors">
-                                        <Upload className="size-6 text-muted-foreground group-hover:text-orange-600 transition-colors" />
+                                    <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-primary group-hover:bg-orange-500/20 transition-colors">
+                                        <Upload className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
                                     </div>
-                                    <p className="text-slate-700 font-medium  text-sm mb-1 group-hover:text-slate-900">Перетягніть фото сюди або <span className="text-orange-500 font-bold">натисніть</span> для завантаження</p>
+                                    <p className="text-secondary-foreground font-medium  text-sm mb-1 group-hover:text-card-foreground">Перетягніть фото сюди або <span className="text-primary font-bold">натисніть</span> для завантаження</p>
                                     <p className="text-slate-500 text-xs ">
                                         JPG, PNG, WebP (макс. 5MB)
                                     </p>

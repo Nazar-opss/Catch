@@ -57,7 +57,7 @@ export default function ResetPasswordPage() {
                     variant="outline"
                     disabled={loading || !token}
                     onClick={form.handleSubmit(onSubmit)}
-                    className="px-5 py-2.5 mt-3 w-full text-[15px] bg-orange-600 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95"
+                    className="px-5 py-2.5 mt-3 w-full text-[15px] bg-primary dark:bg-primary dark:hover:bg-orange-700 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95"
                 >
                     {loading ? "Збереження..." : "Зберегти"}
                 </Button>
