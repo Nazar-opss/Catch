@@ -27,8 +27,8 @@ export default function AuthHeader() {
 
     return (
         <div className="mb-8 text-center z-10">
-            <h1 className="text-[26px] sm:text-[28px] font-bold text-slate-900 tracking-tight mb-2.5">{current?.title}</h1>
-            <p className="text-[15px] text-gray-600 text-center max-w-[320px]">{current?.description}</p>
+            <h1 className="text-[26px] sm:text-[28px] font-bold text-card-foreground tracking-tight mb-2.5">{current?.title}</h1>
+            <p className="text-[15px] text-muted-foreground text-center max-w-[320px]">{current?.description}</p>
         </div>
     )
 }

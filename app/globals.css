@@ -50,38 +50,37 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.553 0.195 38.402);
-  --primary-foreground: oklch(0.98 0.016 73.684);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.845 0.143 164.978);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.596 0.145 163.225);
-  --chart-4: oklch(0.508 0.118 165.612);
-  --chart-5: oklch(0.432 0.095 166.913);
-  --radius: 0.45rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.646 0.222 41.116);
-  --sidebar-primary-foreground: oklch(0.98 0.016 73.684);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Світла тема (Light Mode) */
+  --background: hsl(210 40% 98%); /* slate-50 */
+  --foreground: hsl(222.2 84% 4.9%); /* slate-950 */
+
+  --card: hsl(0 0% 100%); /* white */
+  --card-foreground: hsl(222.2 47.4% 11.2%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222.2 84% 4.9%);
+
+  /* Фірмовий помаранчевий (Tailwind orange-600) */
+  --primary: hsl(24 93% 47%);
+  --primary-foreground: hsl(210 40% 98%); /* білий текст на помаранчевому фоні */
+
+  --secondary: hsl(210 40% 96.1%); /* slate-100 */
+  --secondary-foreground: hsl(222.2 47.4% 11.2%);
+
+  --muted: hsl(210 40% 96.1%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%); /* slate-500 */
+
+  --accent: hsl(210 40% 96.1%);
+  --accent-foreground: hsl(222.2 47.4% 11.2%);
+
+  --destructive: hsl(0 84.2% 60.2%); /* red-500 */
+  --destructive-foreground: hsl(210 40% 98%);
+
+  --border: hsl(214.3 31.8% 91.4%); /* slate-200 */
+  --input: hsl(214.3 31.8% 91.4%);
+  --ring: hsl(24 93% 47%); /* помаранчевий outline при фокусі */
+
+  --radius: 0.75rem; /* rounded-xl для карток */
 }
 
 .dark {
@@ -89,7 +88,7 @@
   --foreground: hsl(210 40% 98%); /* білий текст */
 
   --card: hsl(222.2 47.4% 11.2%); /* slate-900 (фон карток, трохи світліший за background) */
-  --card-foreground: hsl(210 40% 98%);
+  --card-foreground: hsl(0 0% 100%);
 
   --popover: hsl(222.2 47.4% 11.2%);
   --popover-foreground: hsl(210 40% 98%);

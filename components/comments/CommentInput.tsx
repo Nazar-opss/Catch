@@ -143,7 +143,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                     unoptimized 
                 />
             ) : session?.user ? (
-                <div className={`shrink-0 rounded-full ${reply ? "w-8 h-8" : "w-12 h-12"} bg-orange-600 text-white flex items-center justify-center text-lg font-semibold`}>
+                <div className={`shrink-0 rounded-full ${reply ? "w-8 h-8" : "w-12 h-12"} bg-primary text-card-foreground flex items-center justify-center text-lg font-semibold`}>
                     {session.user.name?.charAt(0).toUpperCase() ?? "?"}
                 </div>
             ) : null}
@@ -180,7 +180,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                             </FileUploadDropzone>
                             <form
                                 onSubmit={form.handleSubmit(onSubmit)}
-                                className="relative flex w-full flex-col rounded-xl border border-slate-200 bg-white outline-none focus-within:ring-2 focus-within:ring-orange-600/20 focus-within:border-orange-500 transition-all overflow-hidden shadow-sm"
+                                className="relative flex w-full flex-col rounded-xl border border-border bg-card outline-none focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-orange-500 transition-all overflow-hidden shadow-sm"
                             >
                                 <FileUploadList
                                     orientation="horizontal"
@@ -217,12 +217,12 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                 onInputChange(e);
                                             }}
                                             placeholder={reply ? `Відповісти @${parentName}` : "Написати коментар..."}
-                                            className={`rounded-none text-slate-900 placeholder:text-slate-400 ${reply ? "px-3! py-2.5!" : "px-4! py-3.5!"}  sm:text-[15px] sm:leading-6 ${reply ? "min-h-17.5" : "min-h-22.5"} resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent `}
+                                            className={`rounded-none text-card-foreground placeholder:text-muted-foreground ${reply ? "px-3! py-2.5!" : "px-4! py-3.5!"}  sm:text-[15px] sm:leading-6 ${reply ? "min-h-17.5" : "min-h-22.5"} resize-y w-full border-0 bg-transparent p-0 shadow-none focus-visible:ring-0 dark:bg-transparent `}
                                             disabled={isUploading}
                                         />
                                     )}
                                 />
-                                <div className="flex items-center justify-between bg-slate-50 border-t border-slate-100 px-3 py-2.5">
+                                <div className="flex items-center justify-between bg-card border-t border-secondary px-3 py-2.5">
                                     <div className="flex items-center">
                                         <FileUploadTrigger asChild>
                                             <Button
@@ -231,7 +231,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                 variant="ghost"
                                                 // TODO: add upload images feature, update bd, add images to comment
                                                 disabled
-                                                className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
+                                                className="cursor-pointer p-1.5 text-muted-foreground hover:text-card-foreground hover:bg-border/50 rounded-md transition-colors"
                                             >
                                                 <ImageIcon className="size-5" />
                                                 <span className="sr-only">Додати зображення</span>
@@ -243,7 +243,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                     type="button"
                                                     size="icon"
                                                     variant="ghost"
-                                                    className="cursor-pointer p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200/50 rounded-md transition-colors"
+                                                    className="cursor-pointer p-1.5 text-muted-foreground hover:text-card-foreground hover:bg-border/50 rounded-md transition-colors"
                                                 >
                                                     <Smile className="size-5 " />
                                                     <span className="sr-only">Додати емодзі</span>
@@ -261,7 +261,9 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                     onEmojiClick={(emojiObject) => {
                                                         form.setValue('content', `${form.getValues().content}${emojiObject.emoji}`)
                                                         console.log(emojiObject)
-                                                    }} />
+                                                    }} 
+                                                    className="bg-card text-card-foreground"
+                                                />
                                             </PopoverContent>
                                         </Popover>
 
@@ -269,7 +271,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                     </div>
                                     <Button
                                         type="submit"
-                                        className="rounded-lg font-medium px-5 py-1.5 bg-orange-600 text-white cursor-pointer hover:bg-orange-700 transition-all text-sm shadow-sm h-8"
+                                        className="rounded-lg font-medium px-5 py-1.5 bg-primary text-white cursor-pointer hover:bg-orange-700 transition-all text-sm shadow-sm h-8"
                                         disabled={!form.getValues().content.trim() || isUploading}
                                         onClick={() => onSubmit(form.getValues())}
                                     >

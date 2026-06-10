@@ -53,7 +53,7 @@ function DealEmpty() {
           <circle cx="170" cy="100" r="2" fill="#cbd5e1"></circle>
         </svg>
       </div>
-      <h2 className="text-3xl font-bold text-slate-900 mb-4">
+      <h2 className="text-3xl font-bold text-card-foreground mb-4">
         На жаль, тут порожньо...
       </h2>
       <p className="text-base text-slate-600 mb-10 leading-relaxed">
@@ -62,7 +62,7 @@ function DealEmpty() {
       </p>
       <Button
         onClick={() => setModal(true)}
-        className="items-center justify-center px-5 py-2.5 h-full text-[14px] bg-[#ea580c] text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
+        className="items-center justify-center px-5 py-2.5 h-full text-[14px] bg-primary text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
       >
         <Plus />
         Додати знижку

@@ -66,10 +66,10 @@ export default function ProfileUserPhoto({
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">
           <div className="flex justify-between">
-            <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">
+            <DialogTitle className="text-xl font-bold text-card-foreground tracking-tight">
               Змінити фото профілю
             </DialogTitle>
-            <DialogClose onClick={() => setFiles([])} className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
+            <DialogClose onClick={() => setFiles([])} className="w-5 h-5 p-2 bg-card items-center box-content flex justify-center rounded-full cursor-pointer text-muted-foreground hover:bg-secondary hover:text-card-foreground transition-colors">
               <X height={20} width={20} className="" aria-hidden={false} />
             </DialogClose>
           </div>
@@ -89,15 +89,15 @@ export default function ProfileUserPhoto({
             <FileUploadDropzone
               asChild
               aria-label="Dropzone for file upload"
-              className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-slate-300"
+              className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-border"
             >
               <div className="flex flex-col items-center transition-colors duration-200">
-                <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-orange-200 group-hover:bg-orange-50 transition-colors">
+                <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-orange-600 group-hover:bg-orange-500/20 transition-colors">
                   <Upload className="size-6 text-muted-foreground group-hover:text-orange-600 transition-colors" />
                 </div>
-                <p className="text-slate-700 font-medium text-center text-sm mb-1 group-hover:text-slate-900">
+                <p className="text-secondary-foreground font-medium text-center text-sm mb-1 group-hover:text-card-foreground">
                   Перетягніть фото сюди або{" "}
-                  <span className="text-orange-500 font-bold">натисніть</span>{" "}
+                  <span className="text-primary font-bold">натисніть</span>{" "}
                   для завантаження
                 </p>
               </div>

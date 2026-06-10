@@ -15,7 +15,6 @@ export default async function UserPage({ params, searchParams }: { params: Promi
     const session = await auth.api.getSession({ headers: await headers() });
     const { username } = await params;
     const searchParam = await searchParams;
-    console.log(searchParam)
 
     const user = await db
         .selectFrom("user")
@@ -68,9 +67,6 @@ export default async function UserPage({ params, searchParams }: { params: Promi
             .where("vote.userId", "=", session?.user?.id ?? "")
             .as("userVote")
     ]).execute();
-
-    console.log(saved)
-    console.log(comments)
 
     let content: (typeof deals[number] | typeof comments[number])[] = deals;
     switch (searchParam.tab) {

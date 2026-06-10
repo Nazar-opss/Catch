@@ -19,7 +19,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                 <Plus />
                 Додати знижку
             </Button>
-            <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-slate-100 hover:border-slate-200 cursor-pointer">
+            <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-secondary hover:border-border cursor-pointer">
                 <div className="w-8 h-8 rounded-full overflow-hidden">
                     <Image className="rounded-full object-cover h-full w-full" width={32} height={32} unoptimized quality={90} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
                 </div>
@@ -27,7 +27,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                     <DropdownMenuTrigger asChild>
                         <ChevronDown className="w-6 h-6 text-slate-400" />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="center" className="bg-white/50 backdrop-blur-md text-slate-900 mt-2.5 border-slate-200 ">
+                    <DropdownMenuContent align="center" className="bg-card/50 backdrop-blur-md text-foreground mt-2.5 border-border ">
                         <Link href={`/user/${session?.user?.username}`}>
                             <DropdownMenuItem className="cursor-pointer">
                                 <UserIcon />

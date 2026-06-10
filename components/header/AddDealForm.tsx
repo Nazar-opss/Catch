@@ -59,9 +59,9 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogContent showCloseButton={false} aria-describedby="Додати нову знижку" className="mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar">
-                    <DialogHeader className="flex justify-between">
-                        <DialogTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DialogTitle>
-                        <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-colors">
+                    <DialogHeader className="flex justify-between bg-card">
+                        <DialogTitle className="text-xl font-bold text-card-foreground tracking-tight">Додати нову знижку</DialogTitle>
+                        <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-muted-foreground hover:bg-secondary hover:text-card-foreground transition-colors">
                             <X height={20} width={20} className="" aria-hidden={false} />
                         </DialogClose>
 
@@ -71,10 +71,10 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                     </div>
                     <DialogFooter >
                         <DialogClose asChild onClick={() => form.reset()}>
-                            <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer border border-slate-300">Скасувати</Button>
+                            <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer border border-border">Скасувати</Button>
                         </DialogClose>
                         <DialogClose type="submit" onClick={form.handleSubmit(onSubmit)} asChild>
-                            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">Опублікувати</Button>
+                            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-card-foreground bg-primary hover:bg-orange-700 cursor-pointer">Опублікувати</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>
@@ -95,7 +95,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                         <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer">Скасувати</Button>
                     </DrawerClose>
                     <DrawerClose type="submit" asChild>
-                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">Додати</Button>
+                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-card-foreground bg-primary hover:bg-orange-700 cursor-pointer">Додати</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </DrawerContent>

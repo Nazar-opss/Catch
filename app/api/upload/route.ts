@@ -17,7 +17,7 @@ export async function POST(req: Request) {
                     folder: 'uploads',
                     format: 'avif',           
                     transformation: [
-                        { width: 400, height: 400, crop: "fill", gravity: "face", quality: "auto:best", fetch_format: "auto" },
+                        { crop: "fit", quality: "auto:best", fetch_format: "auto" },
                     ],
                 },
                 (error, result) => {

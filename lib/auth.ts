@@ -24,7 +24,12 @@ export const auth = betterAuth({
             username: {
                 type: "string",
                 required: false,
-            }
+            },
+            theme: {
+                type: "string",
+                defaultValue: "light",
+                required: false,
+    },
         }
     },
     emailAndPassword: {

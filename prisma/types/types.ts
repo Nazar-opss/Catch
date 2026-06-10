@@ -4,6 +4,11 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export const Theme = {
+    light: "light",
+    dark: "dark"
+} as const;
+export type Theme = (typeof Theme)[keyof typeof Theme];
 export type Account = {
     id: string;
     accountId: string;
@@ -71,6 +76,7 @@ export type User = {
     createdAt: Timestamp;
     updatedAt: Timestamp;
     karma: Generated<number>;
+    theme: Generated<Theme>;
 };
 export type Verification = {
     id: string;
