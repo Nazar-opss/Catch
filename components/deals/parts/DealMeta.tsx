@@ -1,4 +1,4 @@
-import dayjs from "dayjs"
+import dayjs from "@/lib/dayjs";
 import { Clock, MessageCircleMore } from "lucide-react"
 import Image from "next/image"
 import { getShopIcon, getShopName } from "@/lib/utils"

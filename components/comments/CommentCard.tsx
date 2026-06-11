@@ -1,29 +1,6 @@
-import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime'
-import updateLocale from 'dayjs/plugin/updateLocale'
+import dayjs from "@/lib/dayjs";
 import { ChevronDown, ChevronUp, Minus, MoveRight } from "lucide-react";
 import Link from "next/link";
-
-dayjs.extend(relativeTime)
-dayjs.extend(updateLocale)
-
-dayjs.updateLocale('en', {
-    relativeTime: {
-        future: "за %s",
-        past: "%s",
-        s: 'декілька секунд тому',
-        m: "1 хв тому",
-        mm: "%d хв тому",
-        h: "1 год тому",
-        hh: "%d год тому",
-        d: "1 дн тому",
-        dd: "%d дн тому",
-        M: "1 міс тому",
-        MM: "%d міс тому",
-        y: "1 р",
-        yy: "%d р"
-    }
-})
 
 interface CommentCardProps {
     createdAt: Date;

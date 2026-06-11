@@ -54,6 +54,8 @@ export default async function Home({ searchParams }: { searchParams: { view?: st
   }
   const dealsArray = await deals.limit(20).execute();
 
+  
+
   return (
     <main className="flex flex-1 w-full max-w-7xl items-center flex-col mx-auto py-8 sm:px-6 px-4">
       <FilterBar />

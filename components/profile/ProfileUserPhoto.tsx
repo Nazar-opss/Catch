@@ -15,7 +15,6 @@ import {
   FileUploadClear,
   FileUploadDropzone,
   FileUploadItem,
-  FileUploadItemDelete,
   FileUploadItemPreview,
 } from "../ui/file-upload";
 import { updateUserPhoto } from "@/lib/actions/user";
@@ -92,8 +91,8 @@ export default function ProfileUserPhoto({
               className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-border"
             >
               <div className="flex flex-col items-center transition-colors duration-200">
-                <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-orange-600 group-hover:bg-orange-500/20 transition-colors">
-                  <Upload className="size-6 text-muted-foreground group-hover:text-orange-600 transition-colors" />
+                <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-primary group-hover:bg-orange-500/20 transition-colors">
+                  <Upload className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
                 <p className="text-secondary-foreground font-medium text-center text-sm mb-1 group-hover:text-card-foreground">
                   Перетягніть фото сюди або{" "}
@@ -142,7 +141,7 @@ export default function ProfileUserPhoto({
             </Button>
           </DialogClose>
           <DialogClose type="submit" onClick={() => onSubmit(files)} asChild>
-            <Button  className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-[#ea580c] hover:bg-orange-700 cursor-pointer">
+            <Button  className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer">
               Зберегти зміни
             </Button>
           </DialogClose>

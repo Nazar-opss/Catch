@@ -7,33 +7,10 @@ import { Info } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { buildCommentTree } from "@/lib/buildCommentTree";
-import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime'
-import updateLocale from 'dayjs/plugin/updateLocale'
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-
 import DealAsideInfo from "@/components/deals/DealAsideInfo";
-dayjs.extend(relativeTime)
-dayjs.extend(updateLocale)
 
-dayjs.updateLocale('en', {
-    relativeTime: {
-        future: "за %s",
-        past: "%s",
-        s: 'декілька сек тому',
-        m: "1 хв тому",
-        mm: "%d хв тому",
-        h: "1 год тому",
-        hh: "%d год тому",
-        d: "1 дн тому",
-        dd: "%d дн тому",
-        M: "1 міс тому",
-        MM: "%d міс тому",
-        y: "1 р тому",
-        yy: "%d р тому"
-    }
-})
 interface DealPageProps {
     params: Promise<{ id: string }>;
 }

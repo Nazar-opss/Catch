@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeSync } from "@/components/theme-sync";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { db } from "@/server/db";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,11 +19,12 @@ export const metadata: Metadata = {
   description: "Catch - злови свою знижку",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   // const session = await auth.api.getSession({
   //   headers: await headers(),
   // });
@@ -45,23 +43,25 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-      
-      <body className="w-full min-h-full h-full flex flex-col bg-background antialiased font-geist">
-        <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            // defaultTheme={defaultTheme}
-            enableSystem
-            disableTransitionOnChange
-          >
-            {/* <ThemeSync theme={defaultTheme} /> */}
-            {children}
-        </ThemeProvider>
-      </body>
-    </html>
+        lang="en"
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        
+        <body className="w-full min-h-full h-full flex flex-col bg-background antialiased font-geist">
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                // defaultTheme={defaultTheme}
+                enableSystem
+                disableTransitionOnChange
+                >
+                <Providers>
+                  {/* <ThemeSync theme={defaultTheme} /> */}
+                  {children}
+              </Providers>
+            </ThemeProvider>
+        </body>
+      </html>
   );
 }

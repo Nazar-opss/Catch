@@ -1,8 +1,6 @@
 "use client"
-import dayjs from "dayjs";
+import dayjs from "@/lib/dayjs";
 import Image from "next/image";
-import relativeTime from 'dayjs/plugin/relativeTime'
-import updateLocale from 'dayjs/plugin/updateLocale'
 import RatingButton from "../ui/rating-button";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -10,27 +8,6 @@ import CommentInput from "./CommentInput";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import type { CommentWithAuthor } from "@/lib/buildCommentTree";
-
-dayjs.extend(relativeTime)
-dayjs.extend(updateLocale)
-
-dayjs.updateLocale('en', {
-    relativeTime: {
-        future: "за %s",
-        past: "%s",
-        s: 'декілька сек',
-        m: "1 хв",
-        mm: "%d хв",
-        h: "1 год",
-        hh: "%d год",
-        d: "1 дн",
-        dd: "%d дн",
-        M: "1 міс",
-        MM: "%d міс",
-        y: "1 р",
-        yy: "%d р"
-    }
-})
 
 interface CommentItemProps {
     comment: CommentWithAuthor;

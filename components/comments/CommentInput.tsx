@@ -43,7 +43,6 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
 
         const imageUrls: string[] = data.urls.map((image: { secure_url: string }) => image.secure_url);
         const payload = { ...values, images: imageUrls, dealId: dealId, parentId: parentId };
-        console.log(payload)
         const result = await createCommentAction(payload)
         console.log(result)
         if (result?.success) {
@@ -260,7 +259,6 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
                                                     autoFocusSearch={false}
                                                     onEmojiClick={(emojiObject) => {
                                                         form.setValue('content', `${form.getValues().content}${emojiObject.emoji}`)
-                                                        console.log(emojiObject)
                                                     }} 
                                                     className="bg-card text-card-foreground"
                                                 />
