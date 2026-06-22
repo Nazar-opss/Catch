@@ -5,6 +5,7 @@ import InstagramIcon from "../ui/instagram";
 import Telegram from "../ui/telegram";
 import { Button } from "../ui/button";
 import TelegramIcon from "../ui/telegramIcon";
+import ThemeButton from "../ui/theme-button";
 
 
 
@@ -34,9 +35,13 @@ export default function Footer() {
                         </Button>
                     </div>
                 </div>
-                <div className="mt-8 pt-8 border-t border-secondary text-center text-xs text-slate-400">
-                    © 2026 Catch - Спільнота найкращих знижок України.
+                <div className="flex justify-between mt-8 pt-6 border-t items-center">
+                    <div className=" border-secondary text-center text-sm text-muted-foreground">
+                        © 2026 Catch - Спільнота найкращих знижок України.
+                    </div>
+                    <ThemeButton/>
                 </div>
+
             </div>
         </footer>
     )

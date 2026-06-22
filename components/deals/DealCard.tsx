@@ -42,6 +42,8 @@ export default function DealCard({ deal, layout }: DealCardProps) {
 
     const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
 
+    // TODO: add skeleton for loading
+
     return (
         <div>
             <article data-layout={layout} key={deal.id} className="flex items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">

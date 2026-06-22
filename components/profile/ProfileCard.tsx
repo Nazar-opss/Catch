@@ -1,30 +1,11 @@
-'use client'
 import Settings from "./settings";
 import { Selectable } from "kysely";
-import { Theme, User } from "@/prisma/types/types";
+import { User } from "@/prisma/types/types";
 import ProfileUserInfo from "./ProfileUserInfo";
-import { Moon, Sun } from "lucide-react";
-import { Button } from "../ui/button";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { toggleTheme } from "@/lib/actions/theme";
+import ThemeButton from "../ui/theme-button";
 
 
 export default function ProfileCard({ user, isOwnProfile }: { user: Selectable<User>, isOwnProfile: boolean }) {
-    const { setTheme, theme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-    // Detect client mount so theme-dependent classes only render after hydration,
-    // avoiding an SSR/client mismatch (theme is undefined on the server).
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    useEffect(() => setMounted(true), []);
-    const isDark = mounted && theme === "dark";
-
-    function handleChange(next: Theme) {
-    setTheme(next);
-    toggleTheme(next);
-  }
-
-    const themeButtonBase = "flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg py-2 text-center text-sm font-medium transition-all duration-200";
     return (
         <div className=" bg-card rounded-[24px] border border-border shadow-sm p-8 flex flex-col gap-8">
             <ProfileUserInfo user={user} isOwnProfile={isOwnProfile} />
@@ -53,16 +34,7 @@ export default function ProfileCard({ user, isOwnProfile }: { user: Selectable<U
             )}
             <div className="w-full">
                 <span className="px-1.5 text-xs font-bold uppercase tracking-wider text-slate-400">Тема:</span>
-                <div className="mt-3 flex w-full items-center rounded-xl bg-secondary p-1 gap-2">
-                    <Button onClick={() => handleChange("light")} className={`${themeButtonBase} ${!isDark ? 'bg-card text-foreground shadow-sm hover:bg-card' : 'text-slate-400 bg-transparent hover:text-slate-200'}`}>
-                        <Sun className={`h-4 w-4 ${!isDark ? 'text-orange-400' : 'text-slate-400'}`} />
-                        Світла
-                    </Button>
-                    <Button onClick={() => handleChange("dark")} className={`${themeButtonBase} ${isDark ? 'bg-slate-700 hover:bg-slate-700 text-foreground shadow-sm' : 'text-slate-400 bg-transparent hover:text-slate-200'}`}>
-                        <Moon className={`h-4 w-4 ${isDark ? 'text-orange-400' : 'text-slate-400'}`} />
-                        Темна
-                    </Button>
-                </div>
+                <ThemeButton/>
             </div>
         </div>
     )

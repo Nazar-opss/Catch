@@ -1,6 +1,8 @@
 import DealEmpty from "@/components/deals/DealEmpty";
+import DealsFeed from "@/components/deals/DealsFeed";
 import DealsList from "@/components/deals/DealsList";
 import { FilterBar } from "@/components/filters/FilterBar";
+import { getDealsPage } from "@/lib/actions/deals";
 import { auth } from "@/lib/auth";
 import { Deal } from "@/prisma/types/types";
 import { db } from "@/server/db";
@@ -18,51 +20,26 @@ export default async function Home({ searchParams }: { searchParams: { view?: st
   const session = await auth.api.getSession({ headers: await headers() });
   const currentUserId = session?.user.id;
 
-  const { view, sort } = await searchParams
-
+  const { view, sort }: { view?: string, sort?: string } = await searchParams
   const layout = view === "list" ? "list" : "grid"
 
-  let deals = db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").select((eb) => [
-    "user.name as authorName",
-    "user.image as authorImage",
-    eb.selectFrom("comment")
-      .select(eb.fn.count<number>("id").as("count"))
-      .whereRef("comment.dealId", "=", ("deal.id"))
-      .as("commentCount"),
-    eb.selectFrom("vote")
-      .select("value")
-      .whereRef("vote.dealId", "=", "deal.id")
-      .where("vote.userId", "=", currentUserId ?? "")
-      .as("userVote")
-  ])
-
-  switch (sort) {
-    case "new":
-      deals = deals.orderBy("deal.createdAt", "desc")
-      break;
-    case "discussed":
-      deals = deals.orderBy((eb) =>
-        eb.selectFrom("comment")
-          .select(eb.fn.count<number>("id").as("count"))
-          .whereRef("comment.dealId", "=", "deal.id"),
-        "desc")
-      break;
-    case "hot":
-    default:
-      deals = deals.orderBy("temperature", "desc")
-      break
-  }
-  const dealsArray = await deals.limit(20).execute();
-
+  const firstPage = await getDealsPage({sort, currentUserId, cursor: null})
   
 
   return (
     <main className="flex flex-1 w-full max-w-7xl items-center flex-col mx-auto py-8 sm:px-6 px-4">
       <FilterBar />
-      {
+      {/* {
         dealsArray.length === 0 && <DealEmpty/>
       }
-      <DealsList deals={dealsArray} layout={layout} />
+      <DealsList deals={dealsArray} layout={layout} /> */}
+      <DealsFeed 
+        key={sort ?? "hot"}
+        initialPage={firstPage}
+        layout={layout}
+        sort={sort ?? "hot"}
+      />
+
     </main>
   );
 }
