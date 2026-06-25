@@ -32,7 +32,7 @@ function decodeCursor(s?: string | null): DealsCursor | null {
     }
 }
 
-export async function getDealsPage(params: {cursor?: string | null, currentUserId?: string, filter?: "hot" | "new" | "discussed", sort?: string, limit?: number}): Promise<DealsPage> {
+export async function getDealsPage(params: {cursor?: string | null, currentUserId?: string, q: string | null, filter?: "hot" | "new" | "discussed", sort?: string, limit?: number}): Promise<DealsPage> {
     const sortMode: SortMode = params.sort === "new" || params.sort === "discussed" ? params.sort : "hot"
 
     const limit = params.limit ?? pageSize
@@ -40,6 +40,10 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
     const cursor = decodeCursor(params.cursor)
 
     const uid = params.currentUserId ?? ""
+
+    const q = params.q?.trim() ? params.q.trim() : null
+
+    const relevance = sql<number>`similarity("deal"."title", ${q})`
 
     const createdAtMs = sql<Date>`date_trunc('milliseconds', "deal"."createdAt")`;
 
@@ -63,49 +67,72 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
                         .where("vote.userId", "=", uid)
                         .as("userVote")
                 ])
-    switch(sortMode) {
-        case "new": {
-                query = query.orderBy("deal.createdAt", "desc").orderBy("deal.id", "desc")
+    if (q) {
+        query = query.select(relevance.as("_score"))
+        const like = `%${q}%`
+
+        query = query.where((eb) => eb.or([
+            eb(sql`"deal"."title"`, "ilike", like),
+            eb(sql`"deal"."description"`, "ilike", like),
+            eb(relevance, ">", 0.2)
+        ]))
+        .orderBy(relevance, "desc")
+        .orderBy("deal.id", "desc")
+        if (cursor) {
+            const v = Number(cursor.v)
+            query = query.where((eb) => 
+            eb.or([
+                eb(relevance, "<", v),
+                eb.and([eb(relevance, "=", v), eb("deal.id", "<", cursor.id)])
+            ]))
+        }
+    }
+    else {
+
+        switch(sortMode) {
+            case "new": {
+                    query = query.orderBy("deal.createdAt", "desc").orderBy("deal.id", "desc")
+                    if(cursor) {
+                        const v = new Date(cursor.v)
+                        query = query.where((eb) => 
+                            eb.or([
+                                eb(createdAtMs, "<", v),
+                                eb.and([eb(createdAtMs, "=", v), eb("deal.id", "<", cursor.id)])
+                            ])
+                    )
+                }
+                break;
+            }
+            case "discussed": {
+                query = query.orderBy((eb) => commentCount(eb), "desc").orderBy("deal.id", "desc")
                 if(cursor) {
-                    const v = new Date(cursor.v)
-                    query = query.where((eb) => 
+                    const v = Number(cursor.v)
+                    query = query.where((eb) =>
                         eb.or([
-                            eb(createdAtMs, "<", v),
-                            eb.and([eb(createdAtMs, "=", v), eb("deal.id", "<", cursor.id)])
+                            eb(commentCount(eb), "<", v),
+                            eb.and([eb(commentCount(eb), "=", v), eb("deal.id", "<", cursor.id)])
                         ])
-                )
-            }
+                    )
+                }
             break;
-        }
-        case "discussed": {
-            query = query.orderBy((eb) => commentCount(eb), "desc").orderBy("deal.id", "desc")
-            if(cursor) {
-                const v = Number(cursor.v)
-                query = query.where((eb) =>
-                    eb.or([
-                        eb(commentCount(eb), "<", v),
-                        eb.and([eb(commentCount(eb), "=", v), eb("deal.id", "<", cursor.id)])
-                    ])
-                )
             }
-        break;
-        }
-        case "hot":
-        default: {
-            query = query.orderBy("deal.temperature", "desc").orderBy("deal.id", "desc")
-            if(cursor) {
-                const v = Number(cursor.v)
-                query = query.where((eb) =>
-                    eb.or([
-                        eb("deal.temperature", "<", v),
-                        eb.and([
-                            eb("deal.temperature", "=", v),
-                            eb("deal.id", "<", cursor.id)
+            case "hot":
+            default: {
+                query = query.orderBy("deal.temperature", "desc").orderBy("deal.id", "desc")
+                if(cursor) {
+                    const v = Number(cursor.v)
+                    query = query.where((eb) =>
+                        eb.or([
+                            eb("deal.temperature", "<", v),
+                            eb.and([
+                                eb("deal.temperature", "=", v),
+                                eb("deal.id", "<", cursor.id)
+                            ])
                         ])
-                    ])
-                )
+                    )
+                }
+                break;
             }
-            break;
         }
     }
     const rows = (await query.limit(limit + 1).execute()) as DealWithAuthor[]
@@ -116,12 +143,16 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
     if(hasMore && items.length > 0) {
         const last = items[items.length - 1]
         const v = 
-            sortMode === "new"
-            ? new Date(last.createdAt as unknown as string).toISOString() 
-            : sortMode === "discussed"
-            ? Number(last.commentCount ?? 0)
-            : Number(last.temperature)
+        q 
+            ? Number((last as DealWithAuthor & {_score?: number})._score ?? 0) 
+            : sortMode === "new"
+                ? new Date(last.createdAt as unknown as string).toISOString() 
+                : sortMode === "discussed"
+                    ? Number(last.commentCount ?? 0)
+                    : Number(last.temperature)
         nextCursor = encodeCursor({ v, id: last.id }) 
     }
     return {items, nextCursor}
 }
+
+// implement search

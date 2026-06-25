@@ -91,7 +91,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                 </aside>
                 <div className="flex-1 min-w-0 w-full">
                     {searchParam.settings === "true" 
-                    ? <ProfileSettings userName={user.name} email={user.email} /> 
+                    ? <ProfileSettings name={user.name} userName={user.username} email={user.email} emailVerified={user.emailVerified} /> 
                     : <>
                         <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
                         <div className={`${searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }`}>

@@ -16,14 +16,14 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null
 }
 
-export default async function Home({ searchParams }: { searchParams: { view?: string, sort?: string | "hot" } }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ view?: string, sort?: string | "hot", q?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const currentUserId = session?.user.id;
 
-  const { view, sort }: { view?: string, sort?: string } = await searchParams
+  const { view, sort, q } = await searchParams
   const layout = view === "list" ? "list" : "grid"
 
-  const firstPage = await getDealsPage({sort, currentUserId, cursor: null})
+  const firstPage = await getDealsPage({sort, q: q ?? null, currentUserId, cursor: null})
   
 
   return (
@@ -34,12 +34,12 @@ export default async function Home({ searchParams }: { searchParams: { view?: st
       }
       <DealsList deals={dealsArray} layout={layout} /> */}
       <DealsFeed 
-        key={sort ?? "hot"}
+        key={`${sort ?? "hot"}:${q ?? ""}`}
         initialPage={firstPage}
         layout={layout}
         sort={sort ?? "hot"}
+        q={q ?? ""}
       />
-
     </main>
   );
 }

@@ -10,9 +10,10 @@ import { formSchema, DealFormValues } from "@/lib/schemas/dealSchema";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import { createDealAction } from "@/lib/actions/deal";
+import { useState } from "react";
 
 export default function AddDealForm({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
-    // const [state, action, isPending] = useActionState(createDealAction, null)
+    const [dealType, setDealType] = useState<"online" | "offline">("online")
 
     const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
@@ -64,17 +65,28 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                         <DialogClose className="w-5 h-5 p-2 bg-transparent items-center box-content flex justify-center rounded-full cursor-pointer text-muted-foreground hover:bg-secondary hover:text-card-foreground transition-colors">
                             <X height={20} width={20} className="" aria-hidden={false} />
                         </DialogClose>
-
                     </DialogHeader>
+                    <div className="flex items-center w-full bg-secondary rounded-xl p-1">
+                        <button onClick={() => setDealType("online")} className={`flex cursor-pointer transition-all duration-200 gap-2 px-4 p-1.5 w-full font-medium justify-center items-center text-[13px] rounded-lg ${dealType === "online" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}>
+                            <span className="hidden sm:inline">
+                                Онлайн
+                            </span>
+                        </button>
+                        <button onClick={() => setDealType("offline")} className={`flex cursor-pointer gap-2 px-4 transition-all duration-200 p-1.5 font-medium w-full justify-center items-center text-[13px] rounded-lg ${dealType === "offline" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}>
+                            <span className="hidden sm:inline">
+                                Офлайн
+                            </span>
+                        </button>
+                    </div>
                     <div className="p-6 sm:p-8">
-                        <DealFormContent form={form} />
+                        <DealFormContent form={form} dealType={dealType} />
                     </div>
                     <DialogFooter >
                         <DialogClose asChild onClick={() => form.reset()}>
                             <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer border border-border">Скасувати</Button>
                         </DialogClose>
                         <DialogClose type="submit" onClick={form.handleSubmit(onSubmit)} asChild>
-                            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-card-foreground bg-primary hover:bg-orange-700 cursor-pointer">Опублікувати</Button>
+                            <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer">Опублікувати</Button>
                         </DialogClose>
                     </DialogFooter>
                 </DialogContent>
@@ -85,7 +97,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
         <Drawer open={open} onOpenChange={onOpenChange}>
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle className="text-xl font-bold text-slate-900 tracking-tight">Додати нову знижку</DrawerTitle>
+                    <DrawerTitle className="text-xl font-bold text-card-foreground tracking-tight">Додати нову знижку</DrawerTitle>
                 </DrawerHeader>
                 <div className="no-scrollbar max-h-[calc(100vh-2rem)] overflow-y-auto p-6 sm:p-8">
                     <DealFormContent form={form} />

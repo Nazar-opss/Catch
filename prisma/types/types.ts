@@ -41,7 +41,11 @@ export type CommentVote = {
 export type Deal = {
     id: string;
     title: string;
-    link: string;
+    link: string | null;
+    isOffline: Generated<boolean>;
+    storeName: string | null;
+    cityName: string | null;
+    geolocation: string | null;
     newPrice: number;
     oldPrice: number | null;
     description: string | null;

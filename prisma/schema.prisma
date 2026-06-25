@@ -1,9 +1,11 @@
 generator client {
     provider = "prisma-client-js"
+    previewFeatures  = ["postgresqlExtensions"]
 }
 
 datasource db {
     provider = "postgresql"
+    extensions = [pg_trgm]
 }
 
 generator kysely {
@@ -87,7 +89,11 @@ model Verification {
 model Deal {
     id          String   @id @default(uuid())
     title       String
-    link        String
+    link        String?
+    isOffline   Boolean   @default(false)
+    storeName   String?   
+    cityName    String?
+    geolocation String?
     newPrice    Float
     oldPrice    Float?
     description String?
@@ -101,6 +107,9 @@ model Deal {
     votes      Vote[]
     comments   Comment[]
     savedDeals SavedDeal[]
+
+    @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_title_trgm")
+    @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_description_trgm")
 
     @@map("deal")
 }

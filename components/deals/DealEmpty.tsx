@@ -20,7 +20,7 @@ function DealEmpty() {
             d="M60 80 L140 80 L150 140 L50 140 Z"
             fill="#e2e8f0"
             stroke="#94a3b8"
-            stroke-width="2"
+            strokeWidth="2"
           ></path>
           <path d="M60 80 L140 80 L140 90 L60 90 Z" fill="#cbd5e1"></path>
 
@@ -36,7 +36,7 @@ function DealEmpty() {
             r="25"
             fill="white"
             stroke="#64748b"
-            stroke-width="3"
+            strokeWidth="3"
           ></circle>
           <line
             x1="140"
@@ -44,8 +44,8 @@ function DealEmpty() {
             x2="160"
             y2="150"
             stroke="#64748b"
-            stroke-width="6"
-            stroke-linecap="round"
+            strokeWidth="6"
+            strokeLinecap="round"
           ></line>
 
           <circle cx="40" cy="60" r="3" fill="#cbd5e1"></circle>
