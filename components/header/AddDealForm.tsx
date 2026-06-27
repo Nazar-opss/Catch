@@ -72,7 +72,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                                 Онлайн
                             </span>
                         </button>
-                        <button onClick={() => setDealType("offline")} className={`flex cursor-pointer gap-2 px-4 transition-all duration-200 p-1.5 font-medium w-full justify-center items-center text-[13px] rounded-lg ${dealType === "offline" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}>
+                        <button type="button" disabled aria-disabled title="Скоро" className="flex cursor-not-allowed opacity-50 gap-2 px-4 transition-all duration-200 p-1.5 font-medium w-full justify-center items-center text-[13px] rounded-lg text-muted-foreground">
                             <span className="hidden sm:inline">
                                 Офлайн
                             </span>
