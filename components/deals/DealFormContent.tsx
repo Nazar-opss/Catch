@@ -11,21 +11,8 @@ export const inputStyle = "flex h-11 w-full rounded-lg border border-border bg-c
 export default function DealFormContent({ form, dealType }: { form: UseFormReturn<DealFormValues>, dealType: "online" | "offline" }) {
     return (
         <FieldGroup>
-            {dealType === "online" 
-                ? <>
-                    <DealFormInput form={form} inputName="link" placeholder="https://rozetka.com.ua/..." inputLabel="Посилання на товар" redRequired />
-                    <DealFormInput form={form} inputName="title" placeholder="Наприклад: iPhone 15 Pro Max 256GB" inputLabel="Назва товару" redRequired />
-                </>
-                :
-                <>
-                    <FieldGroup className="flex flex-row">
-                        <DealFormInput form={form} inputName="storeName" placeholder="Наприклад: АТБ, Сільпо" inputLabel="Назва магазину" redRequired />
-                        <DealFormInput form={form} inputName="cityName" placeholder="Наприклад: Київ" inputLabel="Місто" redRequired />
-                    </FieldGroup>
-                    <DealFormInput form={form} inputName="geolocation" placeholder="https://maps.app.goo.gl/..." inputLabel="Посилання на геолокацію (необов'язково)" />
-                </>
-            
-            }
+            <DealFormInput form={form} inputName="link" placeholder="https://rozetka.com.ua/..." inputLabel="Посилання на товар" redRequired />
+            <DealFormInput form={form} inputName="title" placeholder="Наприклад: iPhone 15 Pro Max 256GB" inputLabel="Назва товару" redRequired />
             <FieldGroup className="flex flex-row">
                 <DealFormInput form={form} inputName="newPrice" placeholder="Наприклад: 12999" inputLabel="Нова ціна (₴)" redRequired price />
                 <DealFormInput form={form} inputName="oldPrice" placeholder="Наприклад: 16999" inputLabel="Стара ціна (₴)" price />
