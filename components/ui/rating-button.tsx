@@ -52,7 +52,6 @@ export default function RatingButton({ userVote, commentId, dealId, authorId, ra
     return (
         <ButtonGroup
             orientation="horizontal"
-            // TODO: Redesign this buttons
 
             className={` flex justify-center items-center bg-background gap-1 border border-border rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
         >

@@ -8,8 +8,6 @@ import { revalidatePath } from "next/cache";
 export async function voteDealAction(dealId: string, authorId: string, voteValue: number) {
     // voteValue = 1 to upvote, -1 to downvote
 
-    // TODO: comment votes is not working, working on but it changes deals temperature instead of comment rating
-
     const session = await auth.api.getSession({ headers: await headers() });
     if (!session) return { error: "Не авторизовано" };
 

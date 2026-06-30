@@ -1,13 +1,12 @@
-import DealEmpty from "@/components/deals/DealEmpty";
 import DealsFeed from "@/components/deals/DealsFeed";
-import DealsList from "@/components/deals/DealsList";
+import DealsListSkeleton from "@/components/deals/DealsListSkeleton";
 import { FilterBar } from "@/components/filters/FilterBar";
 import { getDealsPage } from "@/lib/actions/deals";
 import { auth } from "@/lib/auth";
 import { Deal } from "@/prisma/types/types";
-import { db } from "@/server/db";
 import { Selectable } from "kysely";
 import { headers } from "next/headers";
+import { Suspense } from "react";
 
 export type DealWithAuthor = Selectable<Deal> & {
   authorName: string
@@ -16,15 +15,19 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null
 }
 
+async function DealsFeedLoader({ sort, q, currentUserId, layout }: {
+  sort?: string; q: string; currentUserId?: string; layout: "grid" | "list"
+}) {
+  const firstPage = await getDealsPage({ sort, q: q ?? null, currentUserId, cursor: null })
+  return <DealsFeed initialPage={firstPage} layout={layout} sort={sort ?? "hot"} q={q} />
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<{ view?: string, sort?: string | "hot", q?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const currentUserId = session?.user.id;
 
   const { view, sort, q } = await searchParams
-  const layout = view === "list" ? "list" : "grid"
-
-  const firstPage = await getDealsPage({sort, q: q ?? null, currentUserId, cursor: null})
-  
+  const layout = view === "list" ? "list" : "grid"  
 
   return (
     <main className="flex flex-1 w-full max-w-7xl items-center flex-col mx-auto py-8 sm:px-6 px-4">
@@ -33,13 +36,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
         dealsArray.length === 0 && <DealEmpty/>
       }
       <DealsList deals={dealsArray} layout={layout} /> */}
-      <DealsFeed 
-        key={`${sort ?? "hot"}:${q ?? ""}`}
-        initialPage={firstPage}
-        layout={layout}
-        sort={sort ?? "hot"}
-        q={q ?? ""}
-      />
+      <Suspense fallback={<DealsListSkeleton layout={layout} />}>
+          <DealsFeedLoader sort={sort} q={q ?? ""} currentUserId={currentUserId} layout={layout} />
+      </Suspense>
     </main>
   );
 }

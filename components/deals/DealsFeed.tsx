@@ -1,7 +1,7 @@
 "use client"
 import { DealsPage } from "@/lib/actions/deals";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useEffect, useRef} from "react";
+import { use, useEffect, useRef} from "react";
 import PageLoader from "../ui/PageLoader";
 import DealEmpty from "./DealEmpty";
 import DealsList from "./DealsList";
@@ -43,15 +43,15 @@ export default function DealsFeed({initialPage, layout, sort, q = ""} : {initial
         const el = loadMoreRef.current
         if (!el || !hasNextPage) return;
         const io = new IntersectionObserver(([entry]) => {
-           if(
-               entry.isIntersecting && 
-               hasNextPage &&
-               !isFetchingNextPage &&
-               autoLoads.current < MAX_AUTO
-           ) {
+            if(
+                entry.isIntersecting && 
+                hasNextPage &&
+                !isFetchingNextPage &&
+                autoLoads.current < MAX_AUTO
+            ) {
             autoLoads.current += 1
             fetchNextPage()
-           }
+            }
         }) 
         io.observe(el);
         return () => io.disconnect();

@@ -154,5 +154,3 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
     }
     return {items, nextCursor}
 }
-
-// implement search

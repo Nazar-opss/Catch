@@ -15,7 +15,7 @@ interface CommentCardProps {
 }
 
 export default function CommentCard({ comment, isOwnProfile }: { comment: CommentCardProps; isOwnProfile: boolean }) {
-    // TODO: add comment tree and indent comments based on their level in the tree, add link straight to comment using comment id and scroll to it on click
+    // TODO: add link straight to comment using comment id and scroll to it on click
 
     return (
         <article className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">

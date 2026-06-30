@@ -9,15 +9,17 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
     const authorImage = deal.authorImage || "/icons/avatar-default.svg";
 
     const iconSize = layout === "list" ? "w-4.5 h-4.5" : "w-3 h-3";
-    const imageSize = layout === "list" ? 56 : 32;
+    const imageSize = 32;
     const metaSize = layout === "list" ? "text-sm" : "text-xs";
 
     return (
         <div className="flex flex-col gap-2.5 mt-auto">
-            <div className={`flex items-center gap-2 text-slate-500 ${metaSize} font-medium`}>
-                <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={imageSize} height={imageSize} />
-                {getShopName(deal.link)}
-            </div>
+            {deal.link && (
+                <div className={`flex items-center gap-2 text-slate-500 ${metaSize} font-medium`}>
+                    <Image src={getShopIcon(deal.link)} alt={getShopName(deal.link)} width={imageSize} height={imageSize} />
+                    {getShopName(deal.link)}
+                </div>
+            )}
             <div className="w-full h-px bg-secondary my-2"></div>
             <div className={`flex relative items-center text-slate-500 ${metaSize} ${layout === "list" ? "gap-2" : "justify-between"} font-medium`}>
                 <div className="flex items-center gap-2">
@@ -38,7 +40,7 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
                     {deal.commentCount}
                 </div>
                 {
-                    layout === "list" &&
+                    layout === "list" && deal.link &&
                     <div className="absolute right-0">
                         <DealCTA link={deal.link} layout={layout} />
                     </div>

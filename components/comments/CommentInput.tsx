@@ -115,16 +115,6 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
         });
     }, []);
 
-    // const onSubmit = useCallback(
-    //     (event: React.FormEvent<HTMLFormElement>) => {
-    //         event.preventDefault();
-    //         setInput("");
-    //         setFiles([]);
-    //     },
-    //     [],
-    // );
-
-
     return (
         <div className={`flex gap-4 ${reply ? "sm:gap-3" : "sm:gap-5 mb-10"}`}>
             {isPending ? (

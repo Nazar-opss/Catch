@@ -39,7 +39,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                             </div>          
                         </DropdownMenuLabel>
                         <div className="h-px bg-secondary my-1 mx-2"></div>
-                        <Link href={`/user/${session?.user?.username}`}>
+                        <Link href={`/user/${session?.user?.username}?tab=userDeals`}>
                             <DropdownMenuItem className="cursor-pointer">
                                 <UserIcon />
                                 Профіль

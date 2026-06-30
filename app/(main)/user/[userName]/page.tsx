@@ -1,5 +1,6 @@
 import CommentCard from "@/components/comments/CommentCard";
 import DealCard from "@/components/deals/DealCard";
+import DealEmpty from "@/components/deals/DealEmpty";
 import ProfileCard from "@/components/profile/ProfileCard";
 import ProfileSettings from "@/components/profile/ProfileSettings";
 import ProfileTabs from "@/components/profile/ProfileTabs";
@@ -11,7 +12,7 @@ import { notFound } from "next/navigation";
 
 type Params = { username: string };
 
-export default async function UserPage({ params, searchParams }: { params: Promise<Params>; searchParams: { tab: string | "userDeals", settings: string | "true" } }) {
+export default async function UserPage({ params, searchParams }: { params: Promise<Params>; searchParams: { tab: string | "userDeals", settings: string | "true", emailChanged: string } }) {
     const session = await auth.api.getSession({ headers: await headers() });
     const { username } = await params;
     const searchParam = await searchParams;
@@ -91,17 +92,17 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                 </aside>
                 <div className="flex-1 min-w-0 w-full">
                     {searchParam.settings === "true" 
-                    ? <ProfileSettings name={user.name} userName={user.username} email={user.email} emailVerified={user.emailVerified} /> 
+                    ? <ProfileSettings name={user.name} userName={user.username} email={user.email} emailVerified={user.emailVerified} emailChanged={searchParam.emailChanged} /> 
                     : <>
                         <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
-                        <div className={`${searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" }`}>
-                            {content.map((item) => (
+                        <div className={content.length === 0 ? "flex items-center justify-center" : searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
+                            {content.length === 0 ? <DealEmpty tab={searchParam.tab}/> : content.map((item) => (
                                 "newPrice" in item 
                                 ? <DealCard key={item.id} deal={item} layout="grid" />
                                 : <CommentCard key={item.id} isOwnProfile={isOwnProfile} comment={{ ...item, rating: item.rating ?? 0 }} />
                             ))}
                         </div>
-                     </>
+                    </>
                     }
                 </div>
             </div>

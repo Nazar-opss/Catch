@@ -11,6 +11,7 @@ import { DealWithAuthor } from "@/app/(main)/page"
 import DealPrice from "./parts/DealPrice"
 import DealCTA from "./parts/DealCTA"
 import DealMeta from "./parts/DealMeta"
+import { useState } from "react"
 
 dayjs.extend(relativeTime)
 dayjs.extend(updateLocale)
@@ -38,11 +39,7 @@ interface DealCardProps {
 }
 
 export default function DealCard({ deal, layout }: DealCardProps) {
-
-
     const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
-
-    // TODO: add skeleton for loading
 
     return (
         <div>
@@ -85,7 +82,7 @@ export default function DealCard({ deal, layout }: DealCardProps) {
 
                     <DealMeta deal={deal} layout={layout} />
                     {
-                        layout === "grid" &&
+                        layout === "grid" && deal.link &&
                         <DealCTA link={deal.link} layout={layout} />
                     }
                 </div >

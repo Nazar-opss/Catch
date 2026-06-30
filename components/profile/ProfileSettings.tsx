@@ -1,6 +1,6 @@
 "use client";
 import useSearchParamSetter from "@/hooks/useSearchParamSetter";
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Check, Eye, EyeOff, Mail, Send, TriangleAlert } from "lucide-react";
 import {
   Field,
   FieldContent,
@@ -13,26 +13,43 @@ import { Input } from "../ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { inputStyle } from "../deals/DealFormContent";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "../ui/switch";
 import TelegramIcon from "../ui/telegramIcon";
 import { updateUserData } from "@/lib/actions/user";
 import { profileSchema } from "@/lib/schemas/profileSchema";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-clients";
+import { useRouter } from "next/navigation";
+
+const emailErrorMap: Record<string, string> = {
+  EMAIL_IS_THE_SAME: "Це ваша поточна пошта",
+  INVALID_EMAIL: "Введіть коректний email",
+  USER_ALREADY_EXISTS: "Ця пошта вже використовується",
+}
 
 export default function ProfileSettings({
   name,
   userName,
   email,
   emailVerified,
+  emailChanged,
 }: {
   name: string;
   userName: string;
   email: string;
   emailVerified: boolean;
+  emailChanged?: string;
 }) {
   const [showPassword, setShowPassword] = useState<"password" | "text">(
     "password",
   );
+  const [savingField, setSavingField] = useState<string | null>(null);
+  const [changingEmail, setChangingEmail] = useState(false)
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null)
+  const router = useRouter()
+  const setParam = useSearchParamSetter()
+ 
 
   const form = useForm<any>({
     resolver: zodResolver(profileSchema),
@@ -45,19 +62,60 @@ export default function ProfileSettings({
     },
   });
 
-  async function onSubmit(data: { name?: string; userName?: string }) {
-    const result = await updateUserData({
-      name: data.name,
-      userName: data.userName,
-    })
-    if (result?.success) {
-      console.log(result.success)
+  const saveField = (fieldName: "name" | "userName") => async () => {
+    const valid = await form.trigger(fieldName)
+    if(!valid) return
+    const value = form.getValues(fieldName)
+    setSavingField(fieldName)
+    const result = await updateUserData({[fieldName]: value})
+    setSavingField(null)
+    if(result?.success) {
+      toast.success(result.success)
+      router.push(`/user/${value}?settings=true`)
+      form.resetField(fieldName, {defaultValue: value})
     } else {
-      console.error(result?.error)
+      toast.error(result?.error ?? "Помилка оновлення даних")
     }
   }
 
-  const setParam = useSearchParamSetter();
+  const handleVerifyCurrentEmail = async () => {
+    await authClient.sendVerificationEmail({
+      email: email,
+      callbackURL: `/user/${userName}?settings=true`
+    })
+    toast.success("Лист відправлено на вашу пошту")
+  } 
+
+  const handleChangeEmail = async () => {
+    const valid = await form.trigger("email")
+    if(!valid) return
+    const newEmail = String(form.getValues("email") ?? "").trim().toLowerCase()
+    if(!newEmail || newEmail === email.trim().toLowerCase()) {
+      toast.error(emailErrorMap.EMAIL_IS_THE_SAME)
+      return
+    }
+    setChangingEmail(true)
+    const { error } = await authClient.changeEmail({
+      newEmail,
+      callbackURL: `/user/${userName}?settings=true&emailChanged=1`
+    })
+    setChangingEmail(false)
+    if(error) {
+      toast.error(emailErrorMap[error.code ?? ""] ?? "Не вдалося змінити пошту")
+      return
+    }
+    setPendingEmail(newEmail)
+    toast.success("Лист-підтвердження надіслано на вашу поточну пошту")
+  }
+
+    useEffect(() => {
+      if (emailChanged === "1") {
+        router.refresh()
+        toast.success("Пошту успішно змінено")
+        setParam("emailChanged", null)
+      }
+    }, [emailChanged, router, setParam])
+ 
   return (
     <div className=" bg-card rounded-[24px] border border-border shadow-sm p-8 flex flex-col">
       <div className="flex relative flex-col text-start pb-4 mb-6 border-b border-secondary">
@@ -86,15 +144,18 @@ export default function ProfileSettings({
                   Ім&apos;я користувача (Нікнейм)
                 </FieldLabel>
               </FieldGroup>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={name}
-                type={"text"}
-                value={field.value}
-                className={`${inputStyle} px-4`}
-              />
+              <FieldGroup className="flex flex-row gap-3 items-center">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder={name}
+                  type={"text"}
+                  value={field.value}
+                  className={`${inputStyle} px-4`}
+                />
+                <Button disabled={!fieldState.isDirty || savingField === "name"} onClick={saveField("name")} className="bg-card h-full border-border text-muted-foreground cursor-pointer hover:bg-transparent px-5 py-2.5 rounded-xl font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed" variant={'outline'}>Зберегти</Button>
+              </FieldGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -109,15 +170,19 @@ export default function ProfileSettings({
                   Унікальний нікнейм
                 </FieldLabel>
               </FieldGroup>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={userName}
-                type={"text"}
-                value={field.value || userName}
-                className={`${inputStyle} px-4`}
-              />
+              <FieldGroup className="flex flex-row gap-3 items-center">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  placeholder={userName}
+                  type={"text"}
+                  value={field.value}
+                  className={`${inputStyle} px-4`}
+
+                />
+                <Button disabled={!fieldState.isDirty || savingField === "userName"} onClick={saveField("userName")}  className="bg-card h-full border-border text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>Зберегти</Button>
+              </FieldGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -133,24 +198,57 @@ export default function ProfileSettings({
               <FieldGroup className="flex flex-row justify-between">
                 <FieldLabel htmlFor={field.name}>Електронна пошта</FieldLabel>
               </FieldGroup>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder={email}
-                type={"text"}
-                value={field.value || email}
-                className={`${inputStyle} px-4`}
-                disabled={!emailVerified}
-              />
+              <FieldGroup className="relative flex flex-row items-center">
+                <Input
+                  {...field}
+                  id={field.name}
+                  aria-describedby="email-hint"
+                  aria-invalid={fieldState.invalid}
+                  placeholder={email}
+                  type="email"
+                  autoComplete="email"
+                  value={field.value}
+                  className={`${inputStyle} px-4`}
+                  disabled={!emailVerified}
+                />
+                  <div className={`absolute ${emailVerified ? "text-green-500 bg-green-200" : "text-yellow-500 bg-amber-200"}  text-xs font-medium rounded-lg border border-transparent flex items-center gap-1 right-0 py-2 px-4 mr-px`}>
+                    {
+                      emailVerified ? <>
+                      <Check className="w-4"/>
+                    Верифіковано  </> : <>
+                      <TriangleAlert className="w-4" />
+                      Не Верифіковано
+                      </>
+                    }
+                    
+                  </div>
+              </FieldGroup>
+              <FieldGroup className="flex flex-row">
+                <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail}  className="bg-card h-full border-border max-w-1/4 text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
+                  <Mail />
+                  Змінити пошту
+                </Button>
+                {!emailVerified && 
+                  <Button onClick={handleVerifyCurrentEmail}  className="bg-card h-full border-border text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
+                    Відправити лист для верифікації
+                  </Button>
+                }
+              </FieldGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
-            // TODO: change email feature
           )}
         />
-        <p className="text-xs text-muted-foreground mt-1.5">
-          Електронну пошту можна змінити лише після верифікації.
-        </p>
+        {pendingEmail && (
+          <div className="text-[13px] flex flex-col bg-orange-200/50 dark:bg-orange-700/20 text-muted-foreground mt-1.5 gap-2.5 px-4 py-3.25 rounded-lg border border-orange-100/50 dark:border-orange-900/30">
+            <p>
+              Очікує підтвердження зміни на <b className="text-primary">{pendingEmail}</b>. Перевірте поточну скриньку <b className="text-primary">({email})</b> і підтвердіть зміну, потім підтвердіть лист у новій скриньці.
+            </p>
+            <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail} className="cursor-pointer w-1/4 text-[13px] text-primary flex py-1.75 px-3.5 rounded-lg items-center gap-2.25 bg-orange-100 hover:bg-orange-300 dark:bg-orange-900/20 border border-primary dark:hover:bg-orange-950 dark:border-orange-900/30"><Send />Надіслати ще раз</Button>
+          </div>
+        )}
+        {!emailVerified && (
+          <p id="email-hint" className="text-xs text-muted-foreground mt-1.5">Електронну пошту можна змінити лише після верифікації.</p>
+        )}
       </div>
       <div className="space-y-4 border-b border-secondary pt-6 pb-8">
         <h2 className="text-lg font-semibold text-card-foreground mb-4">Безпека</h2>
@@ -226,7 +324,7 @@ export default function ProfileSettings({
           />
         </div>
         <Button
-          className="bg-card h-full border-border text-muted-foreground hover:bg-slate-50 px-5 py-2.5 rounded-xl font-medium text-sm transition-colors"
+          className="bg-card h-full border-border text-muted-foreground px-5 py-2.5 rounded-xl font-medium text-sm transition-colors"
           variant={"outline"}
         >
           Оновити пароль
@@ -282,14 +380,7 @@ export default function ProfileSettings({
           Підключити Telegram-бота
         </Button>
       </div>
-      <div className="pt-6">
-        <div className="flex justify-end">
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)} className="bg-primary h-full text-white hover:bg-orange-700 px-6 py-2.5 rounded-xl font-medium text-[15px] shadow-sm cursor-pointer shadow-orange-600/20 transition-colors">
-            Зберегти зміни
-          </Button>
-        </div>
-      </div>
-      <div className="pt-8 border-t border-secondary mt-12">
+      <div className="mt-12">
           <h3 className="font-medium text-red-600 mb-4">Небезпечна зона</h3>
           <Button variant={"destructive"} className="px-5 py-2.5 rounded-xl font-medium text-sm border border-red-200 text-red-600 h-full bg-transparent hover:bg-red-50 hover:border-red-300 transition-all">
             Видалити акаунт

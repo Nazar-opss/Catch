@@ -4,13 +4,12 @@ import { User } from "@/prisma/types/types";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ThemeButton from "../ui/theme-button";
 
-
 export default function ProfileCard({ user, isOwnProfile }: { user: Selectable<User>, isOwnProfile: boolean }) {
     return (
         <div className=" bg-card rounded-[24px] border border-border shadow-sm p-8 flex flex-col gap-8">
             <ProfileUserInfo user={user} isOwnProfile={isOwnProfile} />
             <div className="w-full h-px bg-secondary "></div>
-            <div className="w-full flex flex-col items-start text-left bg-orange-50/50 dark:bg-orange-950/20 p-5 rounded-2xl border border-orange-100/50 dark:border-orange-900/30">
+            <div className="w-full flex flex-col items-start text-left bg-orange-100/50 dark:bg-orange-900/20 p-5 rounded-2xl border border-orange-200/50 dark:border-orange-900/30">
                 <div className="flex gap-2 items-center text-[15px] font-bold text-foreground">
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-primary">
                         <path d="M12 2C12 2 8 6 8 11C8 14 10 16 10 16C10 16 9 14 10 12C10 12 14 16 13 20C13 20 18 16 18 11C18 6 12 2 12 2Z"></path>

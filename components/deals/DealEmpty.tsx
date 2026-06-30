@@ -2,12 +2,54 @@
 import React, { useState } from "react";
 import AddDealForm from "../header/AddDealForm";
 import { Button } from "../ui/button";
-import { Plus } from "lucide-react";
+import { ArrowLeft, Plus, Search } from "lucide-react";
+import { redirect } from "next/navigation";
 
-function DealEmpty() {
+function DealEmpty({tab}: { tab?: string}) {
   const [modal, setModal] = useState(false);
+  const content = {
+        "userDeals": {
+            header: "Ви ще не поділилися жодною знижкою",
+            subHeading: "Станьте частиною спільноти — знайшли круту ціну? Розкажіть про неї іншим!",
+            buttons: <>
+            <Button
+            onClick={() => setModal(true)}
+            className="items-center justify-center px-5 py-2.5 h-full text-[14px] w-44.25 bg-primary shrink text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
+          >
+            <Plus />
+            Додати знижку
+          </Button>
+          <AddDealForm open={modal} onOpenChange={setModal} />
+        </>
+        },
+        "userBookmarks": {
+            header: "Ваш список збереженого порожній",
+            subHeading: "Тут будуть зберігатися всі цікаві пропозиції, щоб ви могли повернутися до них пізніше.",
+            buttons: 
+              <Button
+            onClick={() => redirect('/')}
+            className="items-center justify-center px-5 py-2.5 h-full text-[14px] w-44.25 bg-primary shrink text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
+          >
+            <Search />
+            Шукати знижки
+          </Button>
+        },
+        "userComments": {
+            header: "Ви ще не залишили жодного коментаря",
+            subHeading: "Долучайтеся до обговорень, діліться відгуками про товари та допомагайте іншим з вибором.",
+            buttons:    <Button
+            onClick={() => redirect('/')}
+            className="items-center justify-center px-5 py-2.5 h-full text-[14px] w-44.25 bg-primary shrink text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
+          >
+            <ArrowLeft/>
+            На головну
+          </Button>
+        }
+    };
+    const current = content[tab as keyof typeof content]
+
   return (
-    <div className="text-center max-w-md w-full flex flex-col items-center">
+    <div className={`text-center ${!tab && "max-w-md"} w-full flex flex-col items-center`}>
       <div className="w-64 h-64 mb-8">
         <svg
           viewBox="0 0 200 200"
@@ -54,13 +96,14 @@ function DealEmpty() {
         </svg>
       </div>
       <h2 className="text-3xl font-bold text-card-foreground mb-4">
-        На жаль, тут порожньо...
+        { tab ? current.header : "На жаль, тут порожньо..."}
       </h2>
       <p className="text-base text-slate-600 mb-10 leading-relaxed">
-        Спробуйте змінити фільтри або зачекайте на нові знижки. Можливо, ви самі
-        знайдете щось цікаве?
+        { tab ? current.subHeading : "Спробуйте змінити фільтри або зачекайте на нові знижки. Можливо, ви самі знайдете щось цікаве?"}
       </p>
-      <Button
+      {
+        tab ? current.buttons : <>
+         <Button
         onClick={() => setModal(true)}
         className="items-center justify-center px-5 py-2.5 h-full text-[14px] bg-primary text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
       >
@@ -68,6 +111,9 @@ function DealEmpty() {
         Додати знижку
       </Button>
       <AddDealForm open={modal} onOpenChange={setModal} />
+        </>
+      }
+     
     </div>
   );
 }
