@@ -7,8 +7,9 @@ export default function DealCardSkeleton({layout}: {layout: "grid" | "list"}) {
             <div className={`flex flex-col flex-1 w-full ${layout === "list" ? "gap-5" : "mt-4 gap-3"}`}>
                 <div className="h-7 w-1/3 rounded bg-muted" />     {/* ціна */}
                 <div className="h-4 w-full rounded bg-muted" />     {/* заголовок */}
-                <div className="h-4 w-2/3 rounded bg-muted" />
+                <div className="h-4 w-2/3 mt-5 rounded bg-muted" />
                 <div className="h-4 w-1/2 rounded bg-muted" />     {/* meta */}
+                <div className="w-full h-10 rounded-md bg-secondary" />
             </div>
         </article>
     )

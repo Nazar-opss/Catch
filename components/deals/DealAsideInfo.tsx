@@ -2,11 +2,14 @@
 import Link from "next/link"
 import RatingButton from "../ui/rating-button"
 import { Button } from "../ui/button"
-import { Bookmark, Clock, ExternalLink } from "lucide-react"
+import { Bookmark, Clock, EllipsisVertical, ExternalLink, PenLine, Trash } from "lucide-react"
 import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils"
 import Image from "next/image"
 import { saveDealAction } from "@/lib/actions/saved"
 import dayjs from "@/lib/dayjs";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { useState } from "react"
+import DealEdit from "./DealEdit"
 
 interface DealAsideInfoProps {
     id: string;
@@ -26,8 +29,8 @@ interface DealAsideInfoProps {
     userVote: number | null;
 }
 
-export default function DealAsideInfo({deal}: { deal: DealAsideInfoProps }) {
-
+export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoProps; isAuthor: boolean }) {
+    const [modal, setModal] = useState(false);
     return (
         <div className="sticky top-23 flex flex-col gap-4">
             <div className="bg-card rounded-[24px] border border-border p-6 sm:p-7 shadow-sm">
@@ -36,6 +39,31 @@ export default function DealAsideInfo({deal}: { deal: DealAsideInfoProps }) {
                         рейтинг знижки
                     </span>
                     <RatingButton dealId={deal.id} authorId={deal.authorId} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
+                    {isAuthor && (
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                                <Button asChild onClick={() => {}} className="w-9 h-9 bg-transparent border border-border text-muted-foreground hover:text-card-foreground hover:bg-transparent p-1 rounded-md transition-colors">
+                                    <EllipsisVertical width={32} height={32} />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuGroup>
+                                <DropdownMenuLabel>Налаштування публікації</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => setModal(true)}>
+                                    <PenLine />Редагувати
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Clock />Закінчилася
+                                </DropdownMenuItem>
+                                </DropdownMenuGroup>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem disabled className="text-red-500">
+                                    <Trash />
+                                    Видалити
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
                 </div>
                 <div className="w-full h-px bg-secondary mb-6"></div>
                 <div className="mb-6 flex flex-col gap-2">
@@ -82,11 +110,12 @@ export default function DealAsideInfo({deal}: { deal: DealAsideInfoProps }) {
                         <span>{dayjs(deal.createdAt).fromNow()}</span>
                     </div>
                 </div>
+                <Button onClick={() => saveDealAction({ dealId: deal.id })} className="flex items-center bg-transparent mt-4.5 text-sm font-semibold text-muted-foreground transition-colors gap-1.5 w-full justify-center  border cursor-pointer border-transparent hover:text-primary hover:bg-[#FFF3EA] dark:hover:bg-orange-950/70 flex-1 rounded-lg py-2 px-3">
+                    <Bookmark className="w-4 h-4" />
+                    Зберегти
+                </Button>
             </div>
-            <Button onClick={() => saveDealAction({ dealId: deal.id })} className="flex items-center bg-transparent text-[13px] text-muted-foreground hover:text-card-foreground transition-colors gap-1.5 w-full justify-center hover:bg-card border cursor-pointer border-transparent hover:border-border hover:shadow-sm flex-1 rounded-lg py-2 px-3">
-                <Bookmark className="w-4 h-4" />
-                Зберегти
-            </Button>
+            <DealEdit open={modal} onOpenChange={setModal} />
         </div>
     )
 }

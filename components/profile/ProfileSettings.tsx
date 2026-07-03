@@ -17,15 +17,24 @@ import { useEffect, useState } from "react";
 import { Switch } from "../ui/switch";
 import TelegramIcon from "../ui/telegramIcon";
 import { updateUserData } from "@/lib/actions/user";
-import { profileSchema } from "@/lib/schemas/profileSchema";
+import { ChangePasswordFormValues, changePasswordSchema, ProfileFormValues, profileSchema } from "@/lib/schemas/profileSchema";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-clients";
 import { useRouter } from "next/navigation";
+import Loader from "../ui/loader";
+import ProfileDelete from "./ProfileDelete";
 
 const emailErrorMap: Record<string, string> = {
   EMAIL_IS_THE_SAME: "Це ваша поточна пошта",
   INVALID_EMAIL: "Введіть коректний email",
   USER_ALREADY_EXISTS: "Ця пошта вже використовується",
+}
+
+const passwordErrorMap: Record<string, string> = {
+  INVALID_PASSWORD: "Невірний поточний пароль",
+  PASSWORD_TOO_SHORT: "Пароль занадто короткий",
+  PASSWORD_TOO_LONG: "Пароль занадто довгий",
+  CREDENTIAL_ACCOUNT_NOT_FOUND: "Для цього акаунта не встановлено пароль, спробуйте увійти через соцмережу або відновити пароль",
 }
 
 export default function ProfileSettings({
@@ -47,20 +56,27 @@ export default function ProfileSettings({
   const [savingField, setSavingField] = useState<string | null>(null);
   const [changingEmail, setChangingEmail] = useState(false)
   const [pendingEmail, setPendingEmail] = useState<string | null>(null)
+  const [modal, setModal] = useState(false)
   const router = useRouter()
   const setParam = useSearchParamSetter()
  
 
-  const form = useForm<any>({
+  const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       name: name,
       userName: userName,
       email: email,
+    },
+  });
+
+  const passwordForm = useForm<ChangePasswordFormValues>({
+    resolver: zodResolver(changePasswordSchema),
+    defaultValues: {
       currentPassword: "",
       newPassword: "",
     },
-  });
+  })
 
   const saveField = (fieldName: "name" | "userName") => async () => {
     const valid = await form.trigger(fieldName)
@@ -106,6 +122,30 @@ export default function ProfileSettings({
     }
     setPendingEmail(newEmail)
     toast.success("Лист-підтвердження надіслано на вашу поточну пошту")
+  }
+
+  const handleChangePassword = async () => {
+    const valid = await passwordForm.trigger(["currentPassword", "newPassword"])
+    if(!valid) return;
+    const currentPassword = passwordForm.getValues("currentPassword")
+    const newPassword = passwordForm.getValues("newPassword")
+
+    setSavingField("password")
+    const { error } = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: true,
+    })
+    setSavingField(null)
+
+    if(error) {
+      toast.error(passwordErrorMap[error.code ?? ""] ?? "Не вдалося змінити пароль")
+      return
+    }
+
+    toast.success("Пароль оновлено")
+    passwordForm.resetField("currentPassword", {defaultValue: ""})
+    passwordForm.resetField("newPassword", {defaultValue: ""})
   }
 
     useEffect(() => {
@@ -255,7 +295,7 @@ export default function ProfileSettings({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Controller
             name="currentPassword"
-            control={form.control}
+            control={passwordForm.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="relative text-muted-foreground">
                 <FieldGroup className="flex flex-row justify-between">
@@ -266,7 +306,7 @@ export default function ProfileSettings({
                   id={field.name}
                   aria-invalid={fieldState.invalid}
                   placeholder={"Поточний пароль"}
-                  type="password"
+                  type={showPassword}
                   value={field.value}
                   className={`${inputStyle} px-4`}
                 />
@@ -278,7 +318,7 @@ export default function ProfileSettings({
           />
           <Controller
             name="newPassword"
-            control={form.control}
+            control={passwordForm.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid} className="relative text-muted-foreground">
                 <FieldGroup className="flex flex-row justify-between">
@@ -289,7 +329,8 @@ export default function ProfileSettings({
                   id={field.name}
                   aria-invalid={fieldState.invalid}
                   placeholder={"Мінімум 8 символів"}
-                  type="password"
+                  type={showPassword}
+                  autoComplete="new-password"
                   value={field.value}
                   className={`${inputStyle} px-4`}
                 />
@@ -302,7 +343,7 @@ export default function ProfileSettings({
                       showPassword === "password" ? "text" : "password",
                     )
                   }
-                  className="absolute inline-flex items-center justify-center right-0 top-1/2 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
+                  className="absolute inline-flex items-center justify-center right-0 top-9 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
                   aria-label={
                     showPassword === "password"
                       ? "Показати пароль"
@@ -324,25 +365,32 @@ export default function ProfileSettings({
           />
         </div>
         <Button
+          onClick={handleChangePassword}
+          disabled={savingField === "password"}
           className="bg-card h-full border-border text-muted-foreground px-5 py-2.5 rounded-xl font-medium text-sm transition-colors"
           variant={"outline"}
         >
-          Оновити пароль
+          {savingField === "password" ? 
+          (<>
+            <Loader color="primary" gap={1} />
+            Оновлення...
+          </>) 
+          : "Оновити пароль"}
         </Button>
       </div>
-      <div className="border-b border-secondary pt-6 pb-8">
+      <div className="border-b cursor-not-allowed border-secondary pt-6 pb-8">
         <h2 className="text-lg font-semibold text-card-foreground mb-4">
-          Сповіщення
+          Сповіщення (в розробці/WIP)
         </h2>
     {/*TODO: create a component for this */}
-        <div className="space-y-4">
+        <div className="space-y-4 opacity-50">
             <Field orientation="horizontal" className="w-full">
             <FieldContent>
-                <FieldLabel  className="font-normal text-muted-foreground text-sm pr-4" htmlFor="switch-focus-mode">
+                <FieldLabel className="font-normal text-muted-foreground text-sm pr-4" htmlFor="switch-focus-mode">
                 Надсилати листа, коли хтось відповів на мій коментар
                 </FieldLabel>
             </FieldContent>
-            <Switch id="switch-focus-mode" />
+            <Switch disabled className="disabled:opacity-50 disabled:cursor-not-allowed" id="switch-focus-mode" />
             </Field>
             <Field orientation="horizontal" className="w-full">
             <FieldContent>
@@ -350,7 +398,7 @@ export default function ProfileSettings({
                 Повідомити мене, коли моя знижка набрала +100° температури
                 </FieldLabel>
             </FieldContent>
-            <Switch id="switch-focus-mode" />
+            <Switch disabled className="disabled:opacity-50 disabled:cursor-not-allowed" id="switch-focus-mode" />
             </Field>
             <Field orientation="horizontal" className="w-full">
             <FieldContent >
@@ -358,7 +406,7 @@ export default function ProfileSettings({
                 Сповіщення, коли хтось згадав мене через @username
                 </FieldLabel>
             </FieldContent>
-            <Switch id="switch-focus-mode" />
+            <Switch disabled className="disabled:opacity-50 disabled:cursor-not-allowed" id="switch-focus-mode" />
             </Field>
             <Field orientation="horizontal" className="w-full">
             <FieldContent>
@@ -366,15 +414,16 @@ export default function ProfileSettings({
                 Важливі новини платформи та нові функції
                 </FieldLabel>
             </FieldContent>
-            <Switch id="switch-focus-mode" />
+            <Switch disabled className="disabled:opacity-50 disabled:cursor-not-allowed" id="switch-focus-mode" />
             </Field>
         </div>
       </div>
-      <div className="border-b border-secondary pt-6 pb-8">
-        <h2 className="text-lg font-semibold text-card-foreground mb-4">Месенджери</h2>
+      <div className="border-b cursor-not-allowed border-secondary pt-6 pb-8 ">
+        <h2 className="text-lg font-semibold text-card-foreground mb-4">Месенджери (в розробці/WIP)</h2>
         <Button
-          className="bg-[#24A1DE] dark:bg-[#24A1DE] hover:bg-[#1c8ac4] dark:hover:bg-[#1c8ac4] h-full border-border text-white hover:text-white px-6 py-3 rounded-xl font-medium text-[15px] transition-colors shadow-sm"
+          className="disabled:opacity-50 bg-[#24A1DE] cursor-pointer dark:bg-[#24A1DE] hover:bg-[#1c8ac4] dark:hover:bg-[#1c8ac4] h-full border-border text-white hover:text-white px-6 py-3 rounded-xl font-medium text-[15px] transition-colors shadow-sm"
           variant={"outline"}
+          disabled
         >
             <TelegramIcon size={24} strokeWidth={0.3} color="#FFFFFF" />
           Підключити Telegram-бота
@@ -382,9 +431,10 @@ export default function ProfileSettings({
       </div>
       <div className="mt-12">
           <h3 className="font-medium text-red-600 mb-4">Небезпечна зона</h3>
-          <Button variant={"destructive"} className="px-5 py-2.5 rounded-xl font-medium text-sm border border-red-200 text-red-600 h-full bg-transparent hover:bg-red-50 hover:border-red-300 transition-all">
+          <Button variant={"destructive"} onClick={() => setModal(true)} className="px-5 py-2.5 rounded-xl font-medium text-sm border border-red-200 text-red-600 h-full bg-transparent hover:bg-red-50 hover:border-red-300 cursor-pointer transition-all">
             Видалити акаунт
           </Button>
+          <ProfileDelete open={modal} onOpenChange={setModal} />
       </div>
     </div>
   );

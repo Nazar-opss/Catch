@@ -1,7 +1,7 @@
 "use client"
 import { DealsPage } from "@/lib/actions/deals";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { use, useEffect, useRef} from "react";
+import { useEffect, useRef} from "react";
 import PageLoader from "../ui/PageLoader";
 import DealEmpty from "./DealEmpty";
 import DealsList from "./DealsList";

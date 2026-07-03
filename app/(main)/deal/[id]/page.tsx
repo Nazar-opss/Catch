@@ -71,6 +71,7 @@ export default async function DealPage({ params }: DealPageProps) {
 
 
     const threadComments = buildCommentTree(comments)
+    const isAuthor = currentUserId === deal.authorId;
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -130,7 +131,7 @@ export default async function DealPage({ params }: DealPageProps) {
                 </div>
 
                 <div className="lg:col-span-4 sticky top-24">
-                    <DealAsideInfo deal={deal} />
+                    <DealAsideInfo deal={deal} isAuthor={isAuthor} />
                 </div>
             </div>
         </main>

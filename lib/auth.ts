@@ -33,24 +33,43 @@ export const auth = betterAuth({
             },
         },
         changeEmail: {
-                enabled: true,
-                sendChangeEmailConfirmation: async ({ user, newEmail, url}) => {
-                    if (process.env.NODE_ENV !== "production") console.log("CHANGE-EMAIL CONFIRM URL:", url);
-                    void resend.emails.send({
-                        from: "Catch <onboarding@resend.dev>",
-                        to: [user.email], 
-                        subject: "Підтвердження зміни електронної пошти",
-                        html: `
-                            <div style="font-family: sans-serif; padding: 20px;">
-                                <h2>Привіт, ${user.name}!</h2>
-                                <p>Хтось (сподіваємось, що ви) ініціював зміну пошти на <b>${newEmail}</b>.</p>
-                                <p>Якщо це були ви, підтвердіть дію:</p>
-                                <a href="${url}" style="background-color: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Підтвердити зміну</a>
-                            </div>
-                        `,
-                    });
-                }
-        }
+            enabled: true,
+            sendChangeEmailConfirmation: async ({ user, newEmail, url}) => {
+                if (process.env.NODE_ENV !== "production") console.log("CHANGE-EMAIL CONFIRM URL:", url);
+                void resend.emails.send({
+                    from: "Catch <onboarding@resend.dev>",
+                    to: [user.email], 
+                    subject: "Підтвердження зміни електронної пошти",
+                    html: `
+                        <div style="font-family: sans-serif; padding: 20px;">
+                            <h2>Привіт, ${user.name}!</h2>
+                            <p>Хтось (сподіваємось, що ви) ініціював зміну пошти на <b>${newEmail}</b>.</p>
+                            <p>Якщо це були ви, підтвердіть дію:</p>
+                            <a href="${url}" style="background-color: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Підтвердити зміну</a>
+                        </div>
+                    `,
+                });
+            }
+        },
+        deleteUser: { 
+            enabled: true,
+            sendDeleteAccountVerification: async ({ user, url }) => {
+                if (process.env.NODE_ENV !== "production") console.log("DELETE-ACCOUNT URL:", url);
+                void resend.emails.send({
+                    from: "Catch <onboarding@resend.dev>",
+                    to: [user.email],
+                    subject: "Підтвердження видалення акаунта",
+                    html: `<div style="font-family: sans-serif; padding: 20px;">
+                        <h2>Привіт, ${user.name}!</h2>
+                        <p>Ви ініціювали видалення акаунта. Цю дію не можна скасувати.</p>
+                        <p>Щоб підтвердити, натисніть кнопку:</p>
+                        <a href="${url}" style="background-color:#ef4444;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;">Видалити акаунт</a>
+                        <p>Якщо це були не ви — просто проігноруйте цей лист.</p>
+                    </div>`,
+                });
+            }
+
+        } 
     },
     emailAndPassword: {
         autoSignIn: true,
@@ -90,6 +109,30 @@ export const auth = betterAuth({
         max: 100,
         customRules: {
             "/change-email": {
+                window: 60,
+                max: 3,
+            },
+            "/sign-in/email": {
+                window: 60,
+                max: 3,
+            },
+            "/sign-up/email": {
+                window: 60,
+                max: 5,
+            },
+            "/reset-password": {
+                window: 60,
+                max: 3,
+            },
+            "/change-password": {
+                window: 60,
+                max: 3,
+            },
+            "/verify-email": {
+                window: 60,
+                max: 3,
+            },
+            "/delete-account": {
                 window: 60,
                 max: 3,
             },
