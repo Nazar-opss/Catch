@@ -7,7 +7,7 @@ import { Textarea } from "../ui/textarea";
 
 type DealFormInputProps = {
     form: UseFormReturn<DealFormValues>;
-    inputName: Exclude<keyof DealFormValues, "images">;
+    inputName: Exclude<keyof DealFormValues, "images" | "existingImages">;
     placeholder: string;
     inputLabel: string;
     redRequired?: boolean;

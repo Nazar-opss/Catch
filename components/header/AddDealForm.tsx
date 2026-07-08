@@ -23,6 +23,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             oldPrice: "",
             newPrice: "",
             images: [],
+            existingImages: [],
             description: "",
         }
     })
@@ -30,21 +31,27 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
     const isDesktop = useMediaQuery("(min-width: 640px)")
 
     async function onSubmit(values: DealFormValues) {
-        const formData = new FormData();
-        values.images.forEach((image) => {
-            formData.append("files", image);
-        });
+        let uploadedUrls: string[] = []
 
-        const uploadResult = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-        });
+        if (values.images.length > 0) {
+            const formData = new FormData();
+            values.images.forEach((image) => {
+                formData.append("files", image);
+            });
+    
+            const uploadResult = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            
+            const data = await uploadResult.json();
+            uploadedUrls = data.urls.map((image: { secure_url: string }) => image.secure_url)
+        }
+
         // fix showing error with images
-        const data = await uploadResult.json();
 
-        values.images = data.urls.map((image: { secure_url: string }) => image.secure_url);
         console.log(values)
-        const result = await createDealAction(values)
+        const result = await createDealAction({...values, images: uploadedUrls})
         console.log(result)
         if (result?.success) {
             toast.success(result.success)
@@ -93,6 +100,8 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             </Dialog>
         )
     }
+
+    // TODO: add offline deal type in mobile drawer
     return (
         <Drawer open={open} onOpenChange={onOpenChange}>
             <DrawerContent>
@@ -100,7 +109,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                     <DrawerTitle className="text-xl font-bold text-card-foreground tracking-tight">Додати нову знижку</DrawerTitle>
                 </DrawerHeader>
                 <div className="no-scrollbar max-h-[calc(100vh-2rem)] overflow-y-auto p-6 sm:p-8">
-                    <DealFormContent form={form} />
+                    <DealFormContent form={form} dealType={dealType} />
                 </div>
                 <DrawerFooter >
                     <DrawerClose asChild>

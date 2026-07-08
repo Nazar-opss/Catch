@@ -101,7 +101,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                     : <>
                         <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
                         <div className={content.length === 0 ? "flex items-center justify-center" : searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>
-                            {content.length === 0 ? <DealEmpty tab={searchParam.tab}/> : content.map((item) => (
+                            {content.length === 0 ? <DealEmpty tab={searchParam.tab} isAuthor={isOwnProfile}/> : content.map((item) => (
                                 "newPrice" in item 
                                 ? <DealCard key={item.id} deal={item} layout="grid" />
                                 : <CommentCard key={item.id} isOwnProfile={isOwnProfile} comment={{ ...item, rating: item.rating ?? 0 }} />

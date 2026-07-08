@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import { ArrowLeft, Plus, Search } from "lucide-react";
 import { redirect } from "next/navigation";
 
-function DealEmpty({tab}: { tab?: string}) {
+function DealEmpty({tab, isAuthor}: { tab?: string, isAuthor?: boolean}) {
   const [modal, setModal] = useState(false);
   const content = {
         "userDeals": {
@@ -66,11 +66,11 @@ function DealEmpty({tab}: { tab?: string}) {
           ></path>
           <path d="M60 80 L140 80 L140 90 L60 90 Z" fill="#cbd5e1"></path>
 
-          <path
+          {/* <path
             d="M100 50 L105 65 L120 65 L108 75 L112 90 L100 80 L88 90 L92 75 L80 65 L95 65 Z"
             fill="#f26522"
             opacity="0.4"
-          ></path>
+          ></path> */}
 
           <circle
             cx="120"

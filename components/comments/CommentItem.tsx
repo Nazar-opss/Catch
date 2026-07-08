@@ -45,7 +45,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
 
                         </div>
                         <CollapsibleContent className="mt-4">
-                            <CommentInput dealId={comment.dealId} reply={true} parentName={comment.authorName} parentId={comment.id} />
+                            <CommentInput dealId={comment.dealId} reply={true} parentName={comment.authorName} parentId={comment.id} onSuccess={() => setIsOpen(false)} />
                         </CollapsibleContent>
                     </Collapsible>
                 </div>

@@ -14,7 +14,7 @@ import { Controller, useForm } from "react-hook-form";
 import { createCommentAction } from "@/lib/actions/comment";
 import Image from "next/image";
 
-export default function CommentInput({ dealId, reply, parentName, parentId }: { dealId: string, reply?: boolean, parentName?: string, parentId?: string }) {
+export default function CommentInput({ dealId, reply, parentName, parentId, onSuccess }: { dealId: string, reply?: boolean, parentName?: string, parentId?: string, onSuccess?: () => void }) {
     const { data: session, isPending } = useSession()
 
     const [input, setInput] = useState("");
@@ -48,6 +48,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId }: { 
         if (result?.success) {
             toast.success(result.success)
             form.reset()
+            onSuccess?.()
         } else {
             toast.error(result?.error)
         }

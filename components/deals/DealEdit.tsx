@@ -1,44 +1,65 @@
-import { Upload, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Button } from "../ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import DealFormInput from "./DealFormInput";
-import { FileUpload, FileUploadDropzone, FileUploadItem, FileUploadItemDelete, FileUploadItemMetadata, FileUploadItemPreview, FileUploadList } from "../ui/file-upload";
-import { Controller, useForm } from "react-hook-form";
+import { FileUpload, FileUploadDropzone, FileUploadItem, FileUploadItemDelete, FileUploadItemPreview, FileUploadList } from "../ui/file-upload";
+import { Controller, useForm, useWatch  } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DealFormValues, formSchema } from "@/lib/schemas/dealSchema";
 import { toast } from "sonner";
-import { createDealAction } from "@/lib/actions/deal";
+import { updateDealAction } from "@/lib/actions/deal";
+import { DealAsideInfoProps } from "./DealAsideInfo";
+import Image from "next/image";
+import { useEffect } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export default function DealEdit({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
+    return {
+        link: deal.link || "",
+        title: deal.title || "",
+        oldPrice: deal.oldPrice ?? "",
+        newPrice: deal.newPrice ?? "",
+        images: [],
+        existingImages: deal.imageUrls || [],
+        description: deal.description || "",
+    }
+}
+
+export default function DealEdit({ deal, open, onOpenChange }: { deal: DealAsideInfoProps; open: boolean; onOpenChange: (open: boolean) => void }) {
     const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            link: "",
-            title: "",
-            oldPrice: "",
-            newPrice: "",
-            images: [],
-            description: "",
-        }
+        defaultValues: dealToFormValues(deal),
     })
 
+    useEffect(() => {
+        if (open) {
+            form.reset(dealToFormValues(deal))
+        }
+    }, [open, deal, form])
+
+    const existingImages = useWatch({ control: form.control, name: "existingImages" });
+    const remainingImageSlots = Math.max(0, 5 - (existingImages?.length ?? 0));
+
     async function onSubmit(values: DealFormValues) {
-        const formData = new FormData();
-        values.images.forEach((image) => {
-            formData.append("files", image);
-        });
+        let uploadedUrls: string[] = []
 
-        const uploadResult = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-        });
-        const data = await uploadResult.json();
+        if (values.images.length > 0) {
+            const formData = new FormData();
+            values.images.forEach((image) => {
+                formData.append("files", image);
+            });
 
-        values.images = data.urls.map((image: { secure_url: string }) => image.secure_url);
+            const uploadResult = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+            });
+            const data = await uploadResult.json();
+            uploadedUrls = data.urls.map((image: { secure_url: string }) => image.secure_url);
+        }
         console.log(values)
-        const result = await createDealAction(values)
-        //update the deal in the database with the new values
+        const result = await updateDealAction(deal.id, {...values, images: [...values.existingImages, ...uploadedUrls]}) 
+        
         console.log(result)
         if (result?.success) {
             toast.success(result.success)
@@ -73,7 +94,7 @@ export default function DealEdit({ open, onOpenChange }: { open: boolean; onOpen
                 <DealFormInput form={form} inputName="newPrice" placeholder="Наприклад: 12999" inputLabel="Нова ціна (₴)" price />
                 <DealFormInput form={form} inputName="oldPrice" placeholder="Наприклад: 16999" inputLabel="Стара ціна (₴)" price />
             </FieldGroup>
-
+            
             <Controller
                 name="images"
                 control={form.control}
@@ -87,45 +108,87 @@ export default function DealEdit({ open, onOpenChange }: { open: boolean; onOpen
                             value={field.value}
                             onValueChange={field.onChange}
                             accept="image/*"
-                            maxFiles={5}
+                            maxFiles={remainingImageSlots}
                             className="w-full cursor-pointer"
                         >
-                            <FileUploadDropzone asChild aria-label="Dropzone for file upload" className="py-8 px-4 group transition-colors duration-200 hover:border-orange-400 rounded-xl border-border">
-                                <div className="flex flex-col items-center transition-colors duration-200">
-                                    <div className="flex items-center justify-center rounded-full border w-12 h-12 mb-3 group-hover:border-primary group-hover:bg-orange-500/20 transition-colors">
-                                        <Upload className="size-6 text-muted-foreground group-hover:text-primary transition-colors" />
-                                    </div>
-                                    <p className="text-secondary-foreground font-medium  text-sm mb-1 group-hover:text-card-foreground">Перетягніть фото сюди або <span className="text-primary font-bold">натисніть</span> для завантаження</p>
-                                    <p className="text-slate-500 text-xs ">
-                                        JPG, PNG, WebP (макс. 5MB)
-                                    </p>
-                                </div>
-                            </FileUploadDropzone>
-                            <FileUploadList>
-                                {field.value?.map((file, index) => (
-                                    <FileUploadItem key={index} value={file}>
-                                        <FileUploadItemPreview />
-                                        <FileUploadItemMetadata />
-                                        <FileUploadItemDelete asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="size-7"
+                            <FileUploadList  className="flex flex-row cursor-default" forceMount>
+                                {existingImages?.map((url) => (
+                                    // <Tooltip key={url}>
+                                        // <TooltipTrigger asChild>
+                                            <div
+                                                key={url}
+                                                className="relative w-20 h-20 overflow-hidden rounded-md border"
                                             >
-                                                <X />
-                                                <span className="sr-only">Delete</span>
-                                            </Button>
-                                        </FileUploadItemDelete>
-                                    </FileUploadItem>
+                                                <Image src={url}
+                                                    width={80}
+                                                    height={80}
+                                                    alt="Зображення знижки"
+                                                    className="w-full h-full object-cover p-3"
+                                                />
+                                                <Button
+                                                    type="button"
+                                                    size="icon"
+                                                    className="size-5 absolute top-1 right-1 rounded-full p-1 
+                                                    cursor-pointer bg-secondary text-muted-foreground hover:text-card-foreground hover:bg-secondary transition-colors duration-200"
+                                                    onClick={() =>
+                                                        form.setValue(
+                                                            "existingImages",
+                                                            existingImages.filter((u) => u !== url),
+                                                            { shouldValidate: true, shouldDirty: true },
+                                                        )
+                                                    }
+                                                >
+                                                    <X className="text-red-600"/>
+                                                    <span className="sr-only">Delete</span>
+                                                </Button>
+                                            </div>
+                                    //     </TooltipTrigger>
+                                    //     <TooltipContent side="bottom" className="bg-card-foreground text-card">
+                                    //         <p className="text-xs">{url}</p>
+                                    //     </TooltipContent>
+                                    // </Tooltip>
+                                    // TODO: Add tooltip for existing images, using use_filename in cloudinary to get the original filename, or store the original filename in the database when uploading.
                                 ))}
+                                {field.value?.map((file, index) => (
+                                    <Tooltip key={index}>
+                                        <TooltipTrigger asChild>
+                                            <FileUploadItem key={index} className="w-20 h-20 " value={file}>
+                                                <FileUploadItemPreview className="w-full h-full border-0" />
+                                                {/* <FileUploadItemMetadata /> */}
+                                                <FileUploadItemDelete asChild>
+                                                    <Button
+                                                        size="icon"
+                                                        className="size-5 absolute top-1 right-1 rounded-full p-1
+                                                        cursor-pointer text-muted-foreground 
+                                                        bg-secondary hover:text-card-foreground hover:bg-secondary transition-colors duration-200"
+                                                    >
+                                                        <X className="text-red-600" />
+                                                        <span className="sr-only">Delete</span>
+                                                    </Button>
+                                                </FileUploadItemDelete>
+                                            </FileUploadItem>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="bottom" className="bg-card-foreground text-card">
+                                            <p className="text-xs">{file.name}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                ))}
+                                <FileUploadDropzone asChild aria-label="Dropzone for file upload" className="w-20 h-20 cursor-pointer group transition-colors duration-200 hover:border-orange-400 p-0 rounded-xl border-border">
+                                    <div className="flex flex-col items-center transition-colors duration-200">
+                                        <Plus />
+                                        Додати
+                                    </div>
+                                </FileUploadDropzone>
                             </FileUploadList>
                         </FileUpload>
                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                     </Field>
+                    
                 )}
+                
             //fix error display for images
             />
-
+    
             <DealFormInput form={form} inputName="description" placeholder="Додайте опис або промокод для знижки..." inputLabel="Опис або промокод" description />
         </FieldGroup>
         </div>
@@ -138,7 +201,7 @@ export default function DealEdit({ open, onOpenChange }: { open: boolean; onOpen
               Скасувати
             </Button>
           </DialogClose>
-          <DialogClose type="submit" onClick={() => {}} asChild>
+          <DialogClose type="submit" onClick={form.handleSubmit(onSubmit)} asChild>
             <Button  className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer">
               Зберегти зміни
             </Button>
