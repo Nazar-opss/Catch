@@ -10,7 +10,7 @@ import type { DealsPage } from "@/lib/actions/deals";
 
 type DealsInfiniteData = {pages: DealsPage[]; pageParams: unknown[]}
 
-export default function RatingButton({ userVote, commentId, dealId, authorId, rating, reply, fontSize, iconSize, deal }: { userVote?: number | null, commentId?: string, dealId: string, authorId: string, rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean }) {
+export default function RatingButton({ userVote, commentId, dealId, rating, reply, fontSize, iconSize, deal }: { userVote?: number | null, commentId?: string, dealId: string, rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean }) {
 
     const queryClient = useContext(QueryClientContext)
     const router = useRouter()
@@ -40,7 +40,7 @@ export default function RatingButton({ userVote, commentId, dealId, authorId, ra
                     }))
                 }
             })
-        voteDealAction(dealId, authorId, voteValue).then((res) => {
+        voteDealAction(dealId, voteValue).then((res) => {
             if (res?.error) {
                 queryClient?.invalidateQueries({queryKey: ["deals"]})
             }

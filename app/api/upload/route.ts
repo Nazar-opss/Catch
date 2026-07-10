@@ -1,3 +1,5 @@
+import { auth } from "@/lib/auth";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, MAX_FILES } from "@/lib/constants";
 import { v2 as cloudinary } from "cloudinary"
 import pLimit from "p-limit"
 
@@ -5,8 +7,31 @@ const limit = pLimit(5)
 
 export async function POST(req: Request) {
     try {
+        const session = await auth.api.getSession({ headers: req.headers });
+        if (!session) {
+            return Response.json({ error: "Не авторизовано" }, { status: 401 });
+        }
+
         const formData = await req.formData();
         const files = formData.getAll('files') as File[];
+
+        if (files.length === 0) {
+            return Response.json({error: "Файли не надіслано"}, { status: 400 })
+        }
+        if (files.length > MAX_FILES) {
+            return Response.json({error: `Максимум ${MAX_FILES}`}, { status: 400 })
+        }
+        for (const file of files) {
+            if(!(file instanceof File)) {
+                return Response.json({error: "Некоректні дані"}, { status: 400 })
+            }
+            if(!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                return Response.json({error: "Підтримуються лише .jpeg, .jpg, .png, .webp" }, { status: 400 })
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                return Response.json({ error: "Максимальний розмір файлу 5МБ" }, { status: 400 });
+            }
+        }
 
         const uploadPromises = files.map(async (file) => {
             const bytes = await file.arrayBuffer()
@@ -23,7 +48,7 @@ export async function POST(req: Request) {
                     },
                     (error, result) => {
                         if (error) reject(error);
-                         else resolve(result);
+                        else resolve(result);
                     }
                 ).end(buffer);
             }));

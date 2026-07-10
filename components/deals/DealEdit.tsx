@@ -13,6 +13,7 @@ import { DealAsideInfoProps } from "./DealAsideInfo";
 import Image from "next/image";
 import { useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import DealDateField from "./DealDateField";
 
 function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
     return {
@@ -23,6 +24,7 @@ function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
         images: [],
         existingImages: deal.imageUrls || [],
         description: deal.description || "",
+        expiresAt: deal.expiresAt ? new Date(deal.expiresAt).toISOString().slice(0, 10) : ""
     }
 }
 
@@ -190,6 +192,7 @@ export default function DealEdit({ deal, open, onOpenChange }: { deal: DealAside
             />
     
             <DealFormInput form={form} inputName="description" placeholder="Додайте опис або промокод для знижки..." inputLabel="Опис або промокод" description />
+            <DealDateField form={form} inputName="expiresAt" inputLabel="Діє до (необов'язково)"/>
         </FieldGroup>
         </div>
         <DialogFooter className='relative mt-6 border-t-0 bg-transparent'>

@@ -60,3 +60,55 @@ export function generateSlugUsername(name: string): string {
   const random = Math.floor(1000 + Math.random() * 9000)
   return `${baseSlug}-${random}`
 }
+
+export function isDealExpired(deal: { isExpired: boolean | null; expiresAt?: Date | string | null }): boolean {
+  if (deal.isExpired) {
+    return true
+  }
+  if (deal.expiresAt) {
+    return new Date(deal.expiresAt).getTime() <= Date.now()
+  }
+  return false
+}
+
+export function getExpirationBadge(expiresAt: Date | string | null) {
+  if(!expiresAt) return null;
+
+  const expirationDate = new Date(expiresAt);
+  const now = new Date();
+
+  if (expirationDate.getTime() <= now.getTime()) {
+    return null;
+  }
+  const diffInMs = expirationDate.getTime() - now.getTime();
+  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+  const diffInDays = Math.floor(diffInHours / 24);
+
+  // Стан 1: Залишилось менше 24 годин (Червоний)
+  if (diffInHours < 24) {
+    if (diffInHours === 0) {
+      return {
+        text: "Менше години!",
+        colorClass: "text-red-500",
+      };
+    }
+    return {
+      text: `Залишилось ${diffInHours} год.`,
+      colorClass: "text-red-500",
+    };
+  }
+
+  // Стан 2: Залишилось 1-2 дні (Помаранчевий)
+  if (diffInDays <= 2) {
+    return {
+      text: `Діє ще ${diffInDays} дн.`,
+      colorClass: "text-orange-500",
+    };
+  }
+
+  // Стан 3: Більше 3 днів (Зелений)
+  return {
+    text: `Діє ще ${diffInDays} дн.`,
+    colorClass: "text-green-600",
+  };
+}

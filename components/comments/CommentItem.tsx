@@ -38,7 +38,7 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                     <p className="text-secondary-foreground text-[15px] leading-relaxed mb-2.5">{comment.content}</p>
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
-                            <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} authorId={comment.authorId} rating={Number(comment.rating ?? 0)} reply />
+                            <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} rating={Number(comment.rating ?? 0)} reply />
                             <CollapsibleTrigger className="text-muted-foreground hover:text-card-foreground transition-colors font-medium text-[13px] cursor-pointer">
                                 Відповісти
                             </CollapsibleTrigger>

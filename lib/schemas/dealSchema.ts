@@ -1,7 +1,5 @@
 import z from "zod";
-
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "../constants";
 
 const baseSchema = z.object({
     link: z
@@ -33,6 +31,8 @@ const baseSchema = z.object({
         .string()
         // TODO: if description is empty, use Ai to write smth
         .max(2000, "Опис повинен бути не більше 2000 символів"),
+    expiresAt: z
+        .string()
 })
 
 export const formSchema = baseSchema.refine(
@@ -46,7 +46,8 @@ export const formSchema = baseSchema.refine(
 export const commentFormSchema = z.object({
     content: z
         .string()
-        .min(1, "Введіть коментар"),
+        .min(1, "Введіть коментар")
+        .max(2000, "Коментар не більше 2000 символів"),
     images: z
         .array(
             z.custom<File>((file) => file instanceof File, "Оберіть файл")

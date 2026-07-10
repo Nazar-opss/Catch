@@ -15,7 +15,7 @@ if (!secret) throw new Error("BETTER_AUTH_SECRET is not defined")
 
 export const auth = betterAuth({
     secret,
-    baseURL: "http://localhost:3000/api/auth",
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000/api/auth",
     database: {
         db,
         type: "postgres"

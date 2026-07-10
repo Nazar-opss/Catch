@@ -19,7 +19,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
 
     const user = await db
         .selectFrom("user")
-        .selectAll("user")
+        .select(["id", "name", "username", "image", "karma", "createdAt"])
         .where("user.username", "=", username)
         .executeTakeFirst();
     if (!user) {
@@ -97,7 +97,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                 </aside>
                 <div className="flex-1 min-w-0 w-full">
                     {showSettings
-                    ? <ProfileSettings name={user.name} userName={user.username} email={user.email} emailVerified={user.emailVerified} emailChanged={searchParam.emailChanged} />
+                    ? <ProfileSettings name={user.name} userName={user.username} email={session!.user.email} emailVerified={session!.user.emailVerified} emailChanged={searchParam.emailChanged} />
                     : <>
                         <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
                         <div className={content.length === 0 ? "flex items-center justify-center" : searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>

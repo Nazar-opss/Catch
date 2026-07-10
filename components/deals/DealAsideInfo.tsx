@@ -2,8 +2,8 @@
 import Link from "next/link"
 import RatingButton from "../ui/rating-button"
 import { Button } from "../ui/button"
-import { Bookmark, Clock, EllipsisVertical, ExternalLink, PenLine, Trash } from "lucide-react"
-import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils"
+import { Bookmark, Clock, EllipsisVertical, ExternalLink, PenLine, RotateCcw, Trash } from "lucide-react"
+import { dealPercentCalculate, getExpirationBadge, getShopIcon, getShopName, isDealExpired } from "@/lib/utils"
 import Image from "next/image"
 import { saveDealAction } from "@/lib/actions/saved"
 import dayjs from "@/lib/dayjs";
@@ -11,6 +11,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { useState } from "react"
 import DealEdit from "./DealEdit"
 import DealDelete from "./DealDelete"
+import { toggleDealExpiredAction } from "@/lib/actions/deal"
+import { toast } from "sonner"
 
 export interface DealAsideInfoProps {
     id: string;
@@ -28,11 +30,26 @@ export interface DealAsideInfoProps {
     authorImage: string | null;
     commentCount: number | null;
     userVote: number | null;
+    expiresAt: Date | null;
+    isExpired: boolean;
 }
 
 export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoProps; isAuthor: boolean }) {
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const expired = isDealExpired(deal)
+    const daysLeft = !expired && deal.expiresAt
+        ? dayjs(deal.expiresAt).endOf("day").diff(dayjs(), "day")
+        : null
+    async function handleToggleExpired() {
+        const result = await toggleDealExpiredAction(deal.id)
+        if (result?.success) toast.success(result.success)
+        else toast.error(result?.error)
+    }
+
+    const expirationData = !expired ? getExpirationBadge(deal.expiresAt) : null;
+
+
     return (
         <div className="sticky top-23 flex flex-col gap-4">
             <div className="bg-card rounded-[24px] border border-border p-6 sm:p-7 shadow-sm">
@@ -40,7 +57,7 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                     <span className="uppercase text-sm font-bold text-slate-400">
                         рейтинг знижки
                     </span>
-                    <RatingButton dealId={deal.id} authorId={deal.authorId} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
+                    <RatingButton dealId={deal.id} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
                     {isAuthor && (
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
@@ -54,9 +71,10 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                                 <DropdownMenuItem onClick={() => setEditModal(true)}>
                                     <PenLine />Редагувати
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Clock />Закінчилася
+                                <DropdownMenuItem onClick={handleToggleExpired}>
+                                    {expired ? <><RotateCcw />Відновити</> : <><Clock />Закінчилася</>}
                                 </DropdownMenuItem>
+
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => setDeleteModal(true)} className="text-red-600">
@@ -68,6 +86,12 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                     )}
                 </div>
                 <div className="w-full h-px bg-secondary mb-6"></div>
+                {expired && (
+                    <div className="mb-4 flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                        <Clock className="h-4 w-4" />
+                        Знижка закінчилася
+                    </div>
+                )}
                 <div className="mb-6 flex flex-col gap-2">
                     <span className="font-extrabold text-[40px] leading-none text-card-foreground tracking-tight">{deal.newPrice} <span className="font-bold text-3xl">грн</span></span>
                     {deal.oldPrice && (
@@ -89,6 +113,7 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                                 </span>
                             </Button>
                         </Link>
+                      
                         <div className="flex items-center justify-center gap-2 text-slate-500 text-[14px] font-medium">
                             Продавець:
                             <span className="text-card-foreground items-center font-semibold gap-1.5 flex  ">
@@ -96,6 +121,12 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                                 {getShopName(deal.link)}
                             </span>
                         </div>
+                          {daysLeft !== null && (
+                            <div className={`flex items-center justify-center mt-4 gap-1 font-semibold ${expirationData?.colorClass}`}>
+                                <Clock className='size-4' />
+                                {expirationData?.text}
+                            </div>
+                        )}
                     </>
                 )}
                 <div className="w-full h-px bg-secondary my-6"></div>

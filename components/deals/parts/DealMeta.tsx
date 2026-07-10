@@ -11,7 +11,7 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
     const iconSize = layout === "list" ? "w-4.5 h-4.5" : "w-3 h-3";
     const imageSize = 32;
     const metaSize = layout === "list" ? "text-sm" : "text-xs";
-
+    
     return (
         <div className="flex flex-col gap-2.5 mt-auto">
             {deal.link && (
@@ -27,7 +27,7 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
                         <Image src={authorImage} alt={deal.authorName} className="rounded-full object-cover w-full h-full" width={imageSize} height={imageSize} unoptimized quality={90} />
                     </div>
 
-                    <span>{deal.authorName}</span>
+                    <span className="truncate">{deal.authorName}</span>
                     <span className="text-slate-300">•</span>
                     <div className="flex items-center gap-1">
                         <Clock className={iconSize} />

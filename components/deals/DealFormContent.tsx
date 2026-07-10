@@ -5,6 +5,7 @@ import { Upload, X } from "lucide-react";
 import { DealFormValues } from "@/lib/schemas/dealSchema";
 import { Button } from "../ui/button";
 import DealFormInput from "./DealFormInput";
+import DealDateField from "./DealDateField";
 
 export const inputStyle = "flex h-11 w-full rounded-lg border border-border bg-card px-3.5 py-2 text-[15px] text-card-foreground shadow-sm placeholder:text-muted-foreground hover:border-muted-foreground focus-visible:outline-none focus-visible:border-primary focus-visible:ring-ring/10 transition-all duration-200"
 
@@ -71,6 +72,7 @@ export default function DealFormContent({ form, dealType }: { form: UseFormRetur
             />
 
             <DealFormInput form={form} inputName="description" placeholder="Додайте опис або промокод для знижки..." inputLabel="Опис або промокод" description />
+            <DealDateField form={form} inputName="expiresAt" inputLabel="Діє до (необов'язково)"/>
         </FieldGroup>
     )
 }

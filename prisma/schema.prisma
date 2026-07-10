@@ -99,6 +99,8 @@ model Deal {
     description String?
     imageUrls   String[]
     temperature Int      @default(0)
+    isExpired   Boolean   @default(false)
+    expiresAt   DateTime?
     createdAt   DateTime @default(now())
 
     authorId String

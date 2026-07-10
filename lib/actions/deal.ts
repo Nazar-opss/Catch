@@ -49,7 +49,8 @@ export async function createDealAction(values: DealActionValues): Promise<Action
                 description: data.description,
                 imageUrls: data.images,
                 createdAt: new Date(),
-                authorId: session.user.id
+                authorId: session.user.id,
+                expiresAt: data.expiresAt ? new Date(data.expiresAt) : null
             })
             .execute()
         revalidatePath("/")
@@ -85,6 +86,7 @@ export async function updateDealAction(dealId: string, values: DealActionValues)
                 newPrice: data.newPrice === "" ? 0 : data.newPrice,
                 description: data.description,
                 imageUrls: data.images,
+                expiresAt: data.expiresAt ? new Date(data.expiresAt) : null
             })
             .where('id', '=', dealId)
             .where('authorId', '=', session.user.id)
@@ -122,4 +124,45 @@ export async function deleteDealAction(dealId: string): Promise<ActionResult> {
         console.error(error)
         return { error: "Помилка при видаленні з бази даних" }
     }
+}
+
+export async function toggleDealExpiredAction(dealId: string): Promise<ActionResult> {
+    const sessionResult = await requireSession()
+    if (!sessionResult.ok) {
+        return { error: sessionResult.error }
+    }
+    const { session } = sessionResult
+
+    try {
+        const deal = await db.selectFrom('deal')
+            .select(['isExpired', 'expiresAt'])
+            .where('id', '=' , dealId)
+            .where('authorId', '=', session.user.id)
+            .executeTakeFirst()
+        
+        if (!deal) {
+            return {error: "Угоду не знайдено або немає прав"}
+        }
+
+        const dateExpired = deal.expiresAt ? new Date(deal.expiresAt).getTime() <= Date.now() : false
+        const currentlyExpired = deal.isExpired || dateExpired
+
+        const nextValue = currentlyExpired 
+            ? {isExpired: false, ...(dateExpired ? {expiresAt: null} : {})}
+            : {isExpired: true}
+        
+        await db.updateTable('deal')
+            .set(nextValue)
+            .where('id', '=', dealId)
+            .where('authorId', '=', session.user.id)
+            .execute()
+
+        revalidatePath("/")
+        revalidatePath(`/deal/${dealId}`)
+        return { success: currentlyExpired ? "Знижку відновлено" : "Знижку позначено як закінчену" }
+    } catch (error) {
+        console.error(error)
+        return { error: "Помилка при збереженні в базу даних" }
+    }
+    
 }

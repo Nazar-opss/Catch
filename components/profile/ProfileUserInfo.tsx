@@ -7,7 +7,7 @@ import { Button } from '../ui/button'
 import { Camera } from 'lucide-react'
 import ProfileUserPhoto from './ProfileUserPhoto'
 
-function ProfileUserInfo({ user, isOwnProfile }: { user: Selectable<User>, isOwnProfile: boolean }) {
+function ProfileUserInfo({ user, isOwnProfile }: { user: Pick<Selectable<User>,"id"|"name"|"username"|"image"|"karma"|"createdAt">, isOwnProfile: boolean }) {
     const [modal, setModal] = useState(false)
     return (
         <div className="flex flex-col items-center text-center">

@@ -51,6 +51,8 @@ export type Deal = {
     description: string | null;
     imageUrls: string[];
     temperature: Generated<number>;
+    isExpired: Generated<boolean>;
+    expiresAt: Timestamp | null;
     createdAt: Generated<Timestamp>;
     authorId: string;
 };

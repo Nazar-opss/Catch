@@ -25,6 +25,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             images: [],
             existingImages: [],
             description: "",
+            expiresAt: "",
         }
     })
 

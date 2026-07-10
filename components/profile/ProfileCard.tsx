@@ -4,7 +4,7 @@ import { User } from "@/prisma/types/types";
 import ProfileUserInfo from "./ProfileUserInfo";
 import ThemeButton from "../ui/theme-button";
 
-export default function ProfileCard({ user, isOwnProfile }: { user: Selectable<User>, isOwnProfile: boolean }) {
+export default function ProfileCard({ user, isOwnProfile }: { user: Pick<Selectable<User>,"id"|"name"|"username"|"image"|"karma"|"createdAt">, isOwnProfile: boolean }) {
     return (
         <div className=" bg-card rounded-[24px] border border-border shadow-sm p-8 flex flex-col gap-8">
             <ProfileUserInfo user={user} isOwnProfile={isOwnProfile} />
