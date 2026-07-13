@@ -15,18 +15,18 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null
 }
 
-async function DealsFeedLoader({ sort, q, currentUserId, layout }: {
-  sort?: string; q: string; currentUserId?: string; layout: "grid" | "list"
+async function DealsFeedLoader({ sort, q, currentUserId, layout, category }: {
+  sort?: string; q: string; currentUserId?: string; layout: "grid" | "list", category?: string
 }) {
-  const firstPage = await getDealsPage({ sort, q: q ?? null, currentUserId, cursor: null })
-  return <DealsFeed initialPage={firstPage} layout={layout} sort={sort ?? "hot"} q={q} />
+  const firstPage = await getDealsPage({ sort, q: q ?? null, currentUserId, cursor: null, category })
+  return <DealsFeed initialPage={firstPage} layout={layout} sort={sort ?? "hot"} q={q} category={category} />
 }
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ view?: string, sort?: string | "hot", q?: string }> }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ view?: string, sort?: string | "hot", q?: string, category?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   const currentUserId = session?.user.id;
 
-  const { view, sort, q } = await searchParams
+  const { view, sort, q, category } = await searchParams
   const layout = view === "list" ? "list" : "grid"  
 
   return (
@@ -37,7 +37,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
       }
       <DealsList deals={dealsArray} layout={layout} /> */}
       <Suspense fallback={<DealsListSkeleton layout={layout} />}>
-          <DealsFeedLoader sort={sort} q={q ?? ""} currentUserId={currentUserId} layout={layout} />
+          <DealsFeedLoader sort={sort} q={q ?? ""} currentUserId={currentUserId} layout={layout} category={category} />
       </Suspense>
     </main>
   );

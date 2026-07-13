@@ -4,6 +4,7 @@ import { DealWithAuthor } from "@/app/(main)/page";
 import { DB } from "@/prisma/types/types";
 import { db } from "@/server/db";
 import { sql, ExpressionBuilder } from "kysely";
+import { CategoryValue } from "../constants";
 
 const pageSize = 8
 
@@ -32,7 +33,7 @@ function decodeCursor(s?: string | null): DealsCursor | null {
     }
 }
 
-export async function getDealsPage(params: {cursor?: string | null, currentUserId?: string, q: string | null, filter?: "hot" | "new" | "discussed", sort?: string, limit?: number}): Promise<DealsPage> {
+export async function getDealsPage(params: {cursor?: string | null, currentUserId?: string, q: string | null, filter?: "hot" | "new" | "discussed", sort?: string, limit?: number, category?: string | null}): Promise<DealsPage> {
     const sortMode: SortMode = params.sort === "new" || params.sort === "discussed" ? params.sort : "hot"
 
     const limit = params.limit ?? pageSize
@@ -40,11 +41,11 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
     const cursor = decodeCursor(params.cursor)
 
     const uid = params.currentUserId ?? ""
-
+    
     const q = params.q?.trim() ? params.q.trim() : null
-
+    
     const relevance = sql<number>`similarity("deal"."title", ${q})`
-
+    
     const createdAtMs = sql<Date>`date_trunc('milliseconds', "deal"."createdAt")`;
 
     const commentCount = (eb: ExpressionBuilder<DB ,"deal" | "user">) =>
@@ -66,7 +67,11 @@ export async function getDealsPage(params: {cursor?: string | null, currentUserI
                         .whereRef("vote.dealId", "=", ("deal.id"))
                         .where("vote.userId", "=", uid)
                         .as("userVote")
-                ])
+                    ])
+                    
+    if(params.category && params.category !== "all") {
+        query = query.where("deal.category", "=", params.category as CategoryValue)
+    }
     if (q) {
         query = query.select(relevance.as("_score"))
         const like = `%${q}%`

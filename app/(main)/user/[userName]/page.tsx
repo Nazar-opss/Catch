@@ -16,7 +16,9 @@ export default async function UserPage({ params, searchParams }: { params: Promi
     const session = await auth.api.getSession({ headers: await headers() });
     const { username } = await params;
     const searchParam = await searchParams;
-
+    
+    const isOwnProfile = session?.user?.username === username;
+    
     const user = await db
         .selectFrom("user")
         .select(["id", "name", "username", "image", "karma", "createdAt"])
@@ -26,67 +28,74 @@ export default async function UserPage({ params, searchParams }: { params: Promi
         notFound();
     }
 
-    const isOwnProfile = session?.user?.id === user.id;
-
     if (searchParam.settings === "true" && !isOwnProfile) {
         const query = searchParam.tab ? `?tab=${searchParam.tab}` : "";
         redirect(`/user/${username}${query}`);
     }
 
-    const [ deals, saved, comments ] = await Promise.all([
-        db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("deal.authorId", "=", user.id).select((eb) => [
-            "user.name as authorName",
-            "user.image as authorImage",
-            eb.selectFrom("comment")
-                .select(eb.fn.count<number>("id").as("count"))
-                .whereRef("comment.dealId", "=", ("deal.id"))
-                .as("commentCount"),
-            eb.selectFrom("vote")
-                .select("value")
-                .whereRef("vote.dealId", "=", "deal.id")
-                .where("vote.userId", "=", session?.user?.id ?? "")
-                .as("userVote")
-        ]).execute(),
+    if (searchParam.tab === "userBookmarks" && !isOwnProfile) {
+        redirect(`/user/${username}`)
+    }
 
-        db.selectFrom("saved_deal").innerJoin("deal", "deal.id", "saved_deal.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("saved_deal.userId", "=", user.id).select((eb) => [
-            "user.name as authorName",
-            "user.image as authorImage",
-            eb.selectFrom("comment")
-                .select(eb.fn.count<number>("id").as("count"))
-                .whereRef("comment.dealId", "=", ("deal.id"))
-                .as("commentCount"),
-            eb.selectFrom("vote")
-                .select("value")
-                .whereRef("vote.dealId", "=", "deal.id")
-                .where("vote.userId", "=", session?.user?.id ?? "")
-                .as("userVote")
-        ]).execute(),
 
-        db.selectFrom("comment").innerJoin("deal", "deal.id", "comment.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("comment").where("comment.authorId", "=", user.id).select((eb) => [
-            "user.name as authorName",
-            "user.image as authorImage",
-            "deal.title as dealTitle",
-            eb.selectFrom("comment_vote")
-                .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
-                .whereRef("comment_vote.commentId", "=", "comment.id")
-                .as("rating"),
-            eb.selectFrom("vote")
-                .select("value")
-                .whereRef("vote.dealId", "=", "deal.id")
-                .where("vote.userId", "=", session?.user?.id ?? "")
-                .as("userVote")
-        ]).execute()
-    ])
+    const dealsQuery = () => db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("deal.authorId", "=", user.id).select((eb) => [
+        "user.name as authorName",
+        "user.image as authorImage",
+        eb.selectFrom("comment")
+            .select(eb.fn.count<number>("id").as("count"))
+            .whereRef("comment.dealId", "=", ("deal.id"))
+            .as("commentCount"),
+        eb.selectFrom("vote")
+            .select("value")
+            .whereRef("vote.dealId", "=", "deal.id")
+            .where("vote.userId", "=", session?.user?.id ?? "")
+            .as("userVote")
+    ]).execute();
 
-    let content: (typeof deals[number] | typeof comments[number])[] = deals;
+    const savedQuery = () => db.selectFrom("saved_deal").innerJoin("deal", "deal.id", "saved_deal.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("saved_deal.userId", "=", user.id).select((eb) => [
+        "user.name as authorName",
+        "user.image as authorImage",
+        eb.selectFrom("comment")
+            .select(eb.fn.count<number>("id").as("count"))
+            .whereRef("comment.dealId", "=", ("deal.id"))
+            .as("commentCount"),
+        eb.selectFrom("vote")
+            .select("value")
+            .whereRef("vote.dealId", "=", "deal.id")
+            .where("vote.userId", "=", session?.user?.id ?? "")
+            .as("userVote")
+    ]).execute();
+
+    const commentsQuery = () => db.selectFrom("comment").innerJoin("deal", "deal.id", "comment.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("comment").where("comment.authorId", "=", user.id).select((eb) => [
+        "user.name as authorName",
+        "user.image as authorImage",
+        "deal.title as dealTitle",
+        eb.selectFrom("comment_vote")
+            .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
+            .whereRef("comment_vote.commentId", "=", "comment.id")
+            .as("rating"),
+        eb.selectFrom("vote")
+            .select("value")
+            .whereRef("vote.dealId", "=", "deal.id")
+            .where("vote.userId", "=", session?.user?.id ?? "")
+            .as("userVote")
+    ]).execute();
+
+    type Deal = Awaited<ReturnType<typeof dealsQuery>>[number];
+    type Comment = Awaited<ReturnType<typeof commentsQuery>>[number];
+
+    let content: (Deal | Comment)[];
     switch (searchParam.tab) {
         case "userBookmarks":
-            content = saved;
+            content = isOwnProfile ? await savedQuery() : [];
             break;
         case "userComments":
-            content = comments;
+            content = await commentsQuery();
             break;
+        default:
+            content = await dealsQuery();
     }
+
     const showSettings = searchParam.settings === "true" && isOwnProfile;
 
     return (

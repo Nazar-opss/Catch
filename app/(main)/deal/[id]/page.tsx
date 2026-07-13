@@ -37,7 +37,13 @@ export default async function DealPage({ params }: DealPageProps) {
                 .select("value")
                 .whereRef("vote.dealId", "=", "deal.id")
                 .where("vote.userId", "=", currentUserId ?? "")
-                .as("userVote")
+                .as("userVote"),
+            eb.exists(
+                eb.selectFrom("saved_deal")
+                    .select("id")
+                    .whereRef("saved_deal.dealId", "=", "deal.id")
+                    .where("saved_deal.userId", "=", currentUserId ?? "")
+            ).as("isSaved")
         ])
         .where("deal.id", "=", id)
         .executeTakeFirst();

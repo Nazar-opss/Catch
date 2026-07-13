@@ -37,7 +37,7 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                         )
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-9">
-                        <div className="items-center bg-slate-200 dark:bg-slate-800 px-0.5 py-0.5 border border-secondary rounded-full">
+                        <div className="items-center bg-slate-200 dark:bg-slate-800 border border-secondary rounded-full">
                             <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} userVote={deal.userVote} />
                         </div>
                     </div>

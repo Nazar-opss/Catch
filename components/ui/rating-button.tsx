@@ -53,7 +53,7 @@ export default function RatingButton({ userVote, commentId, dealId, rating, repl
         <ButtonGroup
             orientation="horizontal"
 
-            className={` flex justify-center items-center bg-background gap-1 border border-border rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
+            className={` flex justify-center items-center bg-card gap-1 border border-border rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
         >
             <Button onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, 1) } else { handleDealVote(1) } }} className={`${buttonSize} ${buttonStyle} hover:bg-green-600/50 hover:text-green-600 ${userVote === 1 ? "text-green-600 bg-green-600/50" : "text-slate-400"}`}>
                 <ChevronUp width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />

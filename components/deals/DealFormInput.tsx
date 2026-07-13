@@ -36,7 +36,7 @@ export default function DealFormInput({ form, inputName, placeholder, inputLabel
                                 {...price ? {
                                     onChange: (e) => field.onChange(e.target.value === "" ? "" : Number(e.target.value)),
                                     min: "0",
-                                    step: "0.01",
+                                    step: "1",
                                     type: "number"
                                 } : {}}
                             />

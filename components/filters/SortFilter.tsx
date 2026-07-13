@@ -4,7 +4,7 @@ import { SortButton } from "./SortButton";
 
 export function SortFilter() {
     const searchParams = useSearchParams()
-    const currentSort = searchParams.get("sort") || "hot"
+    const currentSort = searchParams.get("sort") ?? "hot"
 
     const sortOptions = [
         { value: "hot", label: "Гарячі" },
@@ -17,7 +17,7 @@ export function SortFilter() {
             {sortOptions.map((sort) => {
                 const isActive = currentSort === sort.value
                 return (
-                    <SortButton key={sort.value} label={sort.label} category={sort.value} active={isActive} />
+                    <SortButton key={sort.value} label={sort.label} value={sort.value} active={isActive} />
                 )
             })}
         </div>

@@ -6,13 +6,14 @@ import PageLoader from "../ui/PageLoader";
 import DealEmpty from "./DealEmpty";
 import DealsList from "./DealsList";
 
-export default function DealsFeed({initialPage, layout, sort, q = ""} : {initialPage: DealsPage, layout: "grid" | "list", sort: string, q?: string}) {
+export default function DealsFeed({initialPage, layout, sort, q = "", category} : {initialPage: DealsPage, layout: "grid" | "list", sort: string, q?: string, category?: string}) {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ["deals", sort, q],
+        queryKey: ["deals", sort, q, category],
         queryFn: async ({ pageParam }) => {
             const params = new URLSearchParams({sort})
             if(pageParam) params.set("cursor", pageParam)
             if(q) params.set("q", q)
+            if(category) params.set("category", category)
             return fetch(`/api/deals?${params}`).then(r => r.json())
             },
 

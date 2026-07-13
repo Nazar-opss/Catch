@@ -7,10 +7,11 @@ export async function GET(req: Request) {
     const session = await auth.api.getSession({ headers: req.headers });
 
     const limitParam = Number(searchParams.get("limit"))
-    const safeLimit = Number.isFinite(limitParam) && limitParam ? Math.min(limitParam, 50) : undefined
+    const safeLimit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(limitParam, 50) : undefined
 
     const page = await getDealsPage({
         q: searchParams.get("q"),
+        category: searchParams.get("category"),
         sort: searchParams.get("sort") ?? "hot",
         cursor: searchParams.get("cursor"),
         limit: safeLimit,

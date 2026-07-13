@@ -17,7 +17,7 @@ export function getShopName(url: string) {
   const subdomains = ['www', 'bt', 'shop', 'm', 'store', 'hard'];
   const filtered = parts.filter(p => !subdomains.includes(p));
 
-  const name = filtered[0];
+  const name = filtered[0] ?? hostname;
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
@@ -44,7 +44,7 @@ const SHOP_ICONS: Record<string, string> = {
 
 export function getShopIcon(url: string) {
   const name = getShopName(url).toLowerCase();
-  const fileName = SHOP_ICONS[name] || `${name}.svg`
+  const fileName = SHOP_ICONS[name] || "/icons/store-default.svg"
   return fileName
 }
 

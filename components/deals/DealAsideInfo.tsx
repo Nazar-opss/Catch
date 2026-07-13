@@ -2,7 +2,7 @@
 import Link from "next/link"
 import RatingButton from "../ui/rating-button"
 import { Button } from "../ui/button"
-import { Bookmark, Clock, EllipsisVertical, ExternalLink, PenLine, RotateCcw, Trash } from "lucide-react"
+import { Bookmark, Clock, EllipsisVertical, ExternalLink, PenLine, RotateCcw, Trash2 } from "lucide-react"
 import { dealPercentCalculate, getExpirationBadge, getShopIcon, getShopName, isDealExpired } from "@/lib/utils"
 import Image from "next/image"
 import { saveDealAction } from "@/lib/actions/saved"
@@ -13,6 +13,8 @@ import DealEdit from "./DealEdit"
 import DealDelete from "./DealDelete"
 import { toggleDealExpiredAction } from "@/lib/actions/deal"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { CategoryValue } from "@/lib/constants"
 
 export interface DealAsideInfoProps {
     id: string;
@@ -32,11 +34,15 @@ export interface DealAsideInfoProps {
     userVote: number | null;
     expiresAt: Date | null;
     isExpired: boolean;
+    isSaved: boolean;
+    category: CategoryValue;
 }
 
 export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoProps; isAuthor: boolean }) {
     const [editModal, setEditModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [saved, setSaved] = useState(deal.isSaved);
+    const router = useRouter();
     const expired = isDealExpired(deal)
     const daysLeft = !expired && deal.expiresAt
         ? dayjs(deal.expiresAt).endOf("day").diff(dayjs(), "day")
@@ -45,6 +51,17 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
         const result = await toggleDealExpiredAction(deal.id)
         if (result?.success) toast.success(result.success)
         else toast.error(result?.error)
+    }
+
+    async function handleSave() {
+        const result = await saveDealAction({ dealId: deal.id })
+        if (result.error) {
+            toast.error(result.error)
+            if (result.error === "Ви не авторизовані") router.push("/login")
+            return
+        }
+        setSaved(result.saved!)
+        toast.success(result.success)
     }
 
     const expirationData = !expired ? getExpirationBadge(deal.expiresAt) : null;
@@ -78,7 +95,7 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem onClick={() => setDeleteModal(true)} className="text-red-600">
-                                    <Trash />
+                                    <Trash2 />
                                     Видалити
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -147,9 +164,9 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                         <span>{dayjs(deal.createdAt).fromNow()}</span>
                     </div>
                 </div>
-                <Button onClick={() => saveDealAction({ dealId: deal.id })} className="flex items-center bg-transparent mt-4.5 text-sm font-semibold text-muted-foreground transition-colors gap-1.5 w-full justify-center  border cursor-pointer border-transparent hover:text-primary hover:bg-[#FFF3EA] dark:hover:bg-orange-950/70 flex-1 rounded-lg py-2 px-3">
-                    <Bookmark className="w-4 h-4" />
-                    Зберегти
+                <Button onClick={handleSave} className={`flex items-center bg-transparent mt-4.5 text-sm font-semibold transition-colors gap-1.5 w-full justify-center border cursor-pointer border-transparent hover:text-primary hover:bg-[#FFF3EA] dark:hover:bg-orange-950/70 flex-1 rounded-lg py-2 px-3 ${saved ? "text-primary" : "text-muted-foreground"}`}>
+                    <Bookmark className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
+                    {saved ? "Збережено" : "Зберегти"}
                 </Button>
             </div>
             <DealEdit deal={deal} open={editModal} onOpenChange={setEditModal} />

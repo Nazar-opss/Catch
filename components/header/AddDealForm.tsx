@@ -11,9 +11,11 @@ import { X } from "lucide-react";
 import { toast } from "sonner";
 import { createDealAction } from "@/lib/actions/deal";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddDealForm({ open, onOpenChange }: { open: boolean, onOpenChange: (open: boolean) => void }) {
     const [dealType, setDealType] = useState<"online" | "offline">("online")
+    const queryClient = useQueryClient()
 
     const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
@@ -26,6 +28,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             existingImages: [],
             description: "",
             expiresAt: "",
+            category: undefined,
         }
     })
 
@@ -58,6 +61,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             toast.success(result.success)
             form.reset()
             onOpenChange(false)
+            queryClient.invalidateQueries({ queryKey: ["deals"] })
         } else {
             toast.error(result?.error)
         }

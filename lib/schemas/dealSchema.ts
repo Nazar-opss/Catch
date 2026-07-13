@@ -1,5 +1,5 @@
 import z from "zod";
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "../constants";
+import { ACCEPTED_IMAGE_TYPES, CATEGORY_VALUES, MAX_FILE_SIZE } from "../constants";
 
 const baseSchema = z.object({
     link: z
@@ -7,11 +7,15 @@ const baseSchema = z.object({
     title: z
         .string()
         .min(1, "Введіть назву"),
+    category: z
+        .enum(CATEGORY_VALUES, {message: "Оберіть категорію"}),
     oldPrice: z
         .number()
+        .int("Введіть ціле число")
         .or(z.literal("")),
     newPrice: z
         .number()
+        .int("Введіть ціле число")
         .or(z.literal(""))
         .refine((value) => value !== "" && value > 0, "Введіть нову ціну"),
 

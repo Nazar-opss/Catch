@@ -9,6 +9,23 @@ export const Theme = {
     dark: "dark"
 } as const;
 export type Theme = (typeof Theme)[keyof typeof Theme];
+export const Category = {
+    electronics: "electronics",
+    food: "food",
+    clothing: "clothing",
+    home: "home",
+    gaming: "gaming",
+    auto: "auto",
+    beauty: "beauty",
+    sports: "sports",
+    software: "software",
+    kids: "kids",
+    pets: "pets",
+    books: "books",
+    travel: "travel",
+    other: "other"
+} as const;
+export type Category = (typeof Category)[keyof typeof Category];
 export type Account = {
     id: string;
     accountId: string;
@@ -54,6 +71,7 @@ export type Deal = {
     isExpired: Generated<boolean>;
     expiresAt: Timestamp | null;
     createdAt: Generated<Timestamp>;
+    category: Generated<Category>;
     authorId: string;
 };
 export type SavedDeal = {

@@ -18,6 +18,23 @@ enum Theme {
   dark
 }
 
+enum Category {
+  electronics
+  food
+  clothing
+  home
+  gaming
+  auto
+  beauty
+  sports
+  software
+  kids
+  pets
+  books
+  travel
+  other
+}
+
 model User {
     id            String   @id
     name          String
@@ -94,14 +111,15 @@ model Deal {
     storeName   String?   
     cityName    String?
     geolocation String?
-    newPrice    Float
-    oldPrice    Float?
+    newPrice    Int
+    oldPrice    Int?
     description String?
     imageUrls   String[]
     temperature Int      @default(0)
     isExpired   Boolean   @default(false)
     expiresAt   DateTime?
     createdAt   DateTime @default(now())
+    category    Category @default(other)
 
     authorId String
     author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -110,6 +128,7 @@ model Deal {
     comments   Comment[]
     savedDeals SavedDeal[]
 
+    @@index([category])
     @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_title_trgm")
     @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_description_trgm")
 

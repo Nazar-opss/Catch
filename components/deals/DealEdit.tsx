@@ -24,7 +24,8 @@ function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
         images: [],
         existingImages: deal.imageUrls || [],
         description: deal.description || "",
-        expiresAt: deal.expiresAt ? new Date(deal.expiresAt).toISOString().slice(0, 10) : ""
+        expiresAt: deal.expiresAt ? new Date(deal.expiresAt).toISOString().slice(0, 10) : "",
+        category: deal.category,
     }
 }
 

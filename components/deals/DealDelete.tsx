@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { Trash, Trash2 } from "lucide-react";
 
 export default function DealDelete({
   dealId,
@@ -48,6 +49,7 @@ export default function DealDelete({
         className="my-auto max-h-[calc(100vh-2rem)] max-w-sm mx-4 overflow-y-auto no-scrollbar"
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">
+          <Trash2 className="w-12 h-12 rounded-full flex items-center mb-4 p-2 bg-red-50 text-red-600" />
           <DialogTitle className="text-xl font-bold text-card-foreground tracking-tight">Видалити знижку?</DialogTitle>
         </DialogHeader>
         <div className="px-6 sm:px-8">

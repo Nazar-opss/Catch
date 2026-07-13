@@ -6,6 +6,7 @@ import { DealFormValues } from "@/lib/schemas/dealSchema";
 import { Button } from "../ui/button";
 import DealFormInput from "./DealFormInput";
 import DealDateField from "./DealDateField";
+import DealCategorySelect from "./DealCategorySelect";
 
 export const inputStyle = "flex h-11 w-full rounded-lg border border-border bg-card px-3.5 py-2 text-[15px] text-card-foreground shadow-sm placeholder:text-muted-foreground hover:border-muted-foreground focus-visible:outline-none focus-visible:border-primary focus-visible:ring-ring/10 transition-all duration-200"
 
@@ -18,6 +19,7 @@ export default function DealFormContent({ form, dealType }: { form: UseFormRetur
                 <DealFormInput form={form} inputName="newPrice" placeholder="Наприклад: 12999" inputLabel="Нова ціна (₴)" redRequired price />
                 <DealFormInput form={form} inputName="oldPrice" placeholder="Наприклад: 16999" inputLabel="Стара ціна (₴)" price />
             </FieldGroup>
+            <DealCategorySelect form={form}/>
 
             <Controller
                 name="images"

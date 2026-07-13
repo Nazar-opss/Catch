@@ -46,6 +46,7 @@ export async function createDealAction(values: DealActionValues): Promise<Action
                 title: data.title,
                 oldPrice: data.oldPrice === "" ? null : data.oldPrice,
                 newPrice: data.newPrice === "" ? 0 : data.newPrice,
+                category: data.category,
                 description: data.description,
                 imageUrls: data.images,
                 createdAt: new Date(),
@@ -84,6 +85,7 @@ export async function updateDealAction(dealId: string, values: DealActionValues)
                 title: data.title,
                 oldPrice: data.oldPrice === "" ? null : data.oldPrice,
                 newPrice: data.newPrice === "" ? 0 : data.newPrice,
+                category: data.category,
                 description: data.description,
                 imageUrls: data.images,
                 expiresAt: data.expiresAt ? new Date(data.expiresAt) : null
