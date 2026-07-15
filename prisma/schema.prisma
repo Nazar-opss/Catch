@@ -39,7 +39,7 @@ model User {
     id            String   @id
     name          String
     username      String   @unique
-    email         String
+    email         String   @unique
     emailVerified Boolean
     image         String?
     createdAt     DateTime
@@ -129,6 +129,8 @@ model Deal {
     savedDeals SavedDeal[]
 
     @@index([category])
+    @@index([temperature, id])
+    @@index([createdAt, id])
     @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_title_trgm")
     @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_description_trgm")
 
@@ -145,6 +147,7 @@ model Vote {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     deal Deal @relation(fields: [dealId], references: [id], onDelete: Cascade)
 
+    @@index([dealId])
     @@unique([userId, dealId])
     @@map("vote")
 }
@@ -165,6 +168,7 @@ model Comment {
 
     votes CommentVote[]
 
+    @@index([dealId])
     @@map("comment")
 }
 
@@ -192,6 +196,7 @@ model SavedDeal {
     dealId String
     deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
 
+    @@index([dealId])
     @@unique([userId, dealId])
     @@map("saved_deal")
 }

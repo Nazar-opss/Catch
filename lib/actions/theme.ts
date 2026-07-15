@@ -16,9 +16,10 @@ export async function toggleTheme(theme: Theme) {
       .set({ theme })
       .where("id", "=", session.user.id)
       .execute();
-    revalidatePath(`/user/${session.user.id}`);
+    revalidatePath(`/user/[username]`, "page");
     return { success: "Тему оновлено" };
   } catch (error) {
     return { error: "Помилка оновлення теми" };
   }
 }
+//TODO: retrieve a theme from the database

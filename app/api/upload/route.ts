@@ -48,7 +48,7 @@ export async function POST(req: Request) {
                     },
                     (error, result) => {
                         if (error) reject(error);
-                        else resolve(result);
+                        else resolve(result?.secure_url);
                     }
                 ).end(buffer);
             }));

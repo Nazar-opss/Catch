@@ -87,7 +87,9 @@ export default function ProfileSettings({
     setSavingField(null)
     if(result?.success) {
       toast.success(result.success)
-      router.push(`/user/${value}?settings=true`)
+      if(fieldName === "userName") {
+        router.push(`/user/${value}?settings=true`)
+      }
       form.resetField(fieldName, {defaultValue: value})
     } else {
       toast.error(result?.error ?? "Помилка оновлення даних")

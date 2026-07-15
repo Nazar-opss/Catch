@@ -1,18 +1,22 @@
 "use server"
 
 import { db } from "@/server/db"
-import { auth } from "../auth";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { requireSession } from "./require-session";
 
 export async function voteDealAction(dealId: string, voteValue: number) {
     // voteValue = 1 to upvote, -1 to downvote
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session) return { error: "Не авторизовано" };
+    const sessionResult = await requireSession();
+    if (!sessionResult.ok) return { error: sessionResult.error };
+    const { session } = sessionResult;
 
     const userId = session.user.id
     
+    if (voteValue !== 1 && voteValue !== -1) {
+        return { error: "Недопустиме значення голосу" };
+    }
+
     try {
         await db.transaction().execute(async (trx) => {
             const deal = await trx
@@ -84,8 +88,9 @@ export async function voteDealAction(dealId: string, voteValue: number) {
 export async function voteCommentAction(dealId: string, commentId: string, voteValue: number) {
     // voteValue = 1 to upvote, -1 to downvote
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (!session) return { error: "Не авторизовано" };
+    const sessionResult = await requireSession();
+    if (!sessionResult.ok) return { error: sessionResult.error };
+    const { session } = sessionResult;
 
     const userId = session.user.id
 

@@ -3,7 +3,7 @@ import { ACCEPTED_IMAGE_TYPES, CATEGORY_VALUES, MAX_FILE_SIZE } from "../constan
 
 const baseSchema = z.object({
     link: z
-        .url("Введіть коректне посилання"),
+        .url({protocol: /^https?$/, message: "Введіть коректне посилання"}),
     title: z
         .string()
         .min(1, "Введіть назву"),

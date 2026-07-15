@@ -1,8 +1,7 @@
 "use server";
-import { auth } from "@/lib/auth";
 import { db } from "@/server/db";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { requireSession } from "./require-session";
 import z from "zod";
 
 type ActionResult =
@@ -30,13 +29,11 @@ export async function createCommentAction(values: {
   dealId: string;
   parentId?: string | null;
 }): Promise<ActionResult> {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) {
-    return { error: "Ви не авторизовані" };
+  const sessionResult = await requireSession();
+  if (!sessionResult.ok) {
+    return { error: sessionResult.error };
   }
+  const { session } = sessionResult;
   // TODO: uncomment for add images to comment, update db, example for formSchema
   // const serverSchema = formSchema.omit({ images: true }).merge(dealActionSchema)
   // const validateField = serverSchema.safeParse(values)

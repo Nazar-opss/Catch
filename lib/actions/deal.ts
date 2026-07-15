@@ -1,26 +1,13 @@
 "use server"
-import { auth } from '@/lib/auth'
 import { db } from '@/server/db';
 import { DealActionValues , dealActionSchema } from "@/lib/schemas/dealSchema";
-import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
+import { requireSession } from './require-session'
 
 
 type ActionResult =
     | { success: string; error?: undefined }
     | { error: string; success?: undefined }
-
-const requireSession = async () => {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
-
-    if (!session) {
-        return { ok: false as const, error: "Ви не авторизовані" }
-    }
-
-    return { ok: true as const, session }
-}
 
 export async function createDealAction(values: DealActionValues): Promise<ActionResult> {
     const sessionResult = await requireSession()

@@ -32,10 +32,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
   return (
     <main className="flex flex-1 w-full max-w-7xl items-center flex-col mx-auto py-8 sm:px-6 px-4">
       <FilterBar />
-      {/* {
-        dealsArray.length === 0 && <DealEmpty/>
-      }
-      <DealsList deals={dealsArray} layout={layout} /> */}
       <Suspense fallback={<DealsListSkeleton layout={layout} />}>
           <DealsFeedLoader sort={sort} q={q ?? ""} currentUserId={currentUserId} layout={layout} category={category} />
       </Suspense>

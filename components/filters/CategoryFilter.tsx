@@ -1,31 +1,11 @@
 "use client"
-import { CATEGORIES } from "@/lib/constants";
-import { SortButton } from "./SortButton";
-import { useSearchParams } from "next/navigation";
+import CategoryRibbon from "./CategoryRibbon";
 
 export default function CategoryFilter() {
-  const searchParams = useSearchParams();
-  const currentSort = searchParams.get("category") ?? "all";
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <SortButton
-        paramKey="category"
-        value="all"
-        label="Усі"
-        active={currentSort === "all"}
-      />
-      {CATEGORIES.map((c) => {
-        return (
-          <SortButton
-            key={c.value}
-            paramKey="category"
-            label={`${c.icon} ${c.label}`}
-            value={c.value}
-            active={currentSort === c.value}
-          />
-        );
-      })}
+    <div className="[scrollbar-width:none] [&::-webkit-scrollbar]:hidden flex w-full items-center gap-2 overflow-x-auto overflow-hidden whitespace-nowrap py-2 scrollbar-hide">
+      <CategoryRibbon/>
     </div>
   );
 }

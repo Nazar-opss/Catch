@@ -1,17 +1,14 @@
 "use server"
 import { db } from "@/server/db"
 import { revalidatePath } from "next/cache"
-import { auth } from "../auth"
-import { headers } from "next/headers"
+import { requireSession } from "./require-session"
 
 export async function saveDealAction({ dealId }: { dealId: string }) {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
-
-    if (!session) {
-        return { error: "Ви не авторизовані" }
+    const sessionResult = await requireSession()
+    if (!sessionResult.ok) {
+        return { error: sessionResult.error }
     }
+    const { session } = sessionResult
 
     try {
         const existing = await db.selectFrom('saved_deal')

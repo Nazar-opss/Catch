@@ -49,7 +49,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             });
             
             const data = await uploadResult.json();
-            uploadedUrls = data.urls.map((image: { secure_url: string }) => image.secure_url)
+            uploadedUrls = data.urls
         }
 
         // fix showing error with images

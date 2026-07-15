@@ -1,16 +1,14 @@
 "use server"
 
-import { headers } from "next/headers"
 import { auth } from "../auth"
+import { requireSession } from "./require-session"
 
 export async function deleteAccountWithPassword(password: string) {
-    const session = await auth.api.getSession({
-        headers: await headers()
-    })
-
-    if (!session) {
-        return { error: "Ви не авторизовані" }
+    const sessionResult = await requireSession()
+    if (!sessionResult.ok) {
+        return { error: sessionResult.error }
     }
+    const { session } = sessionResult
 
     const ctx = await auth.$context
     const accounts = await ctx.internalAdapter.findAccounts(session.user.id)
