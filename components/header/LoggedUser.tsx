@@ -16,9 +16,11 @@ export default function LoggedUser({ session }: { session: Session }) {
     return (
         <div className="flex items-center gap-4 sm:gap-6">
             <AddDealForm open={modal} onOpenChange={setModal} />
-            <Button onClick={() => setModal(true)} className="items-center justify-center px-5 py-2.5 h-full text-[14px] bg-[#ea580c] text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700">
+            <Button onClick={() => setModal(true)} className="items-center justify-center px-2.5 py-2.5 md:px-5 h-full text-[14px] bg-[#ea580c] text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700">
                 <Plus />
-                Додати знижку
+                <span className="hidden md:block">
+                    Додати знижку
+                </span>
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-secondary hover:border-border cursor-pointer">
                 <div className="w-8 h-8 rounded-full overflow-hidden">

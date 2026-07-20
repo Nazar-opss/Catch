@@ -41,7 +41,7 @@ export default function CommentInput({ dealId, reply, parentName, parentId, onSu
 
         const data = await uploadResult.json();
 
-        const imageUrls: string[] = data.urls.map((image: { secure_url: string }) => image.secure_url);
+        const imageUrls: string[] = data.urls
         const payload = { ...values, images: imageUrls, dealId: dealId, parentId: parentId };
         const result = await createCommentAction(payload)
         console.log(result)

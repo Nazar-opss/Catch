@@ -240,7 +240,7 @@ export default function ProfileSettings({
               <FieldGroup className="flex flex-row justify-between">
                 <FieldLabel htmlFor={field.name}>Електронна пошта</FieldLabel>
               </FieldGroup>
-              <FieldGroup className="relative flex flex-row items-center">
+              <FieldGroup className="relative flex flex-col gap-0 md:flex-row mb-2 items-center">
                 <Input
                   {...field}
                   id={field.name}
@@ -253,43 +253,48 @@ export default function ProfileSettings({
                   className={`${inputStyle} px-4`}
                   disabled={!emailVerified}
                 />
-                  <div className={`absolute ${emailVerified ? "text-green-500 bg-green-200" : "text-yellow-500 bg-amber-200"}  text-xs font-medium rounded-lg border border-transparent flex items-center gap-1 right-0 py-2 px-4 mr-px`}>
+                  <div className={`md:absolute ${emailVerified ? "text-green-500 bg-green-200" : "text-orange-500 bg-amber-200"}  text-xs font-medium rounded-lg border border-transparent w-full md:w-fit flex items-center gap-1 right-0 py-2 px-4 mr-px`}>
                     {
-                      emailVerified ? <>
-                      <Check className="w-4"/>
-                    Верифіковано  </> : <>
-                      <TriangleAlert className="w-4" />
-                      Не Верифіковано
+                      emailVerified 
+                      ? 
+                      <>
+                        <Check className="w-4"/>
+                        Верифіковано  
+                      </> 
+                      : 
+                      <>
+                        <TriangleAlert className="w-4" />
+                        Не Верифіковано
                       </>
                     }
                     
                   </div>
               </FieldGroup>
-              <FieldGroup className="flex flex-row">
-                <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail}  className="bg-card h-full border-border max-w-1/4 text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
-                  <Mail />
-                  Змінити пошту
-                </Button>
+              <FieldGroup className="flex flex-row flex-wrap gap-3 md:gap-8">
                 {!emailVerified && 
-                  <Button onClick={handleVerifyCurrentEmail}  className="bg-card h-full border-border text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
+                  <Button onClick={handleVerifyCurrentEmail} className="bg-card h-full w-full md:max-w-fit border-border text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
                     Відправити лист для верифікації
                   </Button>
                 }
+                <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail}  className="bg-card h-full border-border w-full md:max-w-1/4 text-muted-foreground cursor-pointer hover:bg-transparent disabled:opacity-50 disabled:cursor-not-allowed px-5 py-2.5 rounded-xl font-medium text-sm transition-colors" variant={'outline'}>
+                  <Mail size={16}/>
+                  Змінити пошту
+                </Button>
               </FieldGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
+        {!emailVerified && (
+          <p id="email-hint" className="text-xs text-muted-foreground mt-1.5">Електронну пошту можна змінити лише після верифікації.</p>
+        )}
         {pendingEmail && (
           <div className="text-[13px] flex flex-col bg-orange-200/50 dark:bg-orange-700/20 text-muted-foreground mt-1.5 gap-2.5 px-4 py-3.25 rounded-lg border border-orange-100/50 dark:border-orange-900/30">
             <p>
               Очікує підтвердження зміни на <b className="text-primary">{pendingEmail}</b>. Перевірте поточну скриньку <b className="text-primary">({email})</b> і підтвердіть зміну, потім підтвердіть лист у новій скриньці.
             </p>
-            <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail} className="cursor-pointer w-1/4 text-[13px] text-primary flex py-1.75 px-3.5 rounded-lg items-center gap-2.25 bg-orange-100 hover:bg-orange-300 dark:bg-orange-900/20 border border-primary dark:hover:bg-orange-950 dark:border-orange-900/30"><Send />Надіслати ще раз</Button>
+            <Button disabled={changingEmail || !emailVerified || !form.formState.dirtyFields.email} onClick={handleChangeEmail} className="cursor-pointer w-fit text-[13px] text-primary flex py-1.75 px-3.5 rounded-lg items-center gap-2.25 bg-orange-100 hover:bg-orange-300 dark:bg-orange-900/20 border border-primary dark:hover:bg-orange-950 dark:border-orange-900/30"><Send size={16} />Надіслати ще раз</Button>
           </div>
-        )}
-        {!emailVerified && (
-          <p id="email-hint" className="text-xs text-muted-foreground mt-1.5">Електронну пошту можна змінити лише після верифікації.</p>
         )}
       </div>
       <div className="space-y-4 border-b border-secondary pt-6 pb-8">

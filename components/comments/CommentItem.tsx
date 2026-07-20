@@ -5,21 +5,23 @@ import RatingButton from "../ui/rating-button";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import CommentInput from "./CommentInput";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import type { CommentWithAuthor } from "@/lib/buildCommentTree";
 
 interface CommentItemProps {
     comment: CommentWithAuthor;
     userVote?: number | null;
+    dealAuthorId: string;
 }
 
-export default function CommentItem({ comment, userVote }: CommentItemProps) {
+export default function CommentItem({ comment, userVote, dealAuthorId }: CommentItemProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [collapsibleState, setCollapsibleState] = useState(false)
 
     return (
         <div>
-            <div className="flex gap-4" key={comment.id}>
+            <div className="flex gap-2 md:gap-4 pt-4.5" key={comment.id}>
                 {comment.authorImage ? (
                     <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-border" />
                 ) : (
@@ -28,10 +30,15 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                     </div>
                 )}
                 <div className="flex-1 min-w-0">
-                    <div className="flex gap-2 items-center mb-1">
+                    <div className="flex flex-wrap gap-2 items-center mb-1">
                         <Link href={`/user/${comment.authorUsername}`} className="font-semibold text-card-foreground hover:text-primary transition-colors text-[15px]">
                             {comment.authorName}
                         </Link>
+                        {
+                            comment.authorId === dealAuthorId && (
+                                <span className="bg-orange-300/25 rounded-full text-primary text-[13px] px-2">Автор</span>
+                            )
+                        }
                         <span className="text-muted-foreground text-[13px]">•</span>
                         <span className="text-muted-foreground text-[13px]">{dayjs(comment.createdAt).fromNow()}</span>
                     </div>
@@ -39,7 +46,8 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
                     <Collapsible open={isOpen} onOpenChange={setIsOpen} >
                         <div className="flex items-center gap-2">
                             <RatingButton commentId={comment.id} dealId={comment.dealId} userVote={userVote} rating={Number(comment.rating ?? 0)} reply />
-                            <CollapsibleTrigger className="text-muted-foreground hover:text-card-foreground transition-colors font-medium text-[13px] cursor-pointer">
+                            <CollapsibleTrigger className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors font-medium text-[13px] cursor-pointer">
+                                <MessageSquare size={16} />
                                 Відповісти
                             </CollapsibleTrigger>
 
@@ -64,29 +72,34 @@ export default function CommentItem({ comment, userVote }: CommentItemProps) {
             } */}
             {comment.replies && comment.replies.length > 0 && (
                 <>
-                    <div className="ml-5 pl-6 mt-4 border-l-2 border-border">
+                    <div className="ml-2 md:ml-14 pl-3 md:pl-4 border-l border-border">
                         {comment.replies.slice(0, 1).map((reply) => (
-                            <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} />
+                            <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} dealAuthorId={dealAuthorId} />
                         ))}
 
                         {comment.replies.length > 1 && (
-                            <Collapsible>
-                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-card-foreground transition-colors font-medium cursor-pointer mb-4">
-                                    <ChevronDown className="w-4 h-4" />
-                                    Показати ще {comment.replies.length - 1} відповідей
-                                </CollapsibleTrigger>
+                            <Collapsible className="gap-4">
                                 <CollapsibleContent className="flex flex-col">
                                     {comment.replies.slice(1).map((reply) => (
-                                        <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} />
+                                        <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} dealAuthorId={dealAuthorId} />
                                     ))}
                                 </CollapsibleContent>
+                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-primary hover:text-orange-700 transition-colors font-medium cursor-pointer mt-2" onClick={() => setCollapsibleState(!collapsibleState)}>
+                                    
+                                    {collapsibleState === false ? <>
+                                    <ChevronDown size={16} /> Показати ще {comment.replies.length - 1} відповідей
+                                    </> : <>
+                                      <ChevronUp size={16} />
+                                      Сховати відповіді
+                                    </>
+                                    }
+                                </CollapsibleTrigger>
                             </Collapsible>
                         )}
                     </div>
-                    <div className="w-full h-px bg-secondary my-6" />
+                    {/* <div className="w-full h-px bg-secondary my-6" /> */}
                 </>
             )}
-
         </div>
     )
 }

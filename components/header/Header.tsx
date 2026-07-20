@@ -19,7 +19,7 @@ export function Header() {
                 <SearchBar />
                 {isPending ? (
                     <div className="flex items-center gap-4 md:gap-6">
-                        <div className="h-11 w-44 rounded-full bg-orange-200 animate-pulse" />
+                        <div className="h-11 w-12 md:w-44 rounded-full bg-orange-200 animate-pulse" />
                         <div className="h-11 w-19 rounded-full bg-gray-200 animate-pulse" />
                     </div>
                 ) : session ? (

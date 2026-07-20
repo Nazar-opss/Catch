@@ -45,7 +45,7 @@ export const auth = betterAuth({
                             <h2>Привіт, ${user.name}!</h2>
                             <p>Хтось (сподіваємось, що ви) ініціював зміну пошти на <b>${newEmail}</b>.</p>
                             <p>Якщо це були ви, підтвердіть дію:</p>
-                            <a href="${url}" style="background-color: #ef4444; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Підтвердити зміну</a>
+                            <a href="${url}" style="background-color: #f97316; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Підтвердити зміну</a>
                         </div>
                     `,
                 });
@@ -63,7 +63,7 @@ export const auth = betterAuth({
                         <h2>Привіт, ${user.name}!</h2>
                         <p>Ви ініціювали видалення акаунта. Цю дію не можна скасувати.</p>
                         <p>Щоб підтвердити, натисніть кнопку:</p>
-                        <a href="${url}" style="background-color:#ef4444;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;">Видалити акаунт</a>
+                        <a href="${url}" style="background-color: #ef4444; color: #fff; padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;">Видалити акаунт</a>
                         <p>Якщо це були не ви — просто проігноруйте цей лист.</p>
                     </div>`,
                 });

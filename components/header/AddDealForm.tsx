@@ -121,7 +121,7 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
                         <Button variant="outline" className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold cursor-pointer">Скасувати</Button>
                     </DrawerClose>
                     <DrawerClose type="submit" asChild>
-                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-card-foreground bg-primary hover:bg-orange-700 cursor-pointer">Додати</Button>
+                        <Button className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer">Додати</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </DrawerContent>
