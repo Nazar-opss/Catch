@@ -1,11 +1,15 @@
 import z from "zod";
 import { ACCEPTED_IMAGE_TYPES, CATEGORY_VALUES, MAX_FILE_SIZE } from "../constants";
 
+
 const baseSchema = z.object({
     link: z
         .url({protocol: /^https?$/, message: "Введіть коректне посилання"}),
     title: z
         .string()
+        .refine((val) => !/(https?:\/\/|www\.|\.[a-z]{2,}\/)/i.test(val.normalize("NFKC")),
+            { message: "У це поле потрібно ввести назву (наприклад, iPhone 15), а не посилання" }
+        )
         .min(1, "Введіть назву"),
     category: z
         .enum(CATEGORY_VALUES, {message: "Оберіть категорію"}),

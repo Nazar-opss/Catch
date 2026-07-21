@@ -78,13 +78,13 @@ export default function CommentItem({ comment, userVote, dealAuthorId }: Comment
                         ))}
 
                         {comment.replies.length > 1 && (
-                            <Collapsible className="gap-4">
+                            <Collapsible open={collapsibleState} onOpenChange={setCollapsibleState} className="gap-4">
                                 <CollapsibleContent className="flex flex-col">
                                     {comment.replies.slice(1).map((reply) => (
                                         <CommentItem key={reply.id} comment={reply} userVote={reply.userVote} dealAuthorId={dealAuthorId} />
                                     ))}
                                 </CollapsibleContent>
-                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-primary hover:text-orange-700 transition-colors font-medium cursor-pointer mt-2" onClick={() => setCollapsibleState(!collapsibleState)}>
+                                <CollapsibleTrigger className="flex items-center gap-1.5 text-sm text-primary hover:text-orange-700 transition-colors font-medium cursor-pointer mt-2" >
                                     
                                     {collapsibleState === false ? <>
                                     <ChevronDown size={16} /> Показати ще {comment.replies.length - 1} відповідей

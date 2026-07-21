@@ -5,7 +5,7 @@ import NoImage from "@/components/ui/noImage";
 import { db } from "@/server/db";
 import { Info } from "lucide-react";
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { buildCommentTree } from "@/lib/buildCommentTree";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
@@ -155,7 +155,7 @@ export default async function DealPage({ params, searchParams }: DealPageProps) 
                             </div>
                         )
                     }
-                    <h1 className="text-3xl sm:text-[34px] font-extrabold tracking-tight truncate leading-[1.2] text-balance ">
+                    <h1 className="text-3xl sm:text-[34px] font-extrabold tracking-tight leading-[1.2] ">
                         {deal.title}
                     </h1>
                 </div>
@@ -201,9 +201,11 @@ export default async function DealPage({ params, searchParams }: DealPageProps) 
                                             className={currentPage <= 1 ? "pointer-events-none opacity-40" : "rounded-full"}
                                         />
                                     </PaginationItem>
-                                    <span className="text-sm text-muted-foreground">
-                                        {currentPage} / {totalPages}
-                                    </span>
+                                    <PaginationItem>
+                                        <span className="text-sm text-muted-foreground">
+                                            {currentPage} / {totalPages}
+                                        </span>
+                                    </PaginationItem>
                                     <PaginationItem>
                                         <PaginationNext 
                                             href={`?page=${currentPage + 1}#comments`}

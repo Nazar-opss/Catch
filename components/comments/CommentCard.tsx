@@ -21,11 +21,11 @@ export default function CommentCard({ comment, isOwnProfile }: { comment: Commen
         <article className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-1 text-sm mb-2">
                 <div className="flex items-center">
-                    <div className="text-muted-foreground">
+                    <div className="flex gap-1 text-muted-foreground">
                         {
                             isOwnProfile ? "Ви прокоментували знижку:" : `Коментар до знижки:`
                         }
-                        <span className="font-semibold text-foreground"> {comment.dealTitle}</span>
+                        <span className="font-semibold max-w-[40ch] truncate text-foreground"> {comment.dealTitle}</span>
                     </div>
                 </div>
                 <span className="text-slate-400"> • </span>

@@ -21,27 +21,27 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
                 </div>
             )}
             <div className="w-full h-px bg-secondary my-2"></div>
-            <div className={`flex relative items-center text-slate-500 ${metaSize} ${layout === "list" ? "gap-2" : "justify-between"} font-medium`}>
-                <div className="flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-full overflow-hidden`}>
+            <div className={`flex items-center text-slate-500 ${metaSize} flex-wrap justify-between font-medium`}>
+                <div className="flex items-center w-full gap-3">
+                    <div className="w-8 h-8 rounded-full">
                         <Image src={authorImage} alt={deal.authorName} className="rounded-full object-cover w-full h-full" width={imageSize} height={imageSize} unoptimized quality={90} />
                     </div>
 
-                    <span className="truncate">{deal.authorName}</span>
+                    <span className="truncate max-w-[8ch]">{deal.authorName}</span>
                     <span className="text-slate-300">•</span>
                     <div className="flex items-center gap-1">
                         <Clock className={iconSize} />
                         <span>{dayjs(deal.createdAt).fromNow()}</span>
                     </div>
-                </div>
-                {layout === "list" && <span className="text-slate-300">•</span>}
-                <div className="flex items-center gap-1">
-                    <MessageCircleMore className={iconSize} />
-                    {deal.commentCount}
+                    {layout === "list" && <span className="text-slate-300">•</span>}
+                    <div className="flex items-center gap-1">
+                        <MessageCircleMore className={iconSize} />
+                        {deal.commentCount}
+                    </div>
                 </div>
                 {
                     layout === "list" && deal.link &&
-                    <div className="absolute right-0">
+                    <div className="w-fit right-0">
                         <DealCTA link={deal.link} layout={layout} />
                     </div>
                 }

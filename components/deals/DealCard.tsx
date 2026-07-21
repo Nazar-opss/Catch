@@ -10,7 +10,7 @@ import DealCTA from "./parts/DealCTA"
 import DealMeta from "./parts/DealMeta"
 import { Clock } from "lucide-react"
 
-interface DealCardProps {
+export interface DealCardProps {
     deal: DealWithAuthor;
     layout: "grid" | "list"
 }
@@ -19,9 +19,9 @@ export default function DealCard({ deal, layout }: DealCardProps) {
     const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
     const expired = isDealExpired(deal)
     return (
-        <div>
-            <article data-layout={layout} key={deal.id} className="flex items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
-                <div key={deal.imageUrls[0]} className="relative aspect-4/3 overflow-hidden p-4 justify-center flex items-center rounded-lg border border-border bg-background data-[layout=list]:h-full data-[layout=list]:max-w-60 data-[layout=list]:max-h-69 data-[layout=grid]:h-full">
+        <>
+            <article data-layout={layout} key={deal.id} className="flex w-full items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
+                <div data-layout={layout} key={deal.imageUrls[0]} className="relative flex aspect-4/3 overflow-hidden p-4 justify-center items-center rounded-lg border border-border bg-background w-57.5 h-[172.5px] shrink-0 data-[layout=list]:w-[256px] data-[layout=list]:h-full data-[layout=grid]:h-[172.5px] data-[layout=grid]:w-full">
                     {
                         deal.imageUrls[0] ? (
                             <CldImage
@@ -33,12 +33,12 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                                 className={`object-contain h-full w-full ${expired ? "opacity-60" : ""}`}
                             />
                         ) : (
-                            <NoImage />
+                            <NoImage layout={layout}/>
                         )
                     }
                     <div className="absolute left-3 top-3 gap-1.5 flex items-center h-9">
                         <div className="items-center bg-slate-200 dark:bg-slate-800 border border-secondary rounded-full">
-                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} userVote={deal.userVote} />
+                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} isExpired={deal.isExpired} userVote={deal.userVote} />
                         </div>
                     </div>
                     {expired && (
@@ -47,9 +47,8 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                             Закінчилася
                         </div>
                     )}
-
                 </div>
-                <div className={`flex flex-col flex-1 w-full ${layout === "list" ? "mt-0 gap-5" : "mt-4 gap-3"} `}>
+                <div className={`flex flex-col flex-1 gap-3 w-full ${layout === "list" ? "mt-0 md:gap-5 " : "mt-4"} `}>
                     {
                         layout === "list" ? (
                             <>
@@ -71,6 +70,6 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                     }
                 </div >
             </article >
-        </div >
+        </ >
     )
 }

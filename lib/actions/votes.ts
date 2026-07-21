@@ -3,6 +3,7 @@
 import { db } from "@/server/db"
 import { revalidatePath } from "next/cache";
 import { requireSession } from "./require-session";
+import { isDealExpired } from "@/lib/utils";
 
 export async function voteDealAction(dealId: string, voteValue: number) {
     // voteValue = 1 to upvote, -1 to downvote
@@ -21,11 +22,13 @@ export async function voteDealAction(dealId: string, voteValue: number) {
         await db.transaction().execute(async (trx) => {
             const deal = await trx
                 .selectFrom("deal")
-                .select(["authorId"])
+                .select(["authorId", "isExpired", "expiresAt"])
                 .where("id", "=", dealId)
                 .executeTakeFirst()
 
             if(!deal) throw new Error("DEAL_NOT_FOUND")
+
+            if (isDealExpired(deal)) throw new Error("DEAL_EXPIRED")
 
             const existingVote = await trx
                 .selectFrom("vote")
@@ -80,6 +83,9 @@ export async function voteDealAction(dealId: string, voteValue: number) {
         revalidatePath(`/deal/${dealId}`);
         return { success: true };
     } catch (error) {
+        if (error instanceof Error && error.message === "DEAL_EXPIRED") {
+            return { error: "Голосування за завершені знижки недоступне" };
+        }
         console.error("Помилка голосування:", error);
         return { error: "Щось пішло не так" };
     }

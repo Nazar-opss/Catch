@@ -58,7 +58,7 @@ export default function DealEdit({ deal, open, onOpenChange }: { deal: DealAside
                 body: formData,
             });
             const data = await uploadResult.json();
-            uploadedUrls = data.urls.map((image: { secure_url: string }) => image.secure_url);
+            uploadedUrls = data.urls;
         }
         console.log(values)
         const result = await updateDealAction(deal.id, {...values, images: [...values.existingImages, ...uploadedUrls]}) 

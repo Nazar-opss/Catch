@@ -74,7 +74,7 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                     <span className="uppercase text-sm font-bold text-slate-400">
                         рейтинг знижки
                     </span>
-                    <RatingButton dealId={deal.id} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
+                    <RatingButton dealId={deal.id} isExpired={expired} rating={(deal.temperature)} userVote={deal.userVote} fontSize="text-2xl" iconSize="20" deal />
                     {isAuthor && (
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>

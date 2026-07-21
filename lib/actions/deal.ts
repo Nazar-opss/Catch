@@ -20,7 +20,7 @@ export async function createDealAction(values: DealActionValues): Promise<Action
     const validateField = dealActionSchema.safeParse(values)
 
     if (!validateField.success) {
-        return { error: `Не коректно введені дані ${validateField.error.message}` }
+        return { error: `Не коректно введені ${validateField.error.message}` }
     }
 
     const data = validateField.data

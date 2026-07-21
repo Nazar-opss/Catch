@@ -10,7 +10,7 @@ import type { DealsPage } from "@/lib/actions/deals";
 
 type DealsInfiniteData = {pages: DealsPage[]; pageParams: unknown[]}
 
-export default function RatingButton({ userVote, commentId, dealId, rating, reply, fontSize, iconSize, deal }: { userVote?: number | null, commentId?: string, dealId: string, rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean }) {
+export default function RatingButton({ userVote, commentId, dealId, isExpired, rating, reply, fontSize, iconSize, deal }: { userVote?: number | null, commentId?: string, dealId: string, rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean, isExpired?:boolean }) {
 
     const queryClient = useContext(QueryClientContext)
     const router = useRouter()
@@ -52,10 +52,9 @@ export default function RatingButton({ userVote, commentId, dealId, rating, repl
     return (
         <ButtonGroup
             orientation="horizontal"
-
-            className={` flex justify-center items-center bg-card gap-1 border border-border rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
+            className={` flex justify-center  items-center bg-card gap-1 border border-border rounded-full px-1 py-0.5 ${deal ? "h-12.5!" : "h-7.5!"}`}
         >
-            <Button onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, 1) } else { handleDealVote(1) } }} className={`${buttonSize} ${buttonStyle} hover:bg-green-600/50 hover:text-green-600 ${userVote === 1 ? "text-green-600 bg-green-600/50" : "text-slate-400"}`}>
+            <Button disabled={isExpired} onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, 1) } else { handleDealVote(1) } }} className={`${buttonSize} ${buttonStyle} ${isExpired ? "opacity-50 cursor-not-allowed" : "hover:bg-orange-100"} hover:bg-green-600/50 hover:text-green-600 ${userVote === 1 ? "text-green-600 bg-green-600/50" : "text-slate-400"}`}>
                 <ChevronUp width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
             <span className={`${fontSize ? fontSize : "text-sm"} font-bold text-foreground ${deal ? "px-3" : "px-1"}`}>
@@ -63,7 +62,7 @@ export default function RatingButton({ userVote, commentId, dealId, rating, repl
                 {/* {reply ? "" : "°"} -- return this if decide to keep temperature as concept */} 
                 {reply}
             </span>
-            <Button onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, -1) } else { handleDealVote(-1) } }} className={`${buttonSize} ${buttonStyle} hover:bg-red-600/50 hover:text-red-600 ${userVote === -1 ? "text-red-600 bg-red-600/50" : "text-slate-400"}`}>
+            <Button  disabled={isExpired} onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, -1) } else { handleDealVote(-1) } }} className={`${buttonSize} ${buttonStyle} hover:bg-red-600/50 hover:text-red-600 ${userVote === -1 ? "text-red-600 bg-red-600/50" : "text-slate-400"}`}>
                 <ChevronDown width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
         </ButtonGroup>

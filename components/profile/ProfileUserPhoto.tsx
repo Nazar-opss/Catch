@@ -41,7 +41,7 @@ export default function ProfileUserPhoto({
             // fix showing error with images
             const data = await uploadResult.json();
             console.log(data)
-            const uploadedUrl = data.urls[0].secure_url;
+            const uploadedUrl = data.urls[0]
             console.log(uploadedUrl)
 
             const result = await updateUserPhoto(uploadedUrl)
