@@ -5,9 +5,11 @@ import { AuthButtons } from "./AuthButtons";
 import { Logo } from "../ui/Logo";
 import { useSession } from "@/lib/auth-clients";
 import LoggedUser from "./LoggedUser";
+import { Session } from "@/lib/auth";
 
 export function Header() {
     const { data: session, isPending } = useSession()
+
 
 
     return (
@@ -23,7 +25,7 @@ export function Header() {
                         <div className="h-11 w-19 rounded-full bg-gray-200 animate-pulse" />
                     </div>
                 ) : session ? (
-                    <LoggedUser session={session} />
+                    <LoggedUser session={session as Session} />
                 ) : (
                     <AuthButtons />
                 )
