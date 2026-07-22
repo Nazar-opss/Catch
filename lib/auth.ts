@@ -2,7 +2,6 @@ import { dash } from "@better-auth/infra";
 import { betterAuth } from "better-auth";
 import { db } from "@/server/db";
 import { Resend } from "resend";
-import { render } from "@react-email/components";
 import { EmailTemplate } from "@/components/ui/email-template";
 import { generateSlugUsername } from "./utils";
 
@@ -75,12 +74,18 @@ export const auth = betterAuth({
         autoSignIn: true,
         enabled: true,
         sendResetPassword: async ({ user, url }) => {
-            const html = await render(EmailTemplate({ url }));
+            // const html = await render(EmailTemplate({ url }));
             void resend.emails.send({
                 from: "Catch <onboarding@resend.dev>",
                 to: [user.email],
                 subject: "Відновлення паролю",
-                html,
+                html:`<div style={{ backgroundColor: "#ffffff", padding: "16px", borderRadius: "6px" }}>
+            <p>Привіт!</p>
+            <p>Ви запросили скидання паролю. Натисніть на кнопку нижче, щоб скинути пароль.</p>
+            <a href={url} style={{ backgroundColor: "#3b82f6", color: "#ffffff", padding: "8px 16px", borderRadius: "6px", textDecoration: "none", display: "inline-block" }}>Скинути пароль</a>
+            <p>Якщо ви не запрошували скидання паролю, ігноруйте цей лист.</p>
+            <p>З повагою, команда Catch</p>
+        </div>`
             });
         },
     },
