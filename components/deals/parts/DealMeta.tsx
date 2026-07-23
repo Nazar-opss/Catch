@@ -22,9 +22,9 @@ export default function DealMeta({ deal, layout }: { deal: DealWithAuthor, layou
             )}
             <div className="w-full h-px bg-secondary my-2"></div>
             <div className={`flex items-center text-slate-500 ${metaSize} flex-wrap justify-between font-medium`}>
-                <div className="flex items-center w-full gap-3">
+                <div className="flex items-center w-full gap-2">
                     <div className="w-8 h-8 rounded-full">
-                        <Image src={authorImage} alt={deal.authorName} className="rounded-full object-cover w-full h-full" width={imageSize} height={imageSize} unoptimized quality={90} />
+                        <Image src={authorImage} alt={deal.authorName} className="rounded-full object-cover w-full h-full " width={imageSize} height={imageSize} unoptimized quality={90} />
                     </div>
 
                     <span className="truncate max-w-[8ch]">{deal.authorName}</span>

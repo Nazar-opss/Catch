@@ -14,7 +14,7 @@ export default function LoggedUser({ session }: { session: Session }) {
     // TODO: add notifications
 
     return (
-        <div className="flex items-center gap-4 sm:gap-6">
+        <div className="flex items-center gap-2 sm:gap-6">
             <AddDealForm open={modal} onOpenChange={setModal} />
             <Button onClick={() => setModal(true)} className="items-center justify-center px-2.5 py-2.5 md:px-5 h-full text-[14px] bg-[#ea580c] text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700">
                 <Plus />

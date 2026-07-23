@@ -36,13 +36,11 @@ export default function DealCard({ deal, layout }: DealCardProps) {
                             <NoImage layout={layout}/>
                         )
                     }
-                    <div className="absolute left-3 top-3 gap-1.5 flex items-center h-9">
-                        <div className="items-center bg-slate-200 dark:bg-slate-800 border border-secondary rounded-full">
-                            <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} isExpired={deal.isExpired} userVote={deal.userVote} />
-                        </div>
+                    <div className="absolute left-3 top-3 flex items-center">
+                        <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} isExpired={deal.isExpired} userVote={deal.userVote} />
                     </div>
                     {expired && (
-                        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                        <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
                             <Clock className="h-3.5 w-3.5" />
                             Закінчилася
                         </div>

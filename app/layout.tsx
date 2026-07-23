@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin", "cyrillic"],
@@ -64,6 +66,7 @@ export default function RootLayout({
                   </TooltipProvider>
               </Providers>
             </ThemeProvider>
+            <SpeedInsights />
             <Toaster/>
         </body>
       </html>

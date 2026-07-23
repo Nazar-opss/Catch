@@ -15,9 +15,12 @@ export default function Footer() {
                 <div className="flex flex-col items-center justify-between gap-8 md:flex-row md:items-start">
                     <Link href={"/"} className="flex items-center text-[22px] font-bold tracking-tight text-foreground">
                         <Logo />
-                        Catch
+                        <span className="block sm:hidden">
+                            Catch
+                        </span>
                     </Link>
-                    <ul className="flex items-center flex-wrap gap-8 text-sm font-medium text-muted-foreground">
+                    <ul className="flex items-center justify-center flex-wrap gap-8 text-sm font-medium text-muted-foreground">
+                        <Link href={"/privacy-policy"} className="hover:text-orange-600 transition-colors">Політика конфіденційності</Link>
                         <Link href={"/rules"} className="hover:text-orange-600 transition-colors">Правила</Link>
                         <Link href={"/about"} className="hover:text-orange-600 transition-colors">Про нас</Link>
                         <Link href={"/help"} className="hover:text-orange-600 transition-colors">Допомога</Link>

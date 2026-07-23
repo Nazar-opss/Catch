@@ -1,6 +1,5 @@
 "use client"
 import { SearchIcon } from "lucide-react"
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
 import useDebounced from "@/hooks/useDebounced";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
@@ -67,19 +66,24 @@ export function SearchBar() {
     const showList = open && value.trim().length > 0
 
     return (
-        <div ref={boxRef} className="flex-1 max-w-2xl relative hidden md:block ">
+        <div ref={boxRef} className="flex-1 max-w-2xl relative block ">
             <Command shouldFilter={false} className="bg-transparent overflow-visible focus-within:ring-2 focus-within:ring-primary transition-all" onKeyDown={(e) => {if (e.key === "Escape") setOpen(false)} }>
                     <CommandInput 
                         value={value}
                         onValueChange={(v) => {setValue(v); setOpen(true)}}
                         onFocus={() => value && setOpen(true)}
-                        placeholder="Шукати знижки, товари, магазини..."
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && value.trim() === "") {
+                                goToSearch("")
+                            }
+                        }}
+                        placeholder="Шукати знижки"
                         className="flex-1 h-auto p-0 border-0 text-[15px] placeholder:text-slate-400 focus:ring-0 "
                         wrapperClassName="border-0 px-0 flex-1"
                     />
                 {/* </div> */}
                 { showList && (
-                    <CommandList className="absolute z-50 w-full top-full mt-2 rounded-2xl border border-border bg-card shadow-lg max-h-100">
+                    <CommandList className="absolute w-93.75 -right-42.5 md:right-0 md:w-full z-50 top-full mt-2 rounded-2xl border border-border bg-card shadow-lg max-h-100">
                         <CommandItem
                             value={`__search__${value}`}
                             onSelect={() => goToSearch(value)}
