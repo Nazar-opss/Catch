@@ -19,6 +19,8 @@ export default async function UserPage({ params, searchParams }: { params: Promi
     
     const isOwnProfile = session?.user?.username === username;
     
+    let hasPassword = false
+
     const user = await db
         .selectFrom("user")
         .select(["id", "name", "username", "image", "karma", "createdAt"])
@@ -83,7 +85,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
 
     type Deal = Awaited<ReturnType<typeof dealsQuery>>[number];
     type Comment = Awaited<ReturnType<typeof commentsQuery>>[number];
-
+    
     let content: (Deal | Comment)[];
     switch (searchParam.tab) {
         case "userBookmarks":
@@ -98,6 +100,13 @@ export default async function UserPage({ params, searchParams }: { params: Promi
 
     const showSettings = searchParam.settings === "true" && isOwnProfile;
 
+    if(showSettings) {
+        const linkedAccounts = await auth.api.listUserAccounts({
+            headers: await headers(),
+        });
+        hasPassword = linkedAccounts.some(acc => acc.providerId === "credential");
+    }
+
     return (
         <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -106,7 +115,7 @@ export default async function UserPage({ params, searchParams }: { params: Promi
                 </aside>
                 <div className="flex-1 min-w-0 w-full">
                     {showSettings
-                    ? <ProfileSettings name={user.name} userName={user.username} email={session!.user.email} emailVerified={session!.user.emailVerified} emailChanged={searchParam.emailChanged} />
+                    ? <ProfileSettings name={user.name} userName={user.username} email={session!.user.email} emailVerified={session!.user.emailVerified} emailChanged={searchParam.emailChanged} hasPassword={hasPassword} />
                     : <>
                         <ProfileTabs isOwnProfile={isOwnProfile} currentTab={searchParam.tab || "userDeals"} />
                         <div className={content.length === 0 ? "flex items-center justify-center" : searchParam.tab === "userComments" ? "flex flex-col gap-6" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"}>

@@ -31,6 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ v
 
   return (
     <main className="flex flex-1 w-full max-w-7xl items-center flex-col mx-auto py-8 sm:px-6 px-4">
+      <h1 className="sr-only">Спільнота найкращих знижок та акцій України — Catch</h1>
       <FilterBar />
       <Suspense fallback={<DealsListSkeleton layout={layout} />}>
           <DealsFeedLoader sort={sort} q={q ?? ""} currentUserId={currentUserId} layout={layout} category={category} />

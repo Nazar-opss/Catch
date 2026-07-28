@@ -24,8 +24,8 @@ function ProfileUserInfo({ user, isOwnProfile }: { user: Pick<Selectable<User>,"
                 )}
                 <ProfileUserPhoto open={modal} onOpenChange={setModal} />
             </div>
-            <span className="text-lg font-bold">{user.name}</span>
-            <span className="text-sm text-slate-500 font-medium mt-1.5">Зареєстрований з: {new Date(user.createdAt).toLocaleDateString()}</span>
+            <h1 className="text-lg font-bold">{user.name}</h1>
+            <h2 className="text-sm text-slate-500 font-medium mt-1.5">Зареєстрований з: {new Date(user.createdAt).toLocaleDateString()}</h2>
         </div>
     )
 }

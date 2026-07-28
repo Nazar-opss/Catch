@@ -18,8 +18,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Catch",
-  description: "Catch - злови свою знижку",
+  title: {
+    default: "Catch — Спільнота найкращих знижок та акцій України",
+    template: "%s | Catch"
+  },
+  description: "Шукаєте реальні знижки? На Catch зібрані найкращі акції та промокоди від українських магазинів. Діліться вигодою, голосуйте та економте разом з нами!",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "uk-UA": "/uk-UA"
+    },
+  },
 };
 
 export default function RootLayout({
@@ -46,7 +59,7 @@ export default function RootLayout({
 
   return (
     <html
-        lang="en"
+        lang="uk"
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

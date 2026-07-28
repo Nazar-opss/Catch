@@ -19,6 +19,7 @@ import {
 } from "../ui/file-upload";
 import { updateUserPhoto } from "@/lib/actions/user";
 import { useSession } from "@/lib/auth-clients";
+import { toast } from "sonner";
 
 export default function ProfileUserPhoto({
   open,
@@ -50,6 +51,7 @@ export default function ProfileUserPhoto({
             console.log(result)
             if (result?.success) {
                 onOpenChange(false)
+                toast.success("Фото профілю змінено")
             } else {
                 console.error(result?.error)
             }

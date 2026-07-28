@@ -5,6 +5,7 @@ import AuthTypeDivider from "@/components/auth/AuthTypeDivider"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import Google from "@/components/ui/google"
+import Loader from "@/components/ui/loader"
 import Telegram from "@/components/ui/telegram"
 import { signIn, signUp } from "@/lib/auth-clients"
 import { AuthFormValues, authSchema } from "@/lib/schemas/authSchema"
@@ -80,7 +81,8 @@ export default function RegisterPage() {
                 <AuthEmailInput form={form} inputLabel="Електронна пошта" placeholder="name@example.com" inputName="email" type="email" />
                 <AuthPasswordInput form={form} inputLabel="Пароль" placeholder="Пароль" inputName="password" autoComplete="new-password" />
                 <Button variant="outline" className="px-5 py-2.5 mt-3 w-full text-[15px] bg-primary dark:bg-primary dark:hover:bg-orange-700 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit" onClick={form.handleSubmit(handleFormSignUp)} disabled={pending}>
-                    Зареєструватися
+                    
+                    {pending ? <span className="flex items-center gap-2">Реєстрація...<Loader /></span> : "Зареєструватися"}
                 </Button>
             </FieldGroup>
 

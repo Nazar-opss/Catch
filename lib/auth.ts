@@ -73,8 +73,9 @@ export const auth = betterAuth({
     emailAndPassword: {
         autoSignIn: true,
         enabled: true,
-        sendResetPassword: async ({ user, url }) => {
+        sendResetPassword: async ({ user, url, token }) => {
             // const html = await render(EmailTemplate({ url }));
+            // TODO: fix ${url}
             void resend.emails.send({
                 from: "Catch <onboarding@resend.dev>",
                 to: [user.email],
@@ -83,6 +84,7 @@ export const auth = betterAuth({
             <p>Привіт!</p>
             <p>Ви запросили скидання паролю. Натисніть на кнопку нижче, щоб скинути пароль.</p>
             <a href={url} style={{ backgroundColor: "#3b82f6", color: "#ffffff", padding: "8px 16px", borderRadius: "6px", textDecoration: "none", display: "inline-block" }}>Скинути пароль</a>
+            ${url}
             <p>Якщо ви не запрошували скидання паролю, ігноруйте цей лист.</p>
             <p>З повагою, команда Catch</p>
         </div>`

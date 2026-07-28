@@ -30,7 +30,6 @@ export default function ForgetPasswordPage() {
         }
     }
 
-    // TODO: add toast about email sent, and error toast if something went wrong
 
     return (
         <div className="flex flex-col w-full mb-8 gap-3.5 z-10">

@@ -1,4 +1,4 @@
-import { signOut } from "@/lib/auth-clients"
+import { authClient } from "@/lib/auth-clients"
 import { Button } from "../ui/button"
 import { BookmarkIcon, ChevronDown, LogOutIcon, Plus, Settings, UserIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "../ui/dropdown-menu"
@@ -8,11 +8,21 @@ import { Session } from "@/lib/auth";
 import Link from "next/link"
 import Image from "next/image"
 import ThemeButton from "../ui/theme-button"
+import { useRouter } from "next/navigation"
 
 export default function LoggedUser({ session }: { session: Session }) {
     const [modal, setModal] = useState(false)
+    const router = useRouter()
     // TODO: add notifications
-
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.refresh(); 
+                }
+            }
+        });
+    }
     return (
         <div className="flex items-center gap-2 sm:gap-6">
             <AddDealForm open={modal} onOpenChange={setModal} />
@@ -64,7 +74,7 @@ export default function LoggedUser({ session }: { session: Session }) {
                             <ThemeButton/>
                         </div>
                         <div className="h-px bg-secondary my-1 mx-2"></div>
-                        <DropdownMenuItem onClick={() => signOut()} className="text-red-600">
+                        <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
                             <LogOutIcon />
                             Вийти
                         </DropdownMenuItem>
