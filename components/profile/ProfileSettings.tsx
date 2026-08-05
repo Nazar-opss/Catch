@@ -40,7 +40,6 @@ import {
   newPasswordSchema,
   NewPasswordSchemaValues,
 } from "@/lib/schemas/resetSchema";
-import { auth } from "@/lib/auth";
 import { createPassword } from "@/lib/actions/account";
 
 const emailErrorMap: Record<string, string> = {

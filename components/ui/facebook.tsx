@@ -30,6 +30,7 @@ const FacebookIcon = ({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeLinejoin="round"
+            className="group-hover:text-primary"
             style={{
                 opacity,
                 transform: transforms.join(' ') || undefined,
