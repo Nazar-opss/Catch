@@ -129,7 +129,6 @@ export default async function DealPage({ params, searchParams }: DealPageProps) 
 
     const threadComments = buildCommentTree([...rootComments, ...replies])
     const isAuthor = currentUserId === deal.authorId;
-    
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -150,8 +149,8 @@ export default async function DealPage({ params, searchParams }: DealPageProps) 
                                 />
                             </div>
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <NoImage />
+                            <div className="w-full h-full p-36 border border-border rounded-2xl flex items-center justify-center">
+                                <NoImage dealPage={true} />
                             </div>
                         )
                     }

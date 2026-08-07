@@ -7,6 +7,8 @@ import { Button } from "../ui/button"
 export function DealsCarousel({ images, imageStyle }: { images: string[], imageStyle?: string }) {
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
+    const [imageError, setImageError] = useState(false);
+
 
     const handleApiChange = (newApi: CarouselApi) => {
         setApi(newApi)
@@ -23,7 +25,7 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
                 <Carousel setApi={handleApiChange} className="w-full">
                     <CarouselContent className="aspect-video sm:aspect-21/9 lg:aspect-16/10">
                         {
-                            images.map((image, index) => (
+                            !imageError && images.map((image, index) => (
                                 <CarouselItem key={index}>
                                     <Image
                                         loading="eager"
@@ -32,6 +34,7 @@ export function DealsCarousel({ images, imageStyle }: { images: string[], imageS
                                         width={400}
                                         height={400}
                                         className={imageStyle}
+                                        onError={() => setImageError(true)}
                                     />
                                 </CarouselItem>
                             ))

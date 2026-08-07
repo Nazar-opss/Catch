@@ -9,13 +9,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DealFormValues, formSchema } from "@/lib/schemas/dealSchema";
 import { toast } from "sonner";
 import { updateDealAction } from "@/lib/actions/deal";
-import { DealAsideInfoProps } from "./DealAsideInfo";
 import Image from "next/image";
 import { useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import DealDateField from "./DealDateField";
+import { CategoryValue } from "@/lib/constants";
 
-function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
+export type EditableDeal = {
+  id: string;
+  link: string | null;
+  title: string;
+  newPrice: number;
+  oldPrice: number | null;
+  description: string | null;
+  imageUrls: string[];
+  expiresAt: Date | null;
+  category: CategoryValue;
+};
+
+function dealToFormValues(deal: EditableDeal): DealFormValues {
     return {
         link: deal.link || "",
         title: deal.title || "",
@@ -29,7 +41,7 @@ function dealToFormValues(deal: DealAsideInfoProps): DealFormValues {
     }
 }
 
-export default function DealEdit({ deal, open, onOpenChange }: { deal: DealAsideInfoProps; open: boolean; onOpenChange: (open: boolean) => void }) {
+export default function DealEdit({ deal, open, onOpenChange }: { deal: EditableDeal; open: boolean; onOpenChange: (open: boolean) => void }) {
     const form = useForm<DealFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: dealToFormValues(deal),

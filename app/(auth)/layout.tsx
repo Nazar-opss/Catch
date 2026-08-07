@@ -8,7 +8,7 @@ export default function AuthLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    //TODO: suspense fallback?
+    //TODO: add fallback skeleton
     return (
         <div className="h-full min-h-screen flex items-center justify-center">
             <div className="w-full relative max-w-120 flex flex-col shadow-[0_8px_30px_rgb(0,0,0,0.04)] items-center sm:p-10 p-6 bg-card rounded-[24px] ">

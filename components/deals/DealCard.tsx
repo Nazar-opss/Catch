@@ -9,6 +9,7 @@ import DealPrice from "./parts/DealPrice"
 import DealCTA from "./parts/DealCTA"
 import DealMeta from "./parts/DealMeta"
 import { Clock } from "lucide-react"
+import { useState } from "react"
 
 export interface DealCardProps {
     deal: DealWithAuthor;
@@ -16,21 +17,26 @@ export interface DealCardProps {
 }
 
 export default function DealCard({ deal, layout }: DealCardProps) {
+    const [imageError, setImageError] = useState(false);
     const dealPercent = dealPercentCalculate(deal.oldPrice, deal.newPrice)
     const expired = isDealExpired(deal)
+    const imageUrl = deal.imageUrls[0];
+    const isExternalImage = imageUrl && !imageUrl.includes("res.cloudinary.com");
     return (
         <>
             <article data-layout={layout} key={deal.id} className="flex w-full items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full ">
                 <div data-layout={layout} key={deal.imageUrls[0]} className="relative flex aspect-4/3 overflow-hidden p-4 justify-center items-center rounded-lg border border-border bg-background w-57.5 h-[172.5px] shrink-0 data-[layout=list]:w-[256px] data-[layout=list]:h-full data-[layout=grid]:h-[172.5px] data-[layout=grid]:w-full">
                     {
-                        deal.imageUrls[0] ? (
+                        deal.imageUrls[0] && !imageError ? (
                             <CldImage
                                 width={230}
                                 height={230}
                                 loading="eager"
+                                deliveryType={isExternalImage ? "fetch" : undefined}
                                 src={deal.imageUrls[0]}
                                 alt={deal.title}
                                 className={`object-contain h-full w-full ${expired ? "opacity-60" : ""}`}
+                                onError={() => setImageError(true)}
                             />
                         ) : (
                             <NoImage layout={layout}/>

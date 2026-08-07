@@ -114,12 +114,12 @@ export default function About() {
               </h2>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link href="/register">
-                  <Button className="w-fit h-full bg-primary cursor-pointer text-card px-8 py-4 rounded-2xl font-bold text-lg hover:bg-orange-700 transition-all shadow-lg hover:shadow-bg-orange/20">
+                  <Button className="w-fit h-full bg-primary cursor-pointer text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-orange-700 transition-all shadow-lg hover:shadow-bg-orange/20">
                     Почати економити
                   </Button>
                 </Link>
                 <Link href="/">
-                  <Button className="w-full h-full cursor-pointer bg-card border border-border text-card-foreground px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all">
+                  <Button className="w-full h-full cursor-pointer bg-card border border-border text-card-foreground  px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                     Переглянути знижки
                   </Button>
                 </Link>

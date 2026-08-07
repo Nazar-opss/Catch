@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { Resend } from "resend";
 import { EmailTemplate } from "@/components/ui/email-template";
 import { generateSlugUsername } from "./utils";
+import { admin } from "better-auth/plugins";
 
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -167,7 +168,7 @@ export const auth = betterAuth({
     },
 
     plugins: [
-        
+        admin(),
         dash()
     ]
 })

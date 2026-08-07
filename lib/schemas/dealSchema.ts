@@ -23,7 +23,6 @@ const baseSchema = z.object({
         .or(z.literal(""))
         .refine((value) => value !== "" && value > 0, "Введіть нову ціну"),
 
-    // Нові файли, які користувач щойно додав через FileUpload
     images: z
         .array(
             z.custom<File>((file) => file instanceof File, "Оберіть файл")
@@ -32,7 +31,6 @@ const baseSchema = z.object({
         )
         .max(5, "Додайте не більше 5 зображень"),
 
-    // Вже збережені зображення (URL) — використовується при редагуванні
     existingImages: z
         .array(z.url("Введіть коректне посилання")),
     description: z
@@ -73,6 +71,13 @@ export const dealActionSchema = baseSchema
         images: z.array(z.url("Введіть короктне посилання")),
     })
 
+export const importDealSchema = z.array(dealActionSchema.extend({
+    expiresAt: z.string().optional().nullable(),
+    oldPrice: z.number().int().or(z.literal("")).or(z.null()).optional(),
+}))
+
+
+export type ImportDealsValues = z.infer<typeof importDealSchema>
 export type CommentFormValues = z.infer<typeof commentFormSchema>
 export type DealFormValues = z.infer<typeof formSchema>
 export type DealActionValues = z.infer<typeof dealActionSchema>

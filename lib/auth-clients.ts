@@ -1,12 +1,13 @@
 import { sentinelClient } from "@better-auth/infra/client";
 import { createAuthClient } from "better-auth/react";
+import { adminClient } from "better-auth/client/plugins"
 
 export const authClient = createAuthClient({
     baseURL: process.env.NEXT_PUBLIC_BASE_URL,
     basePath: '/api/auth',
     // ... your existing config
     plugins: [
-        // ... other plugins
+        adminClient(),
         sentinelClient()
     ]
 })

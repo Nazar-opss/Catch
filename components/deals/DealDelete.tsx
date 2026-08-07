@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Trash, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 export default function DealDelete({
   dealId,
@@ -45,7 +45,7 @@ export default function DealDelete({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        aria-describedby="Додати нову знижку"
+        aria-describedby="Delete"
         className="my-auto max-h-[calc(100vh-2rem)] max-w-sm mx-4 overflow-y-auto no-scrollbar"
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">

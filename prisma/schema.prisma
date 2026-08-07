@@ -56,6 +56,11 @@ model User {
     savedDeals   SavedDeal[]
     theme        Theme     @default(light)
 
+    role          String?
+    banned        Boolean?
+    banReason     String?
+    banExpires    DateTime?
+
     @@map("user")
 }
 

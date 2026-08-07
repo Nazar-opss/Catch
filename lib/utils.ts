@@ -84,7 +84,6 @@ export function getExpirationBadge(expiresAt: Date | string | null) {
   const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
   const diffInDays = Math.floor(diffInHours / 24);
 
-  // Стан 1: Залишилось менше 24 годин (Червоний)
   if (diffInHours < 24) {
     if (diffInHours === 0) {
       return {
@@ -98,7 +97,6 @@ export function getExpirationBadge(expiresAt: Date | string | null) {
     };
   }
 
-  // Стан 2: Залишилось 1-2 дні (Помаранчевий)
   if (diffInDays <= 2) {
     return {
       text: `Діє ще ${diffInDays} дн.`,
@@ -106,7 +104,6 @@ export function getExpirationBadge(expiresAt: Date | string | null) {
     };
   }
 
-  // Стан 3: Більше 3 днів (Зелений)
   return {
     text: `Діє ще ${diffInDays} дн.`,
     colorClass: "text-green-600",
