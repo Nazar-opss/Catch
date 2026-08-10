@@ -101,6 +101,10 @@ export type User = {
     updatedAt: Timestamp;
     karma: Generated<number>;
     theme: Generated<Theme>;
+    role: string | null;
+    banned: boolean | null;
+    banReason: string | null;
+    banExpires: Timestamp | null;
 };
 export type Verification = {
     id: string;

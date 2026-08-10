@@ -1,15 +1,18 @@
 "use client"
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, useReactTable } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from '@tanstack/react-table'
 import React from 'react'
+import { Button } from '../ui/button'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[],
+  data: TData[],
+  searchKey: string,
+  searchPlaceholder?: string,
 }
 
-export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({columns, data, searchKey, searchPlaceholder = "Пошук..."}: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
@@ -18,6 +21,12 @@ export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, 
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      }
+    },
     state: {
       columnFilters,
     }
@@ -26,9 +35,9 @@ export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, 
     <div>
       <div className='flex items-center py-4'>
         <Input
-          placeholder='Пошук за назвою...'
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("title")?.setFilterValue(event.target.value)}
+          placeholder={searchPlaceholder}
+          value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn(searchKey)?.setFilterValue(event.target.value)}
           className='max-w-sm'
         />
       </div>
@@ -82,6 +91,29 @@ export function DataTable<TData, TValue>({columns, data}: DataTableProps<TData, 
             }
           </TableBody>
         </Table>
+      </div>
+      <div className='flex items-center justify-between px-2 py-4'>
+        <div className='flex-1 text-sm text-muted-foreground'>
+            Всього записів: {table.getFilteredRowModel().rows.length}
+        </div>
+        <div className='flex items-center space-x-2'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Попередня
+          </Button>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Наступна
+          </Button>
+        </div>
       </div>
     </div>
   )

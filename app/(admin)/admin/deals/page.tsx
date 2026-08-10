@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/server/db";
 import { Download } from "lucide-react";
 import React from "react";
-import { DataTable } from "./data-table";
+import { DataTable } from "../../../../components/admin/data-table";
 import { columns } from "./columns";
 
 export default async function AdminDealPage() {
@@ -21,6 +21,7 @@ export default async function AdminDealPage() {
       "deal.newPrice",
       "deal.oldPrice",
       "deal.temperature",
+      "deal.isExpired",
       "user.name as authorName",
       "user.image as authorImage",
     ])
@@ -46,7 +47,7 @@ export default async function AdminDealPage() {
           Експортувати
         </Button>
       </div>
-      <DataTable columns={columns} data={deals} />
+      <DataTable columns={columns} searchKey="title" searchPlaceholder="Знайти знижку за назвою..." data={deals} />
     </>
   );
 }

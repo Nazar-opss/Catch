@@ -11,10 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CATEGORIES, CategoryValue } from "@/lib/constants";
+import { isDealExpired } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { ClockFading, Copy, ExternalLink, MoreVertical, RotateCcw, SquarePen, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export type DealColumn = {
   id: string;
@@ -23,42 +26,72 @@ export type DealColumn = {
   description: string | null;
   expiresAt: Date | null;
   imageUrls: string[];
-  category:CategoryValue;
+  category: CategoryValue;
   newPrice: number;
   oldPrice: number | null;
   authorName?: string;
   authorImage?: string | null;
   temperature?: number;
+  isExpired: boolean | null;
   status?: "expired" | "active";
 };
 
 const DealActionsCell = ({ deal }: { deal: DealColumn }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
+  const expired = isDealExpired(deal)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(deal.id)
+    toast.success("ID скопійовано!")
+  }
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Відкрити меню</span>
-            <MoreHorizontal className="h-4 w-4" />
+            <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Дії</DropdownMenuLabel>
+          <DropdownMenuLabel className="truncate">
+            {deal.title}
+          </DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link href={`/deal/${deal.id}`} className="flex gap-2">
+            <ExternalLink className="w-4 h-4"/>
+            Переглянути на сайті
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(deal.id)}
+            className="flex gap-2"
+            onClick={() => handleCopy()}
           >
+            <Copy className="w-4 h-4" />
             Копіювати ID
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onSelect={() => setEditModal(true)}>
+          <DropdownMenuItem
+            className="flex gap-2"
+            onSelect={() => setEditModal(true)}
+          >
+            <SquarePen className="w-4 h-4" />
             Редагувати
           </DropdownMenuItem>
           <DropdownMenuItem
-            onSelect={() => setDeleteModal(true)}
-            className="text-red-600"
+            className="flex gap-2"
+            onSelect={() => setEditModal(true)}
           >
+            {expired 
+              ? <><RotateCcw className="w-4 h-4" />Відновити</> 
+              : <><ClockFading className="w-4 h-4" />Закінчилася</>}           
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onSelect={() => setDeleteModal(true)}
+            className="text-red-600 flex gap-2"
+          > 
+            <Trash2 className="w-4 h-4"/>
             Видалити
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -68,11 +101,7 @@ const DealActionsCell = ({ deal }: { deal: DealColumn }) => {
         open={deleteModal}
         onOpenChange={setDeleteModal}
       />
-      <DealEdit 
-        deal={deal} 
-        open={editModal} 
-        onOpenChange={setEditModal} 
-      />
+      <DealEdit deal={deal} open={editModal} onOpenChange={setEditModal} />
     </>
   );
 };
@@ -84,6 +113,7 @@ export const columns: ColumnDef<DealColumn>[] = [
     cell: ({ row }) => {
       const title = row.getValue("title") as string;
       const imageUrl = row.original.imageUrls[0];
+      const id = row.original.id;
       const initials = title?.substring(0, 2).toUpperCase() || "UN";
 
       return (
@@ -101,7 +131,9 @@ export const columns: ColumnDef<DealColumn>[] = [
               {initials}
             </span>
           )}
-          <span className="font-medium">{title}</span>
+          <Link href={`/deal/${id}`} className="font-medium hover:text-primary">
+            {title}
+          </Link>
         </div>
       );
     },
@@ -164,6 +196,17 @@ export const columns: ColumnDef<DealColumn>[] = [
   {
     accessorKey: "temperature",
     header: "Рейтинг",
+    cell: ({row}) => {
+      const rating = row.getValue("temperature") as number
+
+      return (
+        <span
+          className={`font-semibold tabular-nums ${rating >= 0 ? "text-emerald-600" : "text-red-600"} `}
+        >
+          {rating > 0 ? `+${rating}` : rating}
+        </span>
+      )
+    }
   },
   {
     accessorKey: "category",
@@ -184,6 +227,7 @@ export const columns: ColumnDef<DealColumn>[] = [
   },
   {
     id: "actions",
+    header: "Дії",
     cell: ({ row }) => <DealActionsCell deal={row.original} />,
   },
 ];
