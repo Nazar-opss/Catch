@@ -7,8 +7,10 @@ import { Logo } from "../ui/Logo";
 import AdminNav, { links } from "./AdminNav";
 import { usePathname } from "next/navigation";
 import ThemeButton from "../ui/theme-button";
+import Link from "next/link";
+import { Session } from "@/lib/auth";
 
-export default function AdminHeader() {
+export default function AdminHeader({initialSession}: {initialSession: Session | null}) {
     const pathname = usePathname()
     const activeLink = links.find(({href}) => pathname === href || pathname.startsWith(`${href}/`));
   return (
@@ -37,7 +39,9 @@ export default function AdminHeader() {
       </Sheet>
       <div className="flex">
         <span className="flex text-muted-foreground">
-            Адмін
+            <Link href="/admin">
+              Адмін
+            </Link>
             <ChevronRight />
             <p className="first-letter:uppercase text-card-foreground">{activeLink?.label ?? "Головна"}</p>
         </span>
