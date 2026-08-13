@@ -154,7 +154,7 @@ export const columns: ColumnDef<UserColumn>[] = [
         return (
           <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-sm font-medium bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400 ring-1 ring-inset ring-red-600/20 dark:ring-red-500/25">
             <span className="h-1.5 w-1.5 rounded-full bg-red-500"></span>
-            Активний
+            Заблокований
           </div>
         );
       }

@@ -14,8 +14,9 @@ import { toggleDealExpiredAction } from "@/lib/actions/deal";
 import { CATEGORIES, CategoryValue } from "@/lib/constants";
 import { getExpirationBadge, isDealExpired } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "@/lib/dayjs";
 import {
-  Clock,
+  ArrowUpDown,
   ClockFading,
   Copy,
   ExternalLink,
@@ -47,7 +48,7 @@ export type DealColumn = {
   temperature?: number;
   isExpired: boolean | null;
   status?: "expired" | "active";
-  createdAt: Date,
+  createdAt: Date;
 };
 
 const DealActionsCell = ({ deal }: { deal: DealColumn }) => {
@@ -131,56 +132,58 @@ const DealActionsCell = ({ deal }: { deal: DealColumn }) => {
   );
 };
 
-const TitleCell =({row} : {row: DealColumn}) => {
-      const title = row.title as string;
-      const imageUrl = row.imageUrls[0];
-      const id = row.id;
-      const isExpired = row.isExpired;
-      
-      const [imageError, setImageError] = useState(false)
-      
-      const initials = title?.substring(0, 2).toUpperCase() || "UN";
+const TitleCell = ({ row }: { row: DealColumn }) => {
+  const title = row.title as string;
+  const imageUrl = row.imageUrls[0];
+  const id = row.id;
+  const isExpired = row.isExpired;
+  const [imageError, setImageError] = useState(false);
 
-      return (
-        <div className="flex items-center gap-3">
-          {imageUrl && !imageError ? (
-            <Image
-              src={imageUrl}
-              alt={title}
-              width={60}
-              height={60}
-              className="rounded-md w-15 h-15 object-cover shrink-0 bg-muted"
-              onError={() => setImageError(true)}
-            />
+  const initials = title?.substring(0, 2).toUpperCase() || "UN";
+
+  return (
+    <div className="flex items-center gap-3">
+      {imageUrl && !imageError ? (
+        <Image
+          src={imageUrl}
+          alt={title}
+          width={60}
+          height={60}
+          className="rounded-md w-15 h-15 object-cover shrink-0 bg-muted"
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <span className="flex p-5 w-15 h-15 items-center justify-center font-medium bg-orange-200 rounded-md">
+          {initials}
+        </span>
+      )}
+      <div className="flex sm:flex-col gap-1 items-start">
+        <Link
+          href={`/admin/deals?dealId=${id}`}
+          className="font-medium hover:text-primary"
+        >
+          {title}
+        </Link>
+        <span>
+          {isExpired === true ? (
+            <div className="inline-flex w-fit items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+              <ClockFading className="w-4 h-4" />
+              Знижка закінчилася
+            </div>
           ) : (
-            <span className="flex p-5 w-15 h-15 items-center justify-center font-medium bg-orange-200 rounded-md">
-              {initials}
-            </span>
+            ""
           )}
-          <div className="flex sm:flex-col gap-1 items-start">
-            <Link href={`/admin/deals?dealId=${id}`} className="font-medium hover:text-primary">
-              {title}
-            </Link>
-            <span>
-              {isExpired === true ? (
-                <div className="inline-flex w-fit items-center justify-center gap-1.5 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-sm font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                  <ClockFading className="w-4 h-4" />
-                  Знижка закінчилася
-                </div>
-              ) : (
-                ""
-              )}
-            </span>
-          </div>
-        </div>
-      );
-}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export const columns: ColumnDef<DealColumn>[] = [
   {
     accessorKey: "title",
     header: "Назва товару",
-    cell: ({ row }) => <TitleCell row={row.original}/>
+    cell: ({ row }) => <TitleCell row={row.original} />,
   },
   {
     accessorKey: "authorName",
@@ -267,6 +270,25 @@ export const columns: ColumnDef<DealColumn>[] = [
           </div>
         );
       }
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="-ml-4 rounded-md cursor-pointer"
+        >
+          Дата додавання
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const time = row.getValue("createdAt") as Date;
+      return <span>{dayjs(time).fromNow()}</span>;
     },
   },
   {

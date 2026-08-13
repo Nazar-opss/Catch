@@ -1,9 +1,5 @@
-import { DataTable } from '@/components/admin/data-table'
-import { Button } from '@/components/ui/button'
-import { Download } from 'lucide-react'
-import React from 'react'
-import { columns } from './columns'
 import { db } from '@/server/db'
+import AdminUsersTableClient from '@/components/admin/AdminUsersTableClient'
 
 export default async function AdminUsersPage() {
   const users = await db
@@ -22,15 +18,8 @@ export default async function AdminUsersPage() {
             Перегляд, пошук та управління учасниками платформи та їхніми ролями.
           </p>
         </div>
-        <Button
-          variant="outline"
-          className="flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-        >
-          <Download className="w-5 h-5" />
-          Експортувати
-        </Button>
       </div>
-      <DataTable columns={columns} searchKey="name" searchPlaceholder="Знайти користувача за ім'ям..." data={users} />
+      <AdminUsersTableClient users={users} />
     </>
   )
 }

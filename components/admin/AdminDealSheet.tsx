@@ -3,7 +3,13 @@ import { DealColumn } from "@/app/(admin)/admin/deals/columns";
 import useSearchParamSetter from "@/hooks/useSearchParamSetter";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "../ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "../ui/sheet";
 import Image from "next/image";
 import { ClockFading, ExternalLink, Pencil, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -11,12 +17,16 @@ import Link from "next/link";
 import { CATEGORIES } from "@/lib/constants";
 import { dealPercentCalculate, getShopIcon, getShopName } from "@/lib/utils";
 import dayjs from "@/lib/dayjs";
+import DealEdit from "../deals/DealEdit";
+import DealDelete from "../deals/DealDelete";
 
 interface DealSheetProps {
   deals: DealColumn[];
 }
 
 export default function AdminDealSheet({ deals }: DealSheetProps) {
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [imageError, setImageError] = useState(false);
   const searchParams = useSearchParams();
 
@@ -180,7 +190,7 @@ export default function AdminDealSheet({ deals }: DealSheetProps) {
                   </div>
                 </div>
               </div>
-              {deal.description && 
+              {deal.description && (
                 <div className="mt-6 pt-4">
                   <p className="text-[10px] font-bold text-muted-foreground uppercase">
                     Опис знижки
@@ -189,26 +199,48 @@ export default function AdminDealSheet({ deals }: DealSheetProps) {
                     <p>{deal.description}</p>
                   </div>
                 </div>
-              }
+              )}
             </div>
             <div className="flex-1"></div>
             <SheetFooter className="p-0 sticky">
               <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-border shrink-0">
-                <Button asChild className="w-full h-12 py-3 bg-primary hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98]" variant="default">
+                <Button
+                  asChild
+                  className="w-full h-12 py-3 bg-primary hover:bg-orange-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-orange-500/20 active:scale-[0.98]"
+                  variant="default"
+                >
                   <Link href={`/deal/${deal.id}`} target="_blank">
                     <ExternalLink className="w-4 h-4 mr-2" />
                     Перейти на сторінку знижки
                   </Link>
                 </Button>
                 <div className="flex gap-3">
-                  <Button variant="outline" className="flex-1 cursor-pointer h-10.5 py-2.5 border border-border text-card-foreground rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors">
+                  <Button
+                    onClick={() => setEditModal(true)}
+                    variant="outline"
+                    className="flex-1 cursor-pointer h-10.5 py-2.5 border border-border text-card-foreground rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors"
+                  >
                     <Pencil className="w-4 h-4 mr-2" />
                     Редагувати
                   </Button>
-                  <Button variant="destructive" className="flex-1 cursor-pointer h-10.5 py-2.5 border border-border text-card-foreground rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors">
+                  <DealEdit
+                    deal={deal}
+                    open={editModal}
+                    onOpenChange={setEditModal}
+                  />
+                  <Button
+                    onClick={() => setDeleteModal(true)}
+                    variant="destructive"
+                    className="flex-1 cursor-pointer h-10.5 py-2.5 border border-border text-card-foreground rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors"
+                  >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Видалити
                   </Button>
+                  <DealDelete
+                    dealId={deal.id}
+                    open={deleteModal}
+                    onOpenChange={setDeleteModal}
+                  />
                 </div>
               </div>
             </SheetFooter>

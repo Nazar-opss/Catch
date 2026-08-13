@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import { DataTable } from "../../../../components/admin/data-table";
 import { columns } from "./columns";
 import AdminDealSheet from "@/components/admin/AdminDealSheet";
+import AdminDealsTableClient from "@/components/admin/AdminDealsTableClient";
 
 export default async function AdminDealPage() {
   const deals = await db
@@ -48,15 +49,8 @@ export default async function AdminDealPage() {
             учасниками спільноти.
           </p>
         </div>
-        <Button
-          variant="outline"
-          className="flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-        >
-          <Download className="w-5 h-5" />
-          Експортувати
-        </Button>
       </div>
-      <DataTable columns={columns} searchKey="title" searchPlaceholder="Знайти знижку за назвою..." data={deals} />
+      <AdminDealsTableClient deals={deals} />
       <AdminDealSheet deals={deals}/>
     </>
   );

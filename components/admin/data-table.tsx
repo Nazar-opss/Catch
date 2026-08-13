@@ -15,16 +15,20 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
+import { ChevronLeft, ChevronRight, Download } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchKey: string;
   searchPlaceholder?: string;
+  onExport?: (rows: TData[]) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -32,11 +36,12 @@ export function DataTable<TData, TValue>({
   data,
   searchKey,
   searchPlaceholder = "Пошук...",
+  onExport,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
-
+  const [sorting, setSorting] = useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
@@ -44,18 +49,22 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     initialState: {
       pagination: {
         pageSize: 10,
       },
     },
     state: {
+      sorting,
       columnFilters,
     },
   });
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 justify-between relative">
         <Input
           placeholder={searchPlaceholder}
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
@@ -64,6 +73,18 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        {onExport && (
+          <Button
+            variant="outline"
+            className="absolute -top-14 right-0 flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            onClick={() =>
+              onExport(table.getFilteredRowModel().rows.map((r) => r.original))
+            }
+          >
+            <Download className="w-5 h-5" />
+            Експортувати
+          </Button>
+        )}
       </div>
       <div className="rounded-md border border-border bg-card">
         <Table>
@@ -122,20 +143,22 @@ export function DataTable<TData, TValue>({
             <Button
               variant="outline"
               size="sm"
-              className="cursor-pointer"
+              className="cursor-pointer rounded-md"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
+              <ChevronLeft />
               Попередня
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="cursor-pointer"
+              className="cursor-pointer rounded-md"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               Наступна
+              <ChevronRight />
             </Button>
           </div>
         </div>
