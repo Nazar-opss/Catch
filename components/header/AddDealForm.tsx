@@ -52,11 +52,9 @@ export default function AddDealForm({ open, onOpenChange }: { open: boolean, onO
             uploadedUrls = data.urls
         }
 
-        // fix showing error with images
+        //TODO: fix showing error with images
 
-        console.log(values)
         const result = await createDealAction({...values, images: uploadedUrls})
-        console.log(result)
         if (result?.success) {
             toast.success(result.success)
             form.reset()

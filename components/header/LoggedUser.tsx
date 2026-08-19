@@ -1,6 +1,6 @@
 import { authClient } from "@/lib/auth-clients"
 import { Button } from "../ui/button"
-import { BookmarkIcon, ChevronDown, LogOutIcon, Plus, Settings, UserIcon } from "lucide-react"
+import { BookmarkIcon, ChevronDown, LogOutIcon, Plus, Settings, UserIcon, UserStar } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { useState } from "react"
 import AddDealForm from "./AddDealForm"
@@ -69,6 +69,14 @@ export default function LoggedUser({ session }: { session: Session }) {
                                 Налаштування
                             </DropdownMenuItem>
                         </Link>
+                        {session?.user?.role === "admin" && (
+                                <Link href={"/admin"}>
+                                 <DropdownMenuItem>
+                                    <UserStar />
+                                    <span className="text-sm ">Адмін панель</span>
+                                 </DropdownMenuItem>
+                                </Link>
+                              )}
                         <div className="h-px bg-secondary my-1 mx-2"></div>
                         <div className="px-2 py-2">
                             <ThemeButton/>

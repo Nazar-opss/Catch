@@ -6,6 +6,7 @@ import { EmailTemplate } from "@/components/ui/email-template";
 import { generateSlugUsername } from "./utils";
 import { admin } from "better-auth/plugins";
 
+//TODO: Delete console logs here after deploy on host and proper connect to resend, return EmailTemplate
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

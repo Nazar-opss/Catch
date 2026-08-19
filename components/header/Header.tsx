@@ -10,7 +10,7 @@ export function Header({ initialSession }: { initialSession: Session | null }) {
 
     return (
         <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-md border-b border-border shadow-none gap-6 lg:gap-12" >
-            <div className="max-w-7xl mx-auto px-4 lg:px-8 h-17 flex items-center justify-between gap-4">
+            <div className="max-w-7xl relative mx-auto px-4 lg:px-8 h-17 flex items-center justify-between gap-4">
                 <Link href="/" className="cursor-pointer">
                     <Logo />
                 </Link>

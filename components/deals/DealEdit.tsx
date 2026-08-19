@@ -72,10 +72,8 @@ export default function DealEdit({ deal, open, onOpenChange }: { deal: EditableD
             const data = await uploadResult.json();
             uploadedUrls = data.urls;
         }
-        console.log(values)
         const result = await updateDealAction(deal.id, {...values, images: [...values.existingImages, ...uploadedUrls]}) 
         
-        console.log(result)
         if (result?.success) {
             toast.success(result.success)
             form.reset()

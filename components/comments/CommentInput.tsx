@@ -44,7 +44,6 @@ export default function CommentInput({ dealId, reply, parentName, parentId, onSu
         const imageUrls: string[] = data.urls
         const payload = { ...values, images: imageUrls, dealId: dealId, parentId: parentId };
         const result = await createCommentAction(payload)
-        console.log(result)
         if (result?.success) {
             toast.success(result.success)
             form.reset()

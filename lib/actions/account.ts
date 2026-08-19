@@ -38,7 +38,6 @@ export async function createPassword(data: {password: string, confirmPassword: s
     if(!validatedFields.success) {
         return {error: validatedFields.error.message}
     }
-    console.log(validatedFields)
     try {
         await auth.api.setPassword({
             body: {

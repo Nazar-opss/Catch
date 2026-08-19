@@ -6,7 +6,7 @@ import InstagramIcon from "../ui/instagram";
 import { Button } from "../ui/button";
 import TelegramIcon from "../ui/telegramIcon";
 import ThemeButton from "../ui/theme-button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const socials = [
   {
@@ -48,7 +48,6 @@ const footerNav = [
 
 export default function Footer() {
   const pathname = usePathname();
-  console.log(pathname);
   return (
     <footer className="flex justify-center items-center bg-card border-t border-border py-10">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -66,7 +66,6 @@ export default function Contacts() {
         }
         toast.success("Повідомлення успішно відправлено!");
         form.reset();
-        console.log(payload)
     })
   }
 

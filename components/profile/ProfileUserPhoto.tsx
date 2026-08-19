@@ -39,16 +39,13 @@ export default function ProfileUserPhoto({
                 method: "POST",
                 body: formData,
             });
-            // fix showing error with images
+            //TODO: fix showing error with images
             const data = await uploadResult.json();
-            console.log(data)
             const uploadedUrl = data.urls[0]
-            console.log(uploadedUrl)
 
             const result = await updateUserPhoto(uploadedUrl)
             refetch()
             setFiles([])
-            console.log(result)
             if (result?.success) {
                 onOpenChange(false)
                 toast.success("Фото профілю змінено")

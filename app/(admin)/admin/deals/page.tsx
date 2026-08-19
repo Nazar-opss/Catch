@@ -1,8 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { db } from "@/server/db";
-import { Download } from "lucide-react";
-import { DataTable } from "../../../../components/admin/data-table";
-import { columns } from "./columns";
 import AdminDealSheet from "@/components/admin/AdminDealSheet";
 import AdminDealsTableClient from "@/components/admin/AdminDealsTableClient";
 

@@ -84,54 +84,6 @@ export default async function UserPage({
     .innerJoin("user", "user.id", "deal.authorId")
     .where("comment.authorId", "=", user.id);
 
-  // const dealsQuery = () => db.selectFrom("deal").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("deal.authorId", "=", user.id).select((eb) => [
-  //     "user.name as authorName",
-  //     "user.image as authorImage",
-  //     eb.selectFrom("comment")
-  //         .select(eb.fn.count<number>("id").as("count"))
-  //         .whereRef("comment.dealId", "=", ("deal.id"))
-  //         .as("commentCount"),
-  //     eb.selectFrom("vote")
-  //         .select("value")
-  //         .whereRef("vote.dealId", "=", "deal.id")
-  //         .where("vote.userId", "=", session?.user?.id ?? "")
-  //         .as("userVote")
-  // ]).execute();
-
-  // const savedQuery = () => db.selectFrom("saved_deal").innerJoin("deal", "deal.id", "saved_deal.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("deal").where("saved_deal.userId", "=", user.id).select((eb) => [
-  //     "user.name as authorName",
-  //     "user.image as authorImage",
-  //     eb.selectFrom("comment")
-  //         .select(eb.fn.count<number>("id").as("count"))
-  //         .whereRef("comment.dealId", "=", ("deal.id"))
-  //         .as("commentCount"),
-  //     eb.selectFrom("vote")
-  //         .select("value")
-  //         .whereRef("vote.dealId", "=", "deal.id")
-  //         .where("vote.userId", "=", session?.user?.id ?? "")
-  //         .as("userVote")
-  // ]).execute();
-
-  // const commentsQuery = () => db.selectFrom("comment").innerJoin("deal", "deal.id", "comment.dealId").innerJoin("user", "user.id", "deal.authorId").selectAll("comment").where("comment.authorId", "=", user.id).select((eb) => [
-  //     "user.name as authorName",
-  //     "user.image as authorImage",
-  //     "deal.title as dealTitle",
-  //     eb.selectFrom("comment_vote")
-  //         .select((sqb) => sqb.fn.coalesce(sqb.fn.sum<number>("comment_vote.value"), sqb.val(0)).as("rating"))
-  //         .whereRef("comment_vote.commentId", "=", "comment.id")
-  //         .as("rating"),
-  //     eb.selectFrom("vote")
-  //         .select("value")
-  //         .whereRef("vote.dealId", "=", "deal.id")
-  //         .where("vote.userId", "=", session?.user?.id ?? "")
-  //         .as("userVote")
-  // ]).execute();
-
-  //   type Deal = Awaited<ReturnType<typeof dealsBaseQuery>>[number];
-  //   type Comment = Awaited<ReturnType<typeof commentsQuery>>[number];
-
-  //   let content: (Deal | Comment)[];
-
   type Deal = ComponentProps<typeof DealCard>["deal"];
   type Comment = ComponentProps<typeof CommentCard>["comment"];
 
