@@ -4,7 +4,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 export default function CategoryRibbon() {
     const [emblaRef, embla] = useEmblaCarousel({
@@ -64,8 +64,8 @@ export default function CategoryRibbon() {
             className={cn(
               "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
               !active
-                ? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
-                : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900"
+                ? "border-card-foreground bg-card-foreground text-card"
+                : "border-border bg-background text-muted-foreground hover:bg-card hover:text-card-foreground"
             )}
           >
             Усі знижки
@@ -79,10 +79,10 @@ export default function CategoryRibbon() {
                 href={href(cat.value)}
                 scroll={false}
                 className={cn(
-                  "flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors",
+                  "flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-300",
                   isActive
-                    ? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
-                    : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400 dark:hover:bg-slate-900"
+                    ? "border-card-foreground bg-card-foreground text-card"
+                    : "border-border bg-background text-muted-foreground hover:bg-card hover:text-card-foreground"
                 )}
               >
                 <span aria-hidden>{cat.icon}</span>

@@ -83,7 +83,7 @@ export function SearchBar() {
                     />
                 {/* </div> */}
                 { showList && (
-                    <CommandList className="absolute w-93.75 -right-42.5 md:right-0 md:w-full z-50 top-full mt-2 rounded-2xl border border-border bg-card shadow-lg max-h-100">
+                    <CommandList className="fixed left-4 right-4 top-full w-auto z-50 mt-2 rounded-2xl border border-border bg-card shadow-lg max-h-100 md:absolute md:top-full md:left-auto md:right-0 md:w-full">
                         <CommandItem
                             value={`__search__${value}`}
                             onSelect={() => goToSearch(value)}

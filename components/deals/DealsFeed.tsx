@@ -6,7 +6,7 @@ import PageLoader from "../ui/PageLoader";
 import DealEmpty from "./DealEmpty";
 import DealsList from "./DealsList";
 
-export default function DealsFeed({initialPage, layout, sort, q = "", category} : {initialPage: DealsPage, layout: "grid" | "list", sort: string, q?: string, category?: string}) {
+export default function DealsFeed({initialPage, layout, sort, q = "", category, isExpanded} : {initialPage: DealsPage, layout: "grid" | "list", sort: string, q?: string, category?: string, isExpanded: boolean}) {
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
         queryKey: ["deals", sort, q, category],
         queryFn: async ({ pageParam }) => {
@@ -61,7 +61,7 @@ export default function DealsFeed({initialPage, layout, sort, q = "", category} 
 
     return (
         <>
-            {deals.length === 0 ? <DealEmpty/> : <DealsList deals={deals} layout={layout}/>}
+            {deals.length === 0 ? <DealEmpty/> : <DealsList deals={deals} layout={layout} isExpanded={isExpanded}/>}
             <div ref={loadMoreRef} />
             {isFetchingNextPage && <PageLoader />}
             {hasNextPage && !isFetchingNextPage && (

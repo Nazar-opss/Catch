@@ -4,6 +4,7 @@ import useSearchParamSetter from "@/hooks/useSearchParamSetter";
 import { LayoutGrid, LayoutList } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import ExpandButton from "../ui/expand-button";
 
 export function ViewToggle() {
     const searchParams = useSearchParams()
@@ -19,7 +20,7 @@ export function ViewToggle() {
     return (
         <div className="hidden md:flex items-center gap-4 lg:ml-auto bg-card pl-5 pr-2 py-2 rounded-2xl border border-border shadow-xs">
             <span className="uppercase font-bold text-[12px] text-muted-foreground tracking-wider ">оберіть вигляд стрічки:</span>
-            <div className="flex items-center bg-secondary rounded-xl p-1">
+            <div className="flex items-center bg-background rounded-xl p-1">
                 <button onClick={() => setParam("view", "list")} className={`flex cursor-pointer transition-all duration-200 gap-2 px-4 p-1.5 font-medium items-center text-[13px] rounded-lg ${view === "list" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}>
                     <LayoutList size={16} />
                     List
@@ -34,6 +35,8 @@ export function ViewToggle() {
                         (Вертикальні)
                     </span>
                 </button>
+                <div className="hidden min-[1440px]:flex h-6 w-px bg-border my-1 mx-2"></div>
+                <ExpandButton/>
             </div>
         </div>
     )

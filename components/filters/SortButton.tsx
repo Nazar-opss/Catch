@@ -5,7 +5,7 @@ export function SortButton({ paramKey = "sort", value, active, label }: { paramK
     const setParam = useSearchParamSetter()
 
     return (
-        <Button onClick={() => setParam(paramKey, value)} className={`items-center justify-center px-5 py-2 ${active ? "bg-foreground shadow-sm text-background hover:bg-foreground/90 hover:text-background" : "bg-transparent text-muted-foreground hover:bg-border/50 hover:text-foreground"} h-full text-[14px] font-medium border-0 rounded-full cursor-pointer transition-all`}>
+        <Button onClick={() => setParam(paramKey, value)} className={`items-center justify-center px-5 py-2 ${active ? "bg-card-foreground text-background hover:bg-foreground" : "bg-background text-muted-foreground hover:bg-card hover:text-foreground"} h-full text-[14px] font-medium rounded-full cursor-pointer border border-border transition-all duration-300`}>
             {label}
         </Button>
     )
