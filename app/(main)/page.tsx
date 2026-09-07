@@ -19,14 +19,41 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null;
 };
 
-async function DealsFeedLoader({
-  sort,
-  q,
-  currentUserId,
-  category,
-  serverLayout,
-  serverExpanded,
-}: {
+// async function DealsFeedLoader({
+//   sort,
+//   q,
+//   currentUserId,
+//   category,
+//   serverLayout,
+//   serverExpanded,
+// }: {
+//   sort?: string;
+//   q: string;
+//   currentUserId?: string;
+//   category?: string;
+//   serverLayout: "list" | "grid";
+//   serverExpanded: boolean;
+// }) {
+//   const firstPage = await getDealsPage({
+//     sort,
+//     q: q ?? null,
+//     currentUserId,
+//     cursor: null,
+//     category,
+//   });
+//   return (
+//     <DealsFeed
+//       initialPage={firstPage}
+//       sort={sort ?? "hot"}
+//       q={q}
+//       category={category}
+//       serverExpanded={serverExpanded}
+//       serverLayout={serverLayout}
+//     />
+//   );
+// }
+
+async function DealsFeedLoader({ sort, q, currentUserId, category, serverLayout, serverExpanded }: {
   sort?: string;
   q: string;
   currentUserId?: string;
@@ -34,25 +61,31 @@ async function DealsFeedLoader({
   serverLayout: "list" | "grid";
   serverExpanded: boolean;
 }) {
-  const firstPage = await getDealsPage({
-    sort,
-    q: q ?? null,
-    currentUserId,
-    cursor: null,
-    category,
-  });
-  return (
-    <DealsFeed
-      initialPage={firstPage}
-      sort={sort ?? "hot"}
-      q={q}
-      category={category}
-      serverExpanded={serverExpanded}
-      serverLayout={serverLayout}
-    />
-  );
+  try {
+    const firstPage = await getDealsPage({
+      sort,
+      q: q ?? null,
+      currentUserId,
+      cursor: null,
+      category,
+    });
+    return (
+      // eslint-disable-next-line react-hooks/error-boundaries
+      <DealsFeed
+        initialPage={firstPage}
+        sort={sort ?? "hot"}
+        q={q}
+        category={category}
+        serverExpanded={serverExpanded}
+        serverLayout={serverLayout}
+      />
+    );
+  } catch (error) {
+    console.error("Помилка БД:", error);
+    // Тимчасовий фолбек, щоб сторінка відрендерилась
+    return <div className="text-red-500">Помилка завантаження угод. Дивись термінал.</div>;
+  }
 }
-
 export default async function Home({
   searchParams,
 }: {
@@ -63,7 +96,15 @@ export default async function Home({
     category?: string;
   }>;
 }) {
-  const session = await auth.api.getSession({ headers: await headers() });
+  // const session = await auth.api.getSession({ headers: await headers() });
+  // const currentUserId = session?.user.id;
+
+  let session = null;
+  try {
+    session = await auth.api.getSession({ headers: await headers() });
+  } catch (error) {
+    console.error("Auth Error details:", JSON.stringify(error, null, 2));
+  }
   const currentUserId = session?.user.id;
 
   const cookieStore = await cookies();
