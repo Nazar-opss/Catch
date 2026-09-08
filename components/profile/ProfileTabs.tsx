@@ -8,7 +8,7 @@ export default function ProfileTabs({ isOwnProfile, currentTab }: { isOwnProfile
     
     const changeTab = (tab: string) => {
         setParams({
-            tab: tab === "userDeals" ? null : tab,
+            tab: tab,
             page: null
         })
     }

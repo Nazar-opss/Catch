@@ -25,7 +25,7 @@ export default function ForgetPasswordPage() {
                 redirectTo: "/reset-password",
             })
             toast.success("Посилання для скидання пароля відправлено")
-        } catch (error) {
+        } catch {
             toast.error("Не вдалося скинути пароль")
         }
     }

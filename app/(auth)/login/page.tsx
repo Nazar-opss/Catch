@@ -72,7 +72,6 @@ export default function LoginPage() {
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button variant="outline" onClick={() => handleEmailAndPasswordLogin()} disabled={pending} className="px-5 py-2.5 mt-3 w-full text-[15px] bg-primary dark:bg-primary dark:hover:bg-orange-700 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95" type="submit">
                     {pending ? <span className="flex items-center gap-2">Вхід<Loader /></span> : "Увійти"}
-                    {/* {pending ? <PageLoader /> : "Увійти"} */}
                 </Button>
             </FieldGroup>
         </>

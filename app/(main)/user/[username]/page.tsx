@@ -197,7 +197,6 @@ export default async function UserPage({
 
       content = deals;
       totalPages = Math.max(1, Math.ceil(Number(total) / PAGE_SIZE));
-    //   content = await dealsQuery();
   }
 
   const showSettings = searchParam.settings === "true" && isOwnProfile;

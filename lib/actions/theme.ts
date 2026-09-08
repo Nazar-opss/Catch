@@ -18,7 +18,7 @@ export async function toggleTheme(theme: Theme) {
       .execute();
     revalidatePath(`/user/[username]`, "page");
     return { success: "Тему оновлено" };
-  } catch (error) {
+  } catch {
     return { error: "Помилка оновлення теми" };
   }
 }

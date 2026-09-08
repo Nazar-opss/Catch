@@ -9,8 +9,8 @@ function DealEmpty({tab, isAuthor}: { tab?: string, isAuthor?: boolean}) {
   const [modal, setModal] = useState(false);
   const content = {
         "userDeals": {
-            header: "Ви ще не поділилися жодною знижкою",
-            subHeading: "Станьте частиною спільноти — знайшли круту ціну? Розкажіть про неї іншим!",
+            header: isAuthor === true ? "Ви ще не поділилися жодною знижкою" : "Користувач ще не додав жодної знижки",
+            subHeading: isAuthor === true ? "Станьте частиною спільноти — знайшли круту ціну? Розкажіть про неї іншим!" : "Тут з’являться пропозиції, щойно користувач опублікує свою першу знижку.",
             buttons: <>
             <Button
             onClick={() => setModal(true)}
@@ -35,8 +35,8 @@ function DealEmpty({tab, isAuthor}: { tab?: string, isAuthor?: boolean}) {
           </Button>
         },
         "userComments": {
-            header: "Ви ще не залишили жодного коментаря",
-            subHeading: "Долучайтеся до обговорень, діліться відгуками про товари та допомагайте іншим з вибором.",
+            header: isAuthor === true ? "Ви ще не залишили жодного коментаря" : "Користувач ще не залишив жодного коментаря",
+            subHeading: "Користувач ще не брав участі в обговореннях, але ви можете переглянути його знахідки.",
             buttons:    <Button
             onClick={() => redirect('/')}
             className="items-center justify-center px-5 py-2.5 h-full text-[14px] w-44.25 bg-primary shrink text-white font-medium rounded-full cursor-pointer transition-all hover:bg-orange-700"
@@ -66,12 +66,6 @@ function DealEmpty({tab, isAuthor}: { tab?: string, isAuthor?: boolean}) {
           ></path>
           <path d="M60 80 L140 80 L140 90 L60 90 Z" fill="#cbd5e1"></path>
 
-          {/* <path
-            d="M100 50 L105 65 L120 65 L108 75 L112 90 L100 80 L88 90 L92 75 L80 65 L95 65 Z"
-            fill="#f26522"
-            opacity="0.4"
-          ></path> */}
-
           <circle
             cx="120"
             cy="110"
@@ -98,7 +92,7 @@ function DealEmpty({tab, isAuthor}: { tab?: string, isAuthor?: boolean}) {
       <h2 className="text-3xl font-bold text-card-foreground mb-4">
         { tab ? current.header : "На жаль, тут порожньо..."}
       </h2>
-      <p className="text-base text-slate-600 mb-10 leading-relaxed">
+      <p className="text-base text-muted-foreground mb-10 leading-relaxed">
         { tab ? current.subHeading : "Спробуйте змінити фільтри або зачекайте на нові знижки. Можливо, ви самі знайдете щось цікаве?"}
       </p>
       {
