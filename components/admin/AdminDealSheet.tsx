@@ -240,6 +240,7 @@ export default function AdminDealSheet({ deals }: DealSheetProps) {
                     dealId={deal.id}
                     open={deleteModal}
                     onOpenChange={setDeleteModal}
+                    redirectPath={null}
                   />
                 </div>
               </div>

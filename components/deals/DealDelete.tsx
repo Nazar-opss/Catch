@@ -19,10 +19,12 @@ export default function DealDelete({
   dealId,
   open,
   onOpenChange,
+  redirectPath = "/",
 }: {
   dealId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  redirectPath?: string | null;
 }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -37,8 +39,11 @@ export default function DealDelete({
     }
     toast.success(res?.success ?? "Знижку видалено");
     onOpenChange(false);
-    router.push("/");
-    router.refresh();
+    if (redirectPath) {
+      router.push(redirectPath);
+    } else {
+      router.refresh();
+    }
   };
 
   return (

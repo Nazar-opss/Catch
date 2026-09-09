@@ -126,6 +126,7 @@ const DealActionsCell = ({ deal }: { deal: DealColumn }) => {
         dealId={deal.id}
         open={deleteModal}
         onOpenChange={setDeleteModal}
+        redirectPath={null}
       />
       <DealEdit deal={deal} open={editModal} onOpenChange={setEditModal} />
     </div>
