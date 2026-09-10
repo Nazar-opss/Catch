@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toggleDealExpiredAction } from "@/lib/actions/deal";
 import { CATEGORIES, CategoryValue } from "@/lib/constants";
-import { getExpirationBadge, isDealExpired } from "@/lib/utils";
+import { isDealExpired } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "@/lib/dayjs";
 import {

@@ -7,21 +7,29 @@ import Image from "next/image";
 
 export default function AdminSideBar({
   initialSession,
+  inSheet = false,
 }: {
   initialSession: Session | null;
+  inSheet?: boolean;
 }) {
   return (
-    <aside className=" hidden fixed h-full inset-y-0 left-0 z-40 md:flex w-64 flex-col border-r border-border bg-card transition-transform lg:static lg:translate-x-0 -translate-x-full">
+    <aside
+      className={
+        inSheet
+          ? "flex h-full w-full flex-col bg-card"
+          : "hidden fixed inset-y-0 left-0 z-40 h-full w-64 -translate-x-full flex-col border-r border-border bg-card transition-transform md:flex lg:static lg:translate-x-0"
+      }
+    >
       <div className="flex items-center h-full justify-center gap-2.5 px-6 max-h-16 border-b border-border">
         <Logo />
         <p className="text-[22px] font-bold tracking-tight text-foreground">
-          Admin
+          Адмін
         </p>
       </div>
       <div className="flex flex-col h-full justify-between">
         <AdminNav />
         <div>
-          <div className="p-4">
+          <div className="pb-4 px-4">
             <ThemeButton />
           </div>
           <div className="p-4 border-t border-border flex items-center gap-3">

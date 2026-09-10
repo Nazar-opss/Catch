@@ -63,7 +63,7 @@ export default function AdminDealSheet({ deals }: DealSheetProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent className="sm:max-w-125 p-6 overflow-y-auto flex flex-col">
+      <SheetContent className="sm:max-w-full w-full! p-6 overflow-y-auto flex flex-col">
         <SheetHeader className="mb-6 shrink-0 p-0">
           <SheetTitle className="text-xl">Деталі знижки</SheetTitle>
         </SheetHeader>

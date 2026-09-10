@@ -3,12 +3,11 @@ import React from "react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { ChevronRight, Menu } from "lucide-react";
-import { Logo } from "../ui/Logo";
-import AdminNav, { links } from "./AdminNav";
+import { links } from "./AdminNav";
 import { usePathname } from "next/navigation";
-import ThemeButton from "../ui/theme-button";
 import Link from "next/link";
 import { Session } from "@/lib/auth";
+import AdminSideBar from "./AdminSideBar";
 
 export default function AdminHeader({initialSession}: {initialSession: Session | null}) {
     const pathname = usePathname()
@@ -23,18 +22,8 @@ export default function AdminHeader({initialSession}: {initialSession: Session |
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-62.5 p-0">
-          <div className="">
-            <SheetTitle asChild>
-              <div className="flex items-center justify-center gap-2.5 px-6 h-16 border-b border-border">
-                <Logo />
-                <span className="text-[22px] font-bold tracking-tight text-foreground">
-                  Адмін
-                </span>
-              </div>
-            </SheetTitle>
-          </div>
-          <AdminNav/>
-          <ThemeButton/>
+          <SheetTitle className="sr-only">Admin navigation</SheetTitle>
+          <AdminSideBar initialSession={initialSession} inSheet />
         </SheetContent>
       </Sheet>
       <div className="flex">
