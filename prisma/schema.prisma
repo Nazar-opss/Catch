@@ -205,3 +205,12 @@ model SavedDeal {
     @@unique([userId, dealId])
     @@map("saved_deal")
 }
+
+model ContactSubmission {
+  id         Int      @id @default(autoincrement())
+  identifier String
+  createdAt  DateTime @default(now())
+
+  @@index([identifier, createdAt])
+  @@map("contact_submission")
+}

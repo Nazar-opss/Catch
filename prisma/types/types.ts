@@ -55,6 +55,11 @@ export type CommentVote = {
     commentId: string;
     userId: string;
 };
+export type ContactSubmission = {
+    id: Generated<number>;
+    identifier: string;
+    createdAt: Generated<Timestamp>;
+};
 export type Deal = {
     id: string;
     title: string;
@@ -125,6 +130,7 @@ export type DB = {
     account: Account;
     comment: Comment;
     comment_vote: CommentVote;
+    contact_submission: ContactSubmission;
     deal: Deal;
     saved_deal: SavedDeal;
     session: Session;

@@ -54,18 +54,19 @@ export default function Contacts() {
   });
 
   const onSubmit = async (data: ContactFormValues) => {
+    if (isPending) return;
       startTransition(async () => {
-        const payload = {
-            ...data,
-            userId: session?.session?.userId || "Гість"
-        }
-        const result = await sendContactEmail(payload)
+        const result = await sendContactEmail(data)
         if (result.error) {
                 toast.error(result.error);
                 return;
         }
         toast.success("Повідомлення успішно відправлено!");
         form.reset();
+        if (session?.user) {
+          form.setValue("name", session.user.name || "");
+          form.setValue("email", session.user.email || "");
+        }
     })
   }
 
@@ -242,8 +243,8 @@ export default function Contacts() {
               </Field>
             )}
           />
-          <Button type="submit" onClick={form.handleSubmit(onSubmit)} className="w-full h-14 inline-flex items-center justify-center rounded-xl bg-primary font-bold text-base hover:opacity-90 transition-all shadow-orange-500/20 active:scale-[0.98]">
-            Відправити
+          <Button disabled={isPending} type="submit" onClick={form.handleSubmit(onSubmit)} className="w-full h-14 inline-flex items-center justify-center rounded-xl bg-primary font-bold text-base hover:opacity-90 transition-all shadow-orange-500/20 active:scale-[0.98]">
+            {isPending ? "Надсилання..." : "Надіслати"}
           </Button>
         </form>
       </div>
