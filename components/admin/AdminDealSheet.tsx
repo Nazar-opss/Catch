@@ -21,10 +21,10 @@ import DealEdit from "../deals/DealEdit";
 import DealDelete from "../deals/DealDelete";
 
 interface DealSheetProps {
-  deals: DealColumn[];
+  deal: DealColumn;
 }
 
-export default function AdminDealSheet({ deals }: DealSheetProps) {
+export default function AdminDealSheet({ deal }: DealSheetProps) {
   const [editModal, setEditModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -34,8 +34,6 @@ export default function AdminDealSheet({ deals }: DealSheetProps) {
 
   const dealId = searchParams.get("dealId");
   const isOpen = !!dealId;
-
-  const deal = deals.find((d) => d.id === dealId);
 
   if (!deal) return null;
 

@@ -1,6 +1,7 @@
 import { db } from "@/server/db";
 import AdminDealSheet from "@/components/admin/AdminDealSheet";
 import AdminDealsTableClient from "@/components/admin/AdminDealsTableClient";
+import AdminDealWrapper from "@/components/admin/AdminDealWrapper";
 
 export default async function AdminDealPage() {
   const deals = await db
@@ -46,8 +47,7 @@ export default async function AdminDealPage() {
           </p>
         </div>
       </div>
-      <AdminDealsTableClient deals={deals} />
-      <AdminDealSheet deals={deals}/>
+      <AdminDealWrapper deals={deals} />
     </>
   );
 }
