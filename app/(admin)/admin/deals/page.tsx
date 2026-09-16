@@ -1,6 +1,4 @@
 import { db } from "@/server/db";
-import AdminDealSheet from "@/components/admin/AdminDealSheet";
-import AdminDealsTableClient from "@/components/admin/AdminDealsTableClient";
 import AdminDealWrapper from "@/components/admin/AdminDealWrapper";
 
 export default async function AdminDealPage() {
