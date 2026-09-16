@@ -34,7 +34,9 @@ export default function LoggedUser({ session }: { session: Session }) {
             </Button>
             <div className="flex items-center gap-1.5 p-1 pr-2 rounded-full border border-transparent transition-all hover:bg-secondary hover:border-border cursor-pointer">
                 <div className="w-8 h-8 rounded-full overflow-hidden">
-                    <Image className="rounded-full object-cover h-full w-full" width={32} height={32} unoptimized quality={90} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
+                    <Link href={`/user/${session?.user?.username}?tab=userDeals`}>
+                        <Image className="rounded-full object-cover h-full w-full" width={32} height={32} unoptimized quality={90} src={session?.user?.image || "/icons/avatar-default.svg"} alt={session?.user?.name ?? "Користувач"} />
+                    </Link>
                 </div>
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
