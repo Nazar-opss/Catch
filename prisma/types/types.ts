@@ -106,8 +106,8 @@ export type User = {
     updatedAt: Timestamp;
     karma: Generated<number>;
     theme: Generated<Theme>;
-    role: string | null;
-    banned: boolean | null;
+    role: Generated<string>;
+    banned: Generated<boolean>;
     banReason: string | null;
     banExpires: Timestamp | null;
 };

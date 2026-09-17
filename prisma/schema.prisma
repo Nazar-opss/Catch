@@ -56,8 +56,8 @@ model User {
     savedDeals   SavedDeal[]
     theme        Theme     @default(light)
 
-    role          String?
-    banned        Boolean?
+    role          String    @default("user")
+    banned        Boolean   @default(false)
     banReason     String?
     banExpires    DateTime?
 

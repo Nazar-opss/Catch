@@ -1,12 +1,27 @@
-import { db } from '@/server/db'
-import AdminUsersTableClient from '@/components/admin/AdminUsersTableClient'
+import { db } from "@/server/db";
+import AdminUserWrapper from "@/components/admin/AdminUserWrapper";
 
 export default async function AdminUsersPage() {
   const users = await db
-      .selectFrom("user")
-      .select(["id", "karma", "name", "username", "image as authorImage", "email", "role", "banned", "createdAt" ])
-      .orderBy("user.createdAt", "desc")
-      .execute();
+    .selectFrom("user")
+    .select((eb) => [
+      "user.id",
+      "user.karma",
+      "user.name",
+      "user.username",
+      "user.image as authorImage",
+      "user.email",
+      "user.role",
+      "user.banned",
+      "user.createdAt",
+      eb
+        .selectFrom("deal")
+        .select(eb.fn.countAll<number>().as("count"))
+        .whereRef("deal.authorId", "=", "user.id")
+        .as("authorDealCount"),
+    ])
+    .orderBy("user.createdAt", "desc")
+    .execute();
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -19,7 +34,12 @@ export default async function AdminUsersPage() {
           </p>
         </div>
       </div>
-      <AdminUsersTableClient users={users} />
+      <AdminUserWrapper
+        users={users.map((user) => ({
+          ...user,
+          role: user.role === "admin" ? "admin" : "user",
+        }))}
+      />
     </>
-  )
+  );
 }
