@@ -229,7 +229,7 @@ export default function AdminDealSheet({ deal }: DealSheetProps) {
                   <Button
                     onClick={() => setDeleteModal(true)}
                     variant="destructive"
-                    className="flex-1 cursor-pointer h-10.5 py-2.5 border border-border text-card-foreground rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors"
+                    className="flex-1 cursor-pointer h-10.5 py-2.5 rounded-xl text-sm font-semibold w-full flex items-center bg-card justify-center gap-2 border border-destructive/20 text-destructive hover:bg-destructive/20 transition-colors"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Видалити
