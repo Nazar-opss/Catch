@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useTransition } from "react";
 import {
   Dialog,
   DialogClose,
@@ -28,38 +28,46 @@ export default function ProfileUserPhoto({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-    const [files, setFiles] = React.useState<File[]>([]);
-    const { refetch } = useSession();
+  const [files, setFiles] = React.useState<File[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const { refetch } = useSession();
 
-    async function onSubmit(file: File[]) {
-            const formData = new FormData();
-                formData.append("files", file[0]);
-    
-            const uploadResult = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-            });
-            //TODO: fix showing error with images
-            const data = await uploadResult.json();
-            const uploadedUrl = data.urls[0]
+  function onSubmit(file: File[]) {
+    startTransition(async () => {
+      if (!file[0]) return;
 
-            const result = await updateUserPhoto(uploadedUrl)
-            refetch()
-            setFiles([])
-            if (result?.success) {
-                onOpenChange(false)
-                toast.success("Фото профілю змінено")
-            } else {
-                console.error(result?.error)
-            }
-        }
+      const formData = new FormData();
+      formData.append("files", file[0]);
+
+      const uploadResult = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await uploadResult.json();
+      if (!uploadResult.ok || !Array.isArray(data.urls) || !data.urls[0]) {
+        toast.error(data.error || "Failed to upload image");
+        return;
+      }
+      const uploadedUrl = data.urls[0];
+
+      const result = await updateUserPhoto(uploadedUrl);
+      setFiles([]);
+      if (result?.success) {
+        refetch();
+        onOpenChange(false);
+        toast.success("Фото профілю змінено");
+      } else {
+        toast.error("Помилка в зміні фото профіля");
+        console.error(result?.error);
+      }
+    });
+  }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         onInteractOutside={() => setFiles([])}
         showCloseButton={false}
-        aria-describedby="Додати нову знижку"
         className="my-auto max-h-[calc(100vh-2rem)] max-w-md mx-4 overflow-y-auto no-scrollbar"
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">
@@ -67,7 +75,10 @@ export default function ProfileUserPhoto({
             <DialogTitle className="text-xl font-bold text-card-foreground tracking-tight">
               Змінити фото профілю
             </DialogTitle>
-            <DialogClose onClick={() => setFiles([])} className="w-5 h-5 p-2 bg-card items-center box-content flex justify-center rounded-full cursor-pointer text-muted-foreground hover:bg-secondary hover:text-card-foreground transition-colors">
+            <DialogClose
+              onClick={() => setFiles([])}
+              className="w-5 h-5 p-2 bg-card items-center box-content flex justify-center rounded-full cursor-pointer text-muted-foreground hover:bg-secondary hover:text-card-foreground transition-colors"
+            >
               <X height={20} width={20} className="" aria-hidden={false} />
             </DialogClose>
           </div>
@@ -95,26 +106,30 @@ export default function ProfileUserPhoto({
                 </div>
                 <p className="text-secondary-foreground font-medium text-center text-sm mb-1 group-hover:text-card-foreground">
                   Перетягніть фото сюди або{" "}
-                  <span className="text-primary font-bold">натисніть</span>{" "}
-                  для завантаження
+                  <span className="text-primary font-bold">натисніть</span> для
+                  завантаження
                 </p>
               </div>
             </FileUploadDropzone>
             {files.map((file) => (
-              <FileUploadItem className="mt-8 flex flex-col cursor-default" value={file} key={file.name}>
+              <FileUploadItem
+                className="mt-8 flex flex-col cursor-default"
+                value={file}
+                key={file.name}
+              >
                 <div className="rounded-full border border-slate-300 w-40 h-40 items-center justify-center flex">
                   <FileUploadItemPreview
-                  className="rounded-full w-38 h-38 object-cover m-1"
-                  // render={(file, fallback) => {
-                  //     // Custom preview for specific file types
-                  //     if (file.type.startsWith("image/")) {
-                  //     return (
-                  //         <FileUploadItemPreview className="object-cover w-40 h-40" />
-                  //     );
-                  //     }
-                  //     // Use default behavior for everything else
-                  //     return fallback();
-                  // }}
+                    className="rounded-full w-38 h-38 object-cover m-1"
+                    // render={(file, fallback) => {
+                    //     // Custom preview for specific file types
+                    //     if (file.type.startsWith("image/")) {
+                    //     return (
+                    //         <FileUploadItemPreview className="object-cover w-40 h-40" />
+                    //     );
+                    //     }
+                    //     // Use default behavior for everything else
+                    //     return fallback();
+                    // }}
                   />
                 </div>
                 <p className="text-slate-400 font-bold uppercase text-center text-sm">
@@ -122,14 +137,19 @@ export default function ProfileUserPhoto({
                 </p>
                 <div className="flex justify-end absolute top-2 right-2">
                   <FileUploadClear forceMount>
-                      <X height={20} width={20} className="cursor-pointer text-slate-400 hover:text-red-600" aria-hidden={false} />
+                    <X
+                      height={20}
+                      width={20}
+                      className="cursor-pointer text-slate-400 hover:text-red-600"
+                      aria-hidden={false}
+                    />
                   </FileUploadClear>
                 </div>
-            </FileUploadItem>
+              </FileUploadItem>
             ))}
           </FileUpload>
         </div>
-        <DialogFooter className='relative mt-6 border-t-0 bg-transparent'>
+        <DialogFooter className="relative mt-6 border-t-0 bg-transparent">
           <DialogClose asChild>
             <Button
               variant="outline"
@@ -139,11 +159,15 @@ export default function ProfileUserPhoto({
               Скасувати
             </Button>
           </DialogClose>
-          <DialogClose type="submit" onClick={() => onSubmit(files)} asChild>
-            <Button  className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer">
-              Зберегти зміни
-            </Button>
-          </DialogClose>
+
+          <Button
+            type="submit"
+            disabled={isPending}
+            onClick={() => onSubmit(files)}
+            className="rounded-lg h-10 px-5 py-2 text-[14px] font-semibold text-white bg-primary hover:bg-orange-700 cursor-pointer"
+          >
+            {isPending === true ? "Зберігаєм зміни..." : "Зберегти зміни"}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
