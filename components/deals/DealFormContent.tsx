@@ -100,7 +100,7 @@ export default function DealFormContent({
                       Максимальна кількість зображень досягнута
                     </p>
                   ) : (
-                    <p className="text-secondary-foreground font-medium  text-sm mb-1 group-hover:text-card-foreground">
+                    <p className="text-secondary-foreground font-medium text-center text-sm mb-1 group-hover:text-card-foreground">
                       Перетягніть фото сюди або{" "}
                       <span className="text-primary font-bold">натисніть</span>{" "}
                       для завантаження
