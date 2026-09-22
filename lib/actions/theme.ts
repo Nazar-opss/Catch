@@ -22,4 +22,17 @@ export async function toggleTheme(theme: Theme) {
     return { error: "Помилка оновлення теми" };
   }
 }
-//TODO: retrieve a theme from the database
+
+export async function getTheme() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  if (!session?.user?.id) return;
+
+  const user = await db
+    .selectFrom("user")
+    .select("theme")
+    .where("id", "=", session.user.id)
+    .executeTakeFirst();
+
+  return user?.theme;
+}

@@ -7,6 +7,8 @@ import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next"
+import { getTheme } from "@/lib/actions/theme";
+import { ThemeSync } from "@/components/theme-sync";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,27 +38,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
 
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // });
-
-  // const user = session?.user?.id
-  // ? await db
-  //     .selectFrom("user")
-  //     .select("theme")
-  //     .where("id", "=", session.user.id)
-  //     .executeTakeFirst()
-  // : null;
-
-  // const defaultTheme = user?.theme || "light";
-
-  // TODO: make theme sync with db, make it get theme from db on first load
+    const theme = (await getTheme()) ?? "light";
 
   return (
     <html
@@ -68,13 +56,12 @@ export default function RootLayout({
         <body className="w-full min-h-full h-full flex flex-col bg-background antialiased font-geist">
             <ThemeProvider
                 attribute="class"
-                defaultTheme="system"
-                // defaultTheme={defaultTheme}
+                defaultTheme={theme}
                 enableSystem
                 disableTransitionOnChange
                 >
                 <Providers>
-                  {/* <ThemeSync theme={defaultTheme} /> */}
+                  <ThemeSync theme={theme} />
                   <TooltipProvider>
                     {children}
                   </TooltipProvider>
