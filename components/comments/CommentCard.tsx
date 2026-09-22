@@ -15,8 +15,6 @@ interface CommentCardProps {
 }
 
 export default function CommentCard({ comment, isOwnProfile }: { comment: CommentCardProps; isOwnProfile: boolean }) {
-    // TODO: add link straight to comment using comment id and scroll to it on click
-
     return (
         <article className="bg-card border border-secondary rounded-2xl p-6 shadow-sm">
             <div className="flex items-center gap-1 text-sm mb-2">
@@ -39,7 +37,7 @@ export default function CommentCard({ comment, isOwnProfile }: { comment: Commen
                         {comment.rating > 0 ? `+${comment.rating}` : comment.rating}
                     </span>
                 </div>
-                <Link className="text-sm text-orange-600 font-medium hover:underline inline-flex items-center gap-1" href={`/deal/${comment.dealId}`}>
+                <Link className="text-sm text-orange-600 font-medium hover:underline inline-flex items-center gap-1" href={`/deal/${comment.dealId}#comment-${comment.id}`}>
                     Перейти до коментаря
                     <MoveRight className="w-4 h-4" />
                 </Link>

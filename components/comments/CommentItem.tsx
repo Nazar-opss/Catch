@@ -2,7 +2,7 @@
 import dayjs from "@/lib/dayjs";
 import Image from "next/image";
 import RatingButton from "../ui/rating-button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import CommentInput from "./CommentInput";
 import { ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
@@ -15,13 +15,34 @@ interface CommentItemProps {
     dealAuthorId: string;
 }
 
+function containsComment(comments: CommentWithAuthor[] | undefined, id: string): boolean {
+    return comments?.some((comment) => comment.id === id || containsComment(comment.replies, id)) ?? false;
+}
+
 export default function CommentItem({ comment, userVote, dealAuthorId }: CommentItemProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [collapsibleState, setCollapsibleState] = useState(false)
 
+    useEffect(() => {
+        const targetId = window.location.hash.replace(/^#comment-/, "");
+        if (!targetId || !containsComment(comment.replies?.slice(1), targetId)) return;
+
+        const frame = requestAnimationFrame(() => setCollapsibleState(true));
+        return () => cancelAnimationFrame(frame);
+    }, [comment.replies]);
+
+    useEffect(() => {
+        const targetId = window.location.hash.replace(/^#comment-/, "");
+        if (!targetId || !collapsibleState || !containsComment(comment.replies?.slice(1), targetId)) return;
+
+        requestAnimationFrame(() => {
+            document.getElementById(`comment-${targetId}`)?.scrollIntoView({ block: "start" });
+        });
+    }, [collapsibleState, comment.replies]);
+
     return (
         <div>
-            <div className="flex gap-2 md:gap-4 pt-4.5" key={comment.id}>
+            <div id={`comment-${comment.id}`} className="flex gap-2 md:gap-4 pt-4.5 scroll-mt-24" key={comment.id}>
                 {comment.authorImage ? (
                     <Image src={comment.authorImage} alt={comment.authorName} width={40} height={40} unoptimized quality={90} className=" shrink-0 h-10 w-10 rounded-full object-cover border border-border" />
                 ) : (
