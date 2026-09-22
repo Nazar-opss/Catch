@@ -129,5 +129,4 @@ export function SearchBar() {
             </Command>
         </div>
     )
-}   
-// todo: jailbreak the app, test mobile version, email verification, full page of settings
+}
