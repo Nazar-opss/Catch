@@ -110,7 +110,6 @@ export default function AddDealForm({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
           showCloseButton={false}
-          aria-describedby="Додати нову знижку"
           className="mx-auto my-auto max-h-[calc(100vh-2rem)] overflow-y-auto no-scrollbar"
         >
           <DialogHeader className="flex justify-between bg-card">

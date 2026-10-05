@@ -192,7 +192,19 @@ export async function importDealsAction(rawData: unknown) {
     return { error: "Помилка формату JSON. Перевірте структуру файлу." };
   }
 
-  const deals = parsed.data
+  // Синтаксично коректний URL ще може вести на видалений файл, тому
+  // остаточний захист від 404 залишається у компонентах зображень.
+  const deals = parsed.data.map((deal) => ({
+    ...deal,
+    images: deal.images.filter((image) => {
+      try {
+        const url = new URL(image);
+        return url.protocol === "http:" || url.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }),
+  }))
   if(deals.length === 0) return {error: "JSON файл порожній"}
 
   const dealsToInsert = deals.map((deal) => ({

@@ -120,7 +120,6 @@ export default function DealEdit({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        aria-describedby="Додати нову знижку"
         className="my-auto max-h-[calc(100vh-2rem)] max-w-137.5 mx-4 overflow-y-auto no-scrollbar"
       >
         <DialogHeader className="flex flex-col border-b-0 px-6 pt-6 pb-0 sm:px-8 sm:pt-8 sm:mb-8">
