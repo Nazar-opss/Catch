@@ -28,16 +28,14 @@ export function ViewToggle() {
           className={`flex cursor-pointer transition-all duration-200 gap-2 px-4 p-1.5 font-medium items-center text-[13px] rounded-lg ${layout === "list" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}
         >
           <LayoutList size={16} />
-          List
-          <span className="hidden sm:inline">(Горизонтальні)</span>
+          <span className="hidden sm:inline">Список</span>
         </button>
         <button
           onClick={() => setLayout("grid")}
           className={`flex cursor-pointer gap-2 px-4 transition-all duration-200 p-1.5 font-medium items-center text-[13px] rounded-lg ${layout === "grid" ? "bg-[#ea580c] text-white shadow-sm" : "text-muted-foreground"} `}
         >
           <LayoutGrid size={16} />
-          Grid
-          <span className="hidden sm:inline">(Вертикальні)</span>
+          <span className="hidden sm:inline">Сітка</span>
         </button>
         <div className="hidden min-[1440px]:flex h-6 w-px bg-border my-1 mx-2"></div>
         <ExpandButton />
