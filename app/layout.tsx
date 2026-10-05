@@ -7,7 +7,6 @@ import { Toaster } from "@/components/ui/sonner"
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next"
-import { getTheme } from "@/lib/actions/theme";
 import { ThemeSync } from "@/components/theme-sync";
 
 const geistSans = Geist({
@@ -38,14 +37,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-    const theme = (await getTheme()) ?? "light";
-
   return (
     <html
         lang="uk"
@@ -56,12 +52,12 @@ export default async function RootLayout({
         <body className="w-full min-h-full h-full flex flex-col bg-background antialiased font-geist">
             <ThemeProvider
                 attribute="class"
-                defaultTheme={theme}
+                defaultTheme="system"
                 enableSystem
                 disableTransitionOnChange
                 >
                 <Providers>
-                  <ThemeSync theme={theme} />
+                  <ThemeSync />
                   <TooltipProvider>
                     {children}
                   </TooltipProvider>

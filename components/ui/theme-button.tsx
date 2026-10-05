@@ -7,13 +7,13 @@ import { Theme } from "@/prisma/types/types";
 import { toggleTheme } from "@/lib/actions/theme";
 
 export default function ThemeButton() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   // Detect client mount so theme-dependent classes only render after hydration,
   // avoiding an SSR/client mismatch (theme is undefined on the server).
   // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
-  const isDark = mounted && theme === "dark";
+  const isDark = mounted && resolvedTheme === "dark";
 
   function handleChange(next: Theme) {
     setTheme(next);
@@ -29,7 +29,7 @@ export default function ThemeButton() {
         className={`${themeButtonBase} ${!isDark ? "bg-card text-foreground shadow-sm hover:bg-card" : "text-slate-400 bg-transparent hover:text-slate-200"}`}
       >
         <Sun
-          aria-label="Світла"
+          aria-hidden="true"
           className={`h-4 w-4 ${!isDark ? "text-orange-400" : "text-slate-400"}`}
         />
         <p>Світла</p>
@@ -39,7 +39,7 @@ export default function ThemeButton() {
         className={`${themeButtonBase} ${isDark ? "bg-slate-700 hover:bg-slate-700 text-foreground shadow-sm" : "text-slate-400 bg-transparent hover:text-slate-200"}`}
       >
         <Moon
-          aria-label="Темна"
+          aria-hidden="true"
           className={`h-4 w-4 ${isDark ? "text-orange-400" : "text-slate-400"}`}
         />
         <p>Темна</p>

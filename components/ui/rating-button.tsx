@@ -5,13 +5,17 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { voteCommentAction, voteDealAction } from "@/lib/actions/votes";
 import { QueryClientContext } from "@tanstack/react-query";
 import { useRouter } from "next/navigation"
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import type { DealsPage } from "@/lib/actions/deals";
+import { useSession } from "@/lib/auth-clients";
+import LoginRequiredModal from "./login-required";
 
 type DealsInfiniteData = {pages: DealsPage[]; pageParams: unknown[]}
 
 export default function RatingButton({ userVote, commentId, dealId, isExpired, rating, reply, fontSize, iconSize, deal }: { userVote?: number | null, commentId?: string, dealId: string, rating: number, reply?: boolean, fontSize?: string, iconSize?: string, deal?: boolean, isExpired?:boolean }) {
-
+    const { data: session } = useSession();
+    const isLoggedIn = Boolean(session?.user);
+    const [modalOpen, setModalOpen] = useState(false);
     const queryClient = useContext(QueryClientContext)
     const router = useRouter()
 
@@ -19,6 +23,10 @@ export default function RatingButton({ userVote, commentId, dealId, isExpired, r
     const buttonStyle = `cursor-pointer transition-colors bg-transparent  rounded-full! ${deal ? "w-10 h-10" : "w-6 h-6"}`
 
     function handleDealVote(voteValue: number) {
+        if (!isLoggedIn) {
+            setModalOpen(true)
+            return
+        }
         queryClient?.setQueriesData<DealsInfiniteData>({
             queryKey: ["deals"] }, (old) => {
                 if (!old) return old
@@ -65,6 +73,10 @@ export default function RatingButton({ userVote, commentId, dealId, isExpired, r
             <Button  disabled={isExpired} onClick={() => { if (commentId) { voteCommentAction(dealId, commentId, -1) } else { handleDealVote(-1) } }} className={`${buttonSize} ${buttonStyle} hover:bg-red-600/50 hover:text-red-600 ${userVote === -1 ? "text-red-600 bg-red-600/50" : "text-slate-400"}`}>
                 <ChevronDown width={iconSize || 14} height={iconSize || 14} strokeWidth={3} />
             </Button>
+            <LoginRequiredModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
         </ButtonGroup>
     )
 }
