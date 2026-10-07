@@ -19,40 +19,6 @@ export type DealWithAuthor = Selectable<Deal> & {
   userVote: number | null;
 };
 
-// async function DealsFeedLoader({
-//   sort,
-//   q,
-//   currentUserId,
-//   category,
-//   serverLayout,
-//   serverExpanded,
-// }: {
-//   sort?: string;
-//   q: string;
-//   currentUserId?: string;
-//   category?: string;
-//   serverLayout: "list" | "grid";
-//   serverExpanded: boolean;
-// }) {
-//   const firstPage = await getDealsPage({
-//     sort,
-//     q: q ?? null,
-//     currentUserId,
-//     cursor: null,
-//     category,
-//   });
-//   return (
-//     <DealsFeed
-//       initialPage={firstPage}
-//       sort={sort ?? "hot"}
-//       q={q}
-//       category={category}
-//       serverExpanded={serverExpanded}
-//       serverLayout={serverLayout}
-//     />
-//   );
-// }
-
 async function DealsFeedLoader({ sort, q, currentUserId, category, serverLayout, serverExpanded }: {
   sort?: string;
   q: string;
@@ -82,8 +48,7 @@ async function DealsFeedLoader({ sort, q, currentUserId, category, serverLayout,
     );
   } catch (error) {
     console.error("Помилка БД:", error);
-    // Тимчасовий фолбек, щоб сторінка відрендерилась
-    return <div className="text-red-500">Помилка завантаження угод. Дивись термінал.</div>;
+    return <div className="text-red-500">Помилка завантаження угод.</div>;
   }
 }
 export default async function Home({
@@ -96,8 +61,6 @@ export default async function Home({
     category?: string;
   }>;
 }) {
-  // const session = await auth.api.getSession({ headers: await headers() });
-  // const currentUserId = session?.user.id;
 
   let session = null;
   try {

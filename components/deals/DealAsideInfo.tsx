@@ -78,7 +78,7 @@ export default function DealAsideInfo({deal, isAuthor}: { deal: DealAsideInfoPro
                     {isAuthor && (
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
-                                <Button asChild onClick={() => {}} className="w-9 h-9 bg-transparent border border-border text-muted-foreground hover:text-card-foreground hover:bg-transparent p-1 rounded-md transition-colors">
+                                <Button asChild onClick={() => {}} className="w-9 h-9 cursor-pointer bg-transparent border border-border text-muted-foreground hover:text-card-foreground hover:bg-transparent p-1 rounded-md transition-colors">
                                     <EllipsisVertical width={32} height={32} />
                                 </Button>
                             </DropdownMenuTrigger>
