@@ -105,7 +105,7 @@ const isExpanded = hydrated ? storeExpanded : serverExpanded;
             onClick={() => {
               fetchNextPage();
             }}
-            className="px-6 py-3 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-medium transition"
+            className="px-6 py-3 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-medium transition cursor-pointer"
           >
             Показати ще
           </button>

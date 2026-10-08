@@ -40,12 +40,12 @@ export default function DealCard({ deal, layout }: DealCardProps) {
             isExpired={deal.isExpired}
             userVote={deal.userVote}
             layout={layout}
-          />
+            />
         </div>
         <div
           data-layout={layout}
           key={deal.imageUrls[0]}
-          className="relative flex aspect-4/3 overflow-hidden p-4 justify-center items-center rounded-lg border border-border bg-background w-57.5 h-[172.5px] shrink-0 data-[layout=list]:w-[256px] data-[layout=list]:h-full data-[layout=grid]:h-[172.5px] data-[layout=grid]:w-full"
+          className="relative flex aspect-4/3 p-4 justify-center items-center rounded-lg border border-border bg-background w-57.5 h-[172.5px] shrink-0 data-[layout=list]:w-[256px] data-[layout=list]:h-full data-[layout=grid]:h-[172.5px] data-[layout=grid]:w-full"
         >
           {imageUrl && !imageError ? (
             isExternalImage ? (
@@ -73,11 +73,8 @@ export default function DealCard({ deal, layout }: DealCardProps) {
           ) : (
             <NoImage layout={layout} />
           )}
-            {/* <div className={`${layout === "grid" ? "absolute left-3 top-3" : "left-3 top-3"} flex items-center`}>
-                        <RatingButton rating={Number(deal.temperature)} dealId={deal.id} reply={false} isExpired={deal.isExpired} userVote={deal.userVote} layout={layout} />
-                    </div> */}
           {expired && (
-            <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full border border-slate-300 bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+            <div className="absolute -right-3 -bottom-3 z-10 flex items-center gap-1 rounded-lg border border-slate-300 bg-slate-100 px-2.5 py-1.5 text-xs font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
               <Clock className="h-3.5 w-3.5" />
               Закінчилася
             </div>
