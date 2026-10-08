@@ -3,6 +3,7 @@ import "../globals.css";
 import Footer from "@/components/footer/Footer";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 
 export default async function MainLayout({
   children,
@@ -17,6 +18,7 @@ export default async function MainLayout({
       <Header initialSession={session}/>
       {children}
       <Footer />
+      <ScrollToTop/>
     </>
   );
 }
