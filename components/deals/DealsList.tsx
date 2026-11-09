@@ -21,6 +21,7 @@ export default function DealsList({
     : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4";
   return (
     <div
+      data-cy="discounts-list"
       className={`w-full ${layout === "grid" ? `grid ${gridClasses} gap-4` : `grid ${listClasses} gap-6`} `}
     >
       {deals.map((deal) => (

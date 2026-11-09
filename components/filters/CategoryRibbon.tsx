@@ -57,7 +57,7 @@ export default function CategoryRibbon() {
       )}
 
       <div ref={emblaRef} className="overflow-hidden">
-        <div className="flex items-center gap-2 py-1">
+        <div data-cy="category-filter" className="flex items-center gap-2 py-1">
           <Link
             href={href()}
             scroll={false}

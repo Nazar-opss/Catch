@@ -69,6 +69,7 @@ export function SearchBar() {
         <div ref={boxRef} className="flex-1 max-w-2xl relative block ">
             <Command shouldFilter={false} className="bg-transparent overflow-visible focus-within:ring-2 focus-within:ring-primary transition-all" onKeyDown={(e) => {if (e.key === "Escape") setOpen(false)} }>
                     <CommandInput 
+                        data-cy="search-input"
                         value={value}
                         onValueChange={(v) => {setValue(v); setOpen(true)}}
                         onFocus={() => value && setOpen(true)}
