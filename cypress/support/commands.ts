@@ -44,7 +44,7 @@ Cypress.Commands.add('login', (email: string, password: string) => {
         cy.get('[data-cy="email-input"]').type(email);
 
         cy.get('[data-cy="password-input"]').type(password);
-        
+
         cy.intercept('POST', '/api/auth/sign-in/email').as('loginRequest');
         cy.get('[data-cy="login-button"]').click();
         cy.wait('@loginRequest')

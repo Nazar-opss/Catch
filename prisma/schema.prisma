@@ -115,7 +115,7 @@ model Store {
     slug    String   @unique
     logo    String?
     createdAt   DateTime @default(now())
-    deals   Deal[]  
+    deals   Deal[]
 }
 
 model Deal {
@@ -125,7 +125,7 @@ model Deal {
     isOffline   Boolean   @default(false)
     store       String
     storeId     String?
-    storeRef    Store?  @relation(fields: [storeId], references: [id])   
+    storeRef    Store?  @relation(fields: [storeId], references: [id])
     cityName    String?
     geolocation String?
     newPrice    Int
