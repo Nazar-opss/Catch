@@ -31,6 +31,7 @@ export async function createDealAction(
       .values({
         id: crypto.randomUUID(),
         link: data.link,
+        store: "",
         title: data.title,
         oldPrice: data.oldPrice === "" ? null : data.oldPrice,
         newPrice: data.newPrice === "" ? 0 : data.newPrice,
@@ -210,6 +211,7 @@ export async function importDealsAction(rawData: unknown) {
   const dealsToInsert = deals.map((deal) => ({
     id: crypto.randomUUID(),
     authorId: session.user.id,
+    store: "",
     // createdAt: new Date(),
     // updatedAt: new Date(),
     title: deal.title,

@@ -1,20 +1,18 @@
-import { Controller, Path } from "react-hook-form";
+import { Controller, FieldValues, Path, UseFormReturn } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 import { inputStyle } from "../deals/DealFormContent";
-import { UseFormReturn } from "react-hook-form";
-import { AuthFormValues } from "@/lib/schemas/authSchema";
 
-type InputProps = {
-    form: UseFormReturn<AuthFormValues>;
+type InputProps<T extends FieldValues> = {
+    form: UseFormReturn<T>;
     inputLabel: string;
     placeholder: string;
-    inputName: Path<AuthFormValues>;
+    inputName: Path<T>;
     type: string;
     autoComplete?: string;
 }
 
-export default function AuthEmailInput({ form, inputLabel, placeholder, inputName, type, autoComplete }: InputProps) {
+export default function AuthEmailInput<T extends FieldValues>({ form, inputLabel, placeholder, inputName, type, autoComplete }: InputProps<T>) {
     return (
         <Controller
             name={inputName}
@@ -32,6 +30,7 @@ export default function AuthEmailInput({ form, inputLabel, placeholder, inputNam
                         autoComplete={autoComplete || "off"}
                         type={type}
                         value={field.value}
+                        data-cy="email-input"
                         className={`${inputStyle} px-4`}
                     />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

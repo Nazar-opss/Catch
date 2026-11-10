@@ -9,57 +9,80 @@ import { UseFormReturn } from "react-hook-form";
 import Link from "next/link";
 
 type InputProps = {
-    form: UseFormReturn<any>;
-    inputLabel: string;
-    placeholder: string;
-    inputName: string;
-    forgotPassword?: boolean;
-    autoComplete?: string;
-}
+  form: UseFormReturn<any>;
+  inputLabel: string;
+  placeholder: string;
+  inputName: string;
+  forgotPassword?: boolean;
+  autoComplete?: string;
+};
 
-export default function AuthPasswordInput({ form, inputLabel, placeholder, inputName, forgotPassword, autoComplete }: InputProps) {
-    const [showPassword, setShowPassword] = useState<"password" | "text">("password")
+export default function AuthPasswordInput({
+  form,
+  inputLabel,
+  placeholder,
+  inputName,
+  forgotPassword,
+  autoComplete,
+}: InputProps) {
+  const [showPassword, setShowPassword] = useState<"password" | "text">(
+    "password",
+  );
 
-    return (
-        <Controller
-            name={inputName}
-            control={form.control}
-            render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="relative">
-                    <FieldGroup className="flex flex-row justify-between">
-                        <FieldLabel htmlFor={field.name}>{inputLabel}</FieldLabel>
-                        {forgotPassword && <Link href="/forgot-password">
-                            <FieldLabel htmlFor={field.name} className="text-primary cursor-pointer">Забули пароль?</FieldLabel>
-                        </Link>}
-                    </FieldGroup>
-                    <Input
-                        {...field}
-                        id={field.name}
-                        aria-invalid={fieldState.invalid}
-                        placeholder={placeholder}
-                        autoComplete={autoComplete || "off"}
-                        type={showPassword}
-                        value={field.value}
-                        className={`${inputStyle} px-4`}
-                    />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setShowPassword(showPassword === "password" ? "text" : "password")}
-                        className="absolute inline-flex rounded-full items-center justify-center right-0 top-1/2 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
-                        aria-label={showPassword === "password" ? "Показати пароль" : "Приховати пароль"}
-                    >
-                        {showPassword === "password" ? (
-                            <Eye className="h-5 w-5 text-slate-500" />
-                        ) : (
-                            <EyeOff className="h-5 w-5 text-slate-500" />
-                        )}
-                    </Button>
-
-                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
+  return (
+    <Controller
+      name={inputName}
+      control={form.control}
+      render={({ field, fieldState }) => (
+        <Field data-invalid={fieldState.invalid} className="relative">
+          <FieldGroup className="flex flex-row justify-between">
+            <FieldLabel htmlFor={field.name}>{inputLabel}</FieldLabel>
+            {forgotPassword && (
+              <Link href="/forgot-password">
+                <FieldLabel
+                  htmlFor={field.name}
+                  className="text-primary cursor-pointer"
+                >
+                  Забули пароль?
+                </FieldLabel>
+              </Link>
             )}
-        />
-    )
+          </FieldGroup>
+          <Input
+            {...field}
+            data-cy="password-input"
+            id={field.name}
+            aria-invalid={fieldState.invalid}
+            placeholder={placeholder}
+            autoComplete={autoComplete || "off"}
+            type={showPassword}
+            value={field.value}
+            className={`${inputStyle} px-4`}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={() =>
+              setShowPassword(showPassword === "password" ? "text" : "password")
+            }
+            className="absolute inline-flex rounded-full items-center justify-center right-0 top-1/2 -translate-y-1/6 w-10! cursor-pointer h-10 hover:bg-transparent"
+            aria-label={
+              showPassword === "password"
+                ? "Показати пароль"
+                : "Приховати пароль"
+            }
+          >
+            {showPassword === "password" ? (
+              <Eye className="h-5 w-5 text-slate-500" />
+            ) : (
+              <EyeOff className="h-5 w-5 text-slate-500" />
+            )}
+          </Button>
+
+          {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
+  );
 }

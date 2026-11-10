@@ -102,6 +102,7 @@ const isExpanded = hydrated ? storeExpanded : serverExpanded;
       {hasNextPage && !isFetchingNextPage && (
         <div className="flex justify-center mt-8">
           <button
+            data-cy="load-more-button"
             onClick={() => {
               fetchNextPage();
             }}

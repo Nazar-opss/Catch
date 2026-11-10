@@ -13,7 +13,7 @@ export function SortFilter() {
     ];
 
     return (
-        <div className="flex flex-wrap items-center gap-2">
+        <div data-cy="sort-filter" className="flex flex-wrap items-center gap-2">
             {sortOptions.map((sort) => {
                 const isActive = currentSort === sort.value
                 return (

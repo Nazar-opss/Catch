@@ -2,7 +2,7 @@ import Loader from "./loader";
 
 export default function PageLoader() {
     return (
-        <div className="relative w-full h-full bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center">
+        <div data-cy="loader" className="relative w-full h-full bg-background/80 backdrop-blur-sm flex flex-col items-center justify-center">
             <div className="relative flex  items-center justify-center w-32 h-32">
                 <div className="absolute -top-2 -right-2 text-primary animate-sparkle-1" >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

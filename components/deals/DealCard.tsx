@@ -26,6 +26,8 @@ export default function DealCard({ deal, layout }: DealCardProps) {
   return (
     <>
       <article
+        data-id={deal.id}
+        data-cy="discount-card"
         data-layout={layout}
         key={deal.id}
         className=" relative flex w-full items-center bg-card p-5 border border-border rounded-[16px] data-[layout=list]:flex-row data-[layout=list]:gap-5 data-[layout=grid]:flex-col data-[layout=grid]:h-full "

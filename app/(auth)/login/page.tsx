@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthPasswordInput from "@/components/auth/AuthPasswordInput";
 import AuthEmailInput from "@/components/auth/AuthEmailInput";
-import { AuthFormValues, authSchema } from "@/lib/schemas/authSchema";
+import { LoginFormValues, loginSchema } from "@/lib/schemas/authSchema";
 import AuthTypeDivider from "@/components/auth/AuthTypeDivider";
 import Google from "@/components/ui/google";
 import Telegram from "@/components/ui/telegram";
@@ -30,8 +30,8 @@ export default function LoginPage() {
       ? returnUrl
       : "/";
 
-  const form = useForm<AuthFormValues>({
-    resolver: zodResolver(authSchema),
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -49,11 +49,11 @@ export default function LoginPage() {
     });
   };
 
-  const handleEmailAndPasswordLogin = () => {
+  const handleEmailAndPasswordLogin = (data: LoginFormValues) => {
     startTransition(async () => {
       const { error } = await signIn.email({
-        email: form.getValues("email"),
-        password: form.getValues("password"),
+        email: data.email,
+        password: data.password,
         rememberMe: true,
         callbackURL,
       });
@@ -61,7 +61,6 @@ export default function LoginPage() {
       if (error) setError(error.message);
     });
   };
-  // TODO: Add toast about account doesn't have password, use google login instead
 
   return (
     <>
@@ -81,7 +80,7 @@ export default function LoginPage() {
         </Button>
       </div>
       <AuthTypeDivider />
-      <form className="w-full h-full" onSubmit={handleEmailAndPasswordLogin}>
+      <form className="w-full h-full" onSubmit={form.handleSubmit(handleEmailAndPasswordLogin)}>
         <FieldGroup className="gap-5">
           <AuthEmailInput
             form={form}
@@ -100,6 +99,7 @@ export default function LoginPage() {
           {error && <p className="text-sm text-red-500">{error}</p>}
           <Button
             variant="outline"
+            data-cy="login-button"
             disabled={pending}
             className="px-5 py-2.5 mt-3 w-full text-[15px] bg-primary dark:bg-primary dark:hover:bg-orange-700 text-white font-medium shadow-sm shadow-orange-600/20 rounded-xl cursor-pointer transition-all hover:bg-orange-700 hover:text-white active:scale-95"
             type="submit"
