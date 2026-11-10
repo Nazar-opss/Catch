@@ -7,3 +7,10 @@ export const authSchema = z.object({
 })
 
 export type AuthFormValues = z.infer<typeof authSchema>
+
+export const loginSchema = authSchema.pick({
+    email: true,
+    password: true,
+})
+
+export type LoginFormValues = z.infer<typeof loginSchema>

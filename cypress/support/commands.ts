@@ -24,14 +24,31 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+export {}
+
+declare global {
+  // Cypress custom commands are declared through namespace augmentation.
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    interface Chainable {
+      login(email: string, password: string): Chainable
+    }
+  }
+}
+
+Cypress.Commands.add('login', (email: string, password: string) => {
+    cy.session([email, password], () => {
+        cy.visit('http://localhost:3000/login');
+
+        cy.get('[data-cy="email-input"]').type(email);
+
+        cy.get('[data-cy="password-input"]').type(password);
+        
+        cy.intercept('POST', '/api/auth/sign-in/email').as('loginRequest');
+        cy.get('[data-cy="login-button"]').click();
+        cy.wait('@loginRequest')
+
+        cy.url().should('not.include', '/login');
+    })
+})
