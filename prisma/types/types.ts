@@ -65,7 +65,8 @@ export type Deal = {
     title: string;
     link: string | null;
     isOffline: Generated<boolean>;
-    storeName: string | null;
+    store: string;
+    storeId: string | null;
     cityName: string | null;
     geolocation: string | null;
     newPrice: number;
@@ -78,6 +79,14 @@ export type Deal = {
     createdAt: Generated<Timestamp>;
     category: Generated<Category>;
     authorId: string;
+};
+export type Store = {
+    id: string;
+    domain: string;
+    name: string;
+    slug: string;
+    logo: string | null;
+    createdAt: Generated<Timestamp>;
 };
 export type SavedDeal = {
     id: string;
@@ -134,6 +143,7 @@ export type DB = {
     deal: Deal;
     saved_deal: SavedDeal;
     session: Session;
+    store: Store;
     user: User;
     verification: Verification;
     vote: Vote;
