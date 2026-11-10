@@ -108,12 +108,24 @@ model Verification {
     @@map("verification")
 }
 
+model Store {
+    id      String   @id @default(uuid())
+    domain  String   @unique
+    name    String
+    slug    String   @unique
+    logo    String?
+    createdAt   DateTime @default(now())
+    deals   Deal[]  
+}
+
 model Deal {
     id          String   @id @default(uuid())
     title       String
     link        String?
     isOffline   Boolean   @default(false)
-    storeName   String?   
+    store       String
+    storeId     String?
+    storeRef    Store?  @relation(fields: [storeId], references: [id])   
     cityName    String?
     geolocation String?
     newPrice    Int
@@ -138,7 +150,8 @@ model Deal {
     @@index([createdAt, id])
     @@index([title(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_title_trgm")
     @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "deal_description_trgm")
-
+    @@index([storeId, createdAt])
+    
     @@map("deal")
 }
 
